@@ -19,9 +19,12 @@ export const AuthInterceptor: HttpInterceptorFn = (request: HttpRequest<unknown>
     });
   }
 
+  // Dans votre intercepteur
   return next(request).pipe(
     catchError((error: HttpErrorResponse) => {
+      console.error('HTTP Error in interceptor:', error);
       if (error.status === 401) {
+        console.log('Unauthorized, redirecting to login...');
         authService.logout();
       }
       return throwError(() => error);

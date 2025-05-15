@@ -7,6 +7,7 @@ import {ParentManagmentComponent} from "./parent-managment/parent-managment.comp
 import {SessionManagmentComponent} from "./session-managment/session-managment.component";
 import {ModuleManagementComponent} from "./module-management/module-management.component";
 import {EvaluationManagementComponent} from "./Evaluation-management/Evaluation-management.component";
+import { AbsenceManagementComponent } from './absence-management/absence-management.component';
 
 export const AdminRoutes: Routes = [
   {
@@ -34,6 +35,10 @@ export const AdminRoutes: Routes = [
   },
   { path: 'evaluations',
     component: EvaluationManagementComponent
+  },
+  {
+    path: 'absences',
+    component: AbsenceManagementComponent
   }
 ];
 

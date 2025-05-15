@@ -51,10 +51,13 @@ export class AbsenceService {
     return this.http.delete<ApiResponse<void>>(`${this.apiUrl}/${id}`);
   }
 
-  getEtudiantsByModuleClasse(moduleId: number, classeId: number, enseignantId: number): Observable<ApiResponse<EtudiantResponse[]>> {
-    return this.http.get<ApiResponse<EtudiantResponse[]>>(`${this.apiUrl}/etudiants`, {
-      params: { moduleId, classeId, enseignantId }
-    });
+  // Vérifiez cette méthode en particulier
+  getEtudiantsByModuleClasse(moduleId: number, classeId: number, enseignantId: number) {
+    // Vérifiez que cette URL correspond à votre API backend
+    return this.http.get<ApiResponse<EtudiantResponse[]>>(
+      `${environment.apiUrl}/absences/module/${moduleId}/classe/${classeId}/etudiants`,
+      { params: { enseignantId: enseignantId.toString() } }
+    );
   }
 
   createBulk(data: AbsenceRequest[], enseignantId: number): Observable<ApiResponse<AbsenceResponse[]>> {

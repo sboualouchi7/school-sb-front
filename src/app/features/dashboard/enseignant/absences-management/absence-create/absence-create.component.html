@@ -1,0 +1,62 @@
+<!--<div class="head">-->
+<!--    <h1>Recherche Élèves</h1>-->
+<!--    <form [formGroup]="FormSearch" (ngSubmit)="search()">-->
+<!--        <div class="form-group">-->
+<!--            <select id="classeId" formControlName="classeId" class="form-control">-->
+<!--                <option value="" disabled>Rechercher par Classe</option>-->
+<!--                <option *ngFor="let classe of ListClasseGroup" [value]="classe.id">{{ classe.class_room_name }}</option>-->
+<!--            </select>-->
+<!--        </div>-->
+<!--        <div id="btns">-->
+<!--            <button type="submit" class="btn btn-primary" [disabled]="FormSearch.invalid"><i class="pi pi-search"></i></button>-->
+<!--            <button (click)="reloadSearch()" class="btn btn-primary"><i class="pi pi-replay"></i></button>-->
+<!--        </div>-->
+<!--    </form>-->
+<!--</div>-->
+
+<!--<div class="container">-->
+<!--    <h1>Ajouter une Absence</h1>-->
+<!--    <form [formGroup]="FormAbsence" (ngSubmit)="insertAbsence()">-->
+<!--        <div class="group">-->
+<!--            <div class="form-group">-->
+<!--                <label for="date">Date</label>-->
+<!--                <input type="date" id="date" formControlName="date" class="form-control" required>-->
+<!--            </div>-->
+<!--        -->
+<!--            <div class="form-group">-->
+<!--                <label for="time">Heure</label>-->
+<!--                <input type="time" id="time" formControlName="time" class="form-control" required>-->
+<!--            </div>-->
+<!--    -->
+<!--            <div class="form-group">-->
+<!--                <label for="eleve_id">Élève</label>-->
+<!--                <select id="eleve_id" formControlName="eleve_id" class="form-control" required>-->
+<!--                    <option value="" disabled selected>Choisir un élève</option>-->
+<!--                    <option *ngFor="let eleve of ListEleves" [value]="eleve.id">{{eleve.username}}</option>-->
+<!--                </select>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    -->
+<!--        <div class="group">-->
+<!--            <div class="form-group">-->
+<!--                <label for="motif">Motif</label>-->
+<!--                <input type="text" id="motif" formControlName="motif" class="form-control" placeholder="Entre motif" required>-->
+<!--            </div>-->
+<!--    -->
+<!--            -->
+<!--            <div class="form-group">-->
+<!--                <label for="status">Motif Status</label>-->
+<!--                <select id="status" formControlName="status" class="form-control" required>-->
+<!--                    <option value="" disabled selected>Choisir un statut</option>-->
+<!--                    <option  value="true">Avec Motif</option>-->
+<!--                    <option  value="false">Sans Motif</option>-->
+<!--                </select>-->
+<!--            </div>-->
+<!--    -->
+<!--            <div class="form-group" id="btns-form">-->
+<!--                <button type="submit" class="btn btn-primary" [disabled]="FormAbsence.invalid">Ajouter</button>-->
+<!--                <button (click)="reloadAbsence()" class="btn btn-primary"><i class="pi pi-replay"></i></button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </form>-->
+<!--</div>-->

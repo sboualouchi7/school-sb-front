@@ -1,0 +1,134 @@
+<!-- student-create.component.html -->
+<div class="container">
+  <h1>{{ isEditMode ? 'Modifier l\'étudiant' : 'Ajouter un étudiant' }}</h1>
+
+  <form [formGroup]="FormEleve" (ngSubmit)="onSubmit()">
+    <!-- Nom et Prénom -->
+    <div class="group">
+      <div class="form-group">
+        <label for="nom">Nom</label>
+        <input type="text" id="nom" formControlName="nom" class="form-control" placeholder="Entrez le nom">
+        <div *ngIf="FormEleve.get('nom')?.invalid && FormEleve.get('nom')?.touched" class="error-message">
+          Le nom est requis (minimum 2 caractères)
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="prenom">Prénom</label>
+        <input type="text" id="prenom" formControlName="prenom" class="form-control" placeholder="Entrez le prénom">
+        <div *ngIf="FormEleve.get('prenom')?.invalid && FormEleve.get('prenom')?.touched" class="error-message">
+          Le prénom est requis (minimum 2 caractères)
+        </div>
+      </div>
+    </div>
+
+    <!-- Username et Email -->
+    <div class="group">
+      <div class="form-group">
+        <label for="username">Nom d'utilisateur</label>
+        <input type="text" id="username" formControlName="username" class="form-control" placeholder="Entrez le nom d'utilisateur">
+        <div *ngIf="FormEleve.get('username')?.invalid && FormEleve.get('username')?.touched" class="error-message">
+          Le nom d'utilisateur est requis (minimum 3 caractères)
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" formControlName="email" class="form-control" placeholder="Entrez l'email">
+        <div *ngIf="FormEleve.get('email')?.invalid && FormEleve.get('email')?.touched" class="error-message">
+          L'email est requis et doit être valide
+        </div>
+      </div>
+    </div>
+
+    <!-- Mot de passe et Numéro étudiant -->
+    <div class="group">
+      <div class="form-group">
+        <label for="password">
+          Mot de passe
+          <span *ngIf="isEditMode" class="optional-label">(optionnel pour la modification)</span>
+        </label>
+        <input type="password" id="password" formControlName="password" class="form-control" placeholder="Entrez le mot de passe">
+        <div *ngIf="FormEleve.get('password')?.invalid && FormEleve.get('password')?.touched" class="error-message">
+          Le mot de passe doit contenir au moins 6 caractères
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="numeroEtudiant">Numéro d'étudiant</label>
+        <input type="text" id="numeroEtudiant" formControlName="numeroEtudiant" class="form-control" placeholder="Entrez le numéro d'étudiant">
+        <div *ngIf="FormEleve.get('numeroEtudiant')?.invalid && FormEleve.get('numeroEtudiant')?.touched" class="error-message">
+          Le numéro d'étudiant est requis
+        </div>
+      </div>
+    </div>
+
+    <!-- Date de naissance et Téléphone -->
+    <div class="group">
+      <div class="form-group">
+        <label for="dateNaissance">Date de naissance</label>
+        <input type="date" id="dateNaissance" formControlName="dateNaissance" class="form-control">
+        <div *ngIf="FormEleve.get('dateNaissance')?.invalid && FormEleve.get('dateNaissance')?.touched" class="error-message">
+          La date de naissance est requise
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="telephone">Téléphone</label>
+        <input type="tel" id="telephone" formControlName="telephone" class="form-control" placeholder="Entrez le numéro de téléphone">
+      </div>
+    </div>
+
+    <!-- Sexe et Adresse -->
+    <div class="group">
+      <div class="form-group">
+        <label for="sexe">Sexe</label>
+        <select id="sexe" formControlName="sexe" class="form-control">
+          <option value="" disabled>Sélectionnez le sexe</option>
+          <option [value]="'MASCULIN'">Masculin</option>
+          <option [value]="'FEMININ'">Féminin</option>
+        </select>
+        <div *ngIf="FormEleve.get('sexe')?.invalid && FormEleve.get('sexe')?.touched" class="error-message">
+          Le sexe est requis
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="adresse">Adresse</label>
+        <input type="text" id="adresse" formControlName="adresse" class="form-control" placeholder="Entrez l'adresse">
+      </div>
+    </div>
+
+    <!-- Classe et Filière -->
+    <div class="group">
+      <div class="form-group">
+        <label for="classeId">Classe</label>
+        <select id="classeId" formControlName="classeId" class="form-control" (change)="onClasseChange($event)">
+          <option value="" disabled>Sélectionnez une classe</option>
+          <option *ngFor="let classe of ListClasses" [value]="classe.id">{{classe.nom}} ({{classe.labelNiveau}})</option>
+        </select>
+        <div *ngIf="FormEleve.get('classeId')?.invalid && FormEleve.get('classeId')?.touched" class="error-message">
+          La classe est requise
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="filiere">Filière</label>
+        <input type="text" id="filiere" formControlName="filiere" class="form-control" placeholder="Entrez la filière">
+      </div>
+    </div>
+
+    <!-- Niveau ID (caché) -->
+    <input type="hidden" formControlName="niveauId">
+
+    <div class="form-actions">
+      <button type="submit" class="btn-primary" [disabled]="FormEleve.invalid">
+        {{ isEditMode ? 'Mettre à jour' : 'Ajouter l\'étudiant' }}
+      </button>
+
+      <button *ngIf="isEditMode" type="button" class="btn-secondary" (click)="cancelEdit()">
+        Annuler
+      </button>
+    </div>
+  </form>
+</div>

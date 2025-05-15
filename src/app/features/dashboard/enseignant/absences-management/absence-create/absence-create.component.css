@@ -1,0 +1,123 @@
+.container{
+    padding: 20px;
+    background: var(--background-color);
+    border-radius: 15px;
+}
+.container > h1 , .head > h1{
+    font-size: 20px;
+    padding: 10px;
+    color: var(--color-primary);
+    font-weight: 700;
+    margin-bottom: 0px;
+}
+form{
+    width: 100%;
+    /* display: flex;
+    align-items: start;
+    justify-content: left;
+    flex-wrap: wrap; */
+}
+.group{
+    width: 100%;
+    display: flex;
+}
+.form-group{
+    width: 49%;
+    margin-right: 5px;
+}
+.form-group > input {
+    width: 100%;
+    background: var(--primary-color);
+    color: var(--text-color);
+}
+.form-group >  select {
+    width: 100%;
+    background: var(--primary-color);
+    color: var(--text-color);
+}
+.form-group > textarea{
+    width: 100%;
+    background: var(--primary-color);
+    color: var(--text-color);
+}
+.form-group > input::placeholder{
+    color: var(--color-border);
+}
+label{
+    font-size: 16px;
+    font-weight: 500;
+    padding: 5px;
+}
+#btns-form{
+    display: flex;
+    align-items: end;
+}
+#btns-form > button{
+    padding: 7px 12px;
+    border-radius: 5px;
+    border: 1px solid var(--hover-bg);
+    background: var(--background-color);
+    color: var(--text-color);
+    transition: .4s;
+    margin-left: 5px;
+}
+
+.head{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--background-color);
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+}
+.head > form{
+    width: 50%;
+    display: flex;
+    justify-content: right;
+}
+.head > form > .form-group > select{
+    width: 100%;
+    background: var(--primary-color);
+    color: var(--text-color);
+    padding: 5px 10px;
+}
+#btns{
+    display: flex;
+    align-items: center;
+    justify-content: right;
+}
+#btns > button{
+    padding: 9px 10px;
+    border-radius: 5px;
+    border: 1px solid var(--hover-bg);
+    background: var(--background-color);
+    color: var(--text-color);
+    transition: .4s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 5px;
+}
+
+@media only screen and (max-width: 800px) {
+    .group{
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .form-group{
+        width: 100%;
+        margin-right: 5px;
+    }
+    #btns-form > button{
+        padding: 7px 12px;
+        border-radius: 5px;
+        border: 1px solid var(--hover-bg);
+        background: var(--background-color);
+        color: var(--text-color);
+        transition: .4s;
+        margin-top: 10px;
+    }
+}

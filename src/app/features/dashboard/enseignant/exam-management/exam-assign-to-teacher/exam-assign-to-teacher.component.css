@@ -1,0 +1,92 @@
+.container{
+    padding: 20px;
+    background: var(--background-color);
+    border-radius: 15px;
+}
+.container > h1{
+    font-size: 20px;
+    padding: 10px;
+    color: var(--color-primary);
+    font-weight: 700;
+}
+form{
+    display: flex;
+    align-items: start;
+    justify-content: left;
+    flex-wrap: wrap;
+}
+.group{
+    width: 100%;
+    display: flex;
+}
+.group > .form-group{
+    width: 49%;
+}
+#group{
+    width: 100%;
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+}
+#group > .form-group{
+    width: 49%;
+}
+.form-group{
+    margin-right: 5px;
+}
+#form-group{
+    width: 70%;
+}
+.form-group > input , select {
+    width: 100%;
+    background: var(--primary-color);
+    color: var(--text-color);
+}
+.form-group > input::placeholder{
+    color: var(--color-border);
+}
+label{
+    font-size: 16px;
+    font-weight: 500;
+    padding: 5px;
+}
+#btns-form{
+    display: flex;
+    align-items: end;
+    margin-top: 10px;
+}
+#btns-form > button{
+    padding: 7px 12px;
+    border-radius: 5px;
+    border: 1px solid var(--hover-bg);
+    background: var(--background-color);
+    color: var(--text-color);
+    transition: .4s;
+}
+.rd{
+    margin-left: 5px;
+}
+#choice{
+    width: 100%;
+}
+input:disabled, select:disabled {
+    cursor: not-allowed;
+    background-color: #e9ecef; /* Optional: To give it a disabled look */
+    color: #6c757d; /* Optional: A muted text color */
+}
+
+@media only screen and (max-width: 800px) {
+    .group{
+        width: 100%;
+        display: block;
+    }
+    .group > .form-group{
+        width: 100%;
+    }
+    #last-group{
+        display: flex;
+    }
+    #last-group > .form-group{
+        width: 60%;
+    }
+}

@@ -1,0 +1,66 @@
+<!--<div class="head">-->
+<!--    <h1> Absence</h1>-->
+<!--    <form [formGroup]="FromSearch" (ngSubmit)="search()">-->
+<!--        <div class="form-group">-->
+
+<!--            <select id="classeId" formControlName="classeId" class="form-control">-->
+<!--                <option value="" disabled>Rechercher par Classe</option>-->
+<!--                <option *ngFor="let classe of ListClasseGroup" [value]="classe.id">{{ classe.class_room_name }}</option>-->
+<!--            </select>-->
+
+<!--        </div>-->
+<!--        <div class="form-group">-->
+<!--            <button type="submit" class="btn btn-primary" [disabled]="FromSearch.invalid"><i class="pi pi-search"></i></button>-->
+<!--            <button (click)="realod()" class="btn btn-primary"><i class="pi pi-replay"></i></button>-->
+<!--        </div>-->
+<!--    </form>-->
+<!--</div>-->
+
+<!--<div class="cont">-->
+<!--    <table mat-table [dataSource]="ListElevesAbsences" matSort class="mat-elevation-z8">-->
+
+<!--        &lt;!&ndash; Classe ID Column &ndash;&gt;-->
+<!--        &lt;!&ndash; <ng-container matColumnDef="classeId">-->
+<!--      <th mat-header-cell id="th" *matHeaderCellDef> Classe ID </th>-->
+<!--      <td mat-cell *matCellDef="let prof"> {{ prof.classeId }} </td>-->
+<!--    </ng-container> &ndash;&gt;-->
+
+<!--        &lt;!&ndash; Identification ID Column &ndash;&gt;-->
+<!--        <ng-container matColumnDef="identificationId">-->
+<!--            <th mat-header-cell id="th" *matHeaderCellDef> ID d'identification </th>-->
+<!--            <td mat-cell *matCellDef="let eleve"> {{ eleve.identificationId }} </td>-->
+<!--        </ng-container>-->
+
+<!--        &lt;!&ndash; Username Column &ndash;&gt;-->
+<!--        <ng-container matColumnDef="username">-->
+<!--            <th mat-header-cell id="th" *matHeaderCellDef mat-sort-header> Nom de eleveesseur </th>-->
+<!--            <td mat-cell *matCellDef="let eleve"> {{ eleve.username }} </td>-->
+<!--        </ng-container>-->
+
+<!--       -->
+<!--        &lt;!&ndash; <ng-container matColumnDef="email">-->
+<!--            <th mat-header-cell id="th" *matHeaderCellDef> Email </th>-->
+<!--            <td mat-cell *matCellDef="let eleve"> {{ eleve.email }} </td>-->
+<!--        </ng-container> &ndash;&gt;-->
+
+<!--        &lt;!&ndash; Gender Column &ndash;&gt;-->
+<!--        <ng-container matColumnDef="gender">-->
+<!--            <th mat-header-cell id="th" *matHeaderCellDef> Sexe </th>-->
+<!--            <td mat-cell *matCellDef="let eleve"> {{ eleve.gender }} </td>-->
+<!--        </ng-container>-->
+
+<!--        &lt;!&ndash; Age Column &ndash;&gt;-->
+<!--        <ng-container matColumnDef="age">-->
+<!--            <th mat-header-cell id="th" *matHeaderCellDef> Âge </th>-->
+<!--            <td mat-cell *matCellDef="let eleve"> {{ eleve.age }} </td>-->
+<!--        </ng-container>-->
+<!--        <ng-container matColumnDef="totale">-->
+<!--            <th mat-header-cell id="th" *matHeaderCellDef> Les Fois D'absence </th>-->
+<!--            <td mat-cell *matCellDef="let eleve"> {{ eleve.totalAbsences}} </td>-->
+<!--        </ng-container>-->
+
+<!--        &lt;!&ndash; Header and Row Declarations &ndash;&gt;-->
+<!--        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>-->
+<!--        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>-->
+<!--    </table>-->
+<!--</div>-->

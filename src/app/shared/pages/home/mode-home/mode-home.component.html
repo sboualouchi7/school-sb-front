@@ -1,0 +1,12 @@
+<form>
+  <input
+    id="dark-mode"
+    class="toggle"
+    type="checkbox"
+    [checked]="isDarkMode"
+    (change)="toggleTheme()"
+  />
+  <label for="dark-mode" class="toggle-label">
+    <i [ngClass]="isDarkMode ? 'pi pi-sun' : 'pi pi-moon'"></i>
+  </label>
+</form>

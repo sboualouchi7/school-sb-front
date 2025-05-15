@@ -1,0 +1,61 @@
+<!-- classroom-list.component.html -->
+<h1>Les Classes De L'École</h1>
+<div class="cont">
+  <table mat-table [dataSource]="listClasses" matSort class="mat-elevation-z8">
+
+    <ng-container matColumnDef="id">
+      <th mat-header-cell id="th" *matHeaderCellDef> ID </th>
+      <td mat-cell *matCellDef="let classe"> {{ classe.id }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nom">
+      <th mat-header-cell id="th" *matHeaderCellDef mat-sort-header> Nom de classe </th>
+      <td mat-cell *matCellDef="let classe"> {{ classe.nom }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="labelNiveau">
+      <th mat-header-cell id="th" *matHeaderCellDef mat-sort-header> Niveau </th>
+      <td mat-cell *matCellDef="let classe"> {{ classe.labelNiveau }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="capacite">
+      <th mat-header-cell id="th" *matHeaderCellDef mat-sort-header> Capacité </th>
+      <td mat-cell *matCellDef="let classe"> {{ classe.capacite }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="anneeScolaire">
+      <th mat-header-cell id="th" *matHeaderCellDef mat-sort-header> Année Scolaire </th>
+      <td mat-cell *matCellDef="let classe"> {{ classe.anneeScolaire }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell id="th" *matHeaderCellDef> Actions </th>
+      <td mat-cell *matCellDef="let classe">
+        <div class="action-buttons">
+          <button class="edit-btn" (click)="editClasse(classe)">
+            <span class="material-icons">edit</span> Modifier
+          </button>
+          <button class="delete-btn" (click)="deleteClasse(classe.id)">
+            <span class="material-icons">delete</span> Supprimer
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
+    <!-- Header and Row Declarations -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>
+
+<!-- Modal de confirmation de suppression -->
+<div class="confirm-modal" *ngIf="showDeleteConfirmation">
+  <div class="confirm-content">
+    <h3>Confirmation de suppression</h3>
+    <p>Êtes-vous sûr de vouloir supprimer cette classe ?</p>
+    <div class="confirm-buttons">
+      <button class="cancel-btn" (click)="cancelDelete()">Annuler</button>
+      <button class="confirm-btn" (click)="confirmDelete()">Confirmer</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,119 @@
+/* login */
+.login-wrapper {
+  width: 100%;
+  max-width: 900px;
+  height: 450px;
+  margin: 40px auto;
+  display: flex;
+  border-radius: var(--border-raduis-pr);
+  background: var(--background-color);
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.219);
+  overflow: hidden;
+}
+
+.main-left {
+  height: 100%;
+}
+
+.main-left img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.main-right {
+  flex: 1;
+  padding: 40px 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.logo {
+  width: 100px;
+  height: 60px;
+  background-image: var(--logo);
+  background-size: cover;
+  margin-bottom: 10px;
+}
+
+.content1 > #lets {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+form {
+  width: 100%;
+  font-family: "Poppins", sans-serif;
+}
+
+.group {
+  margin-bottom: 12px;
+}
+
+.group > label {
+  font-size: 12px;
+  font-weight: 800;
+  margin-bottom: 5px;
+  color: var(--text-color);
+}
+
+.icon-input {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--primary-color);
+  padding: 5px 10px;
+  border: 1px solid #bababa;
+  border-radius: calc(var(--border-raduis-pr) / 4);
+}
+
+.icon-input > input {
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text-color);
+  flex: 1;
+}
+
+form > a {
+  color: var(--color-link);
+  font-size: 12px;
+  display: inline-block;
+  margin: 5px 0;
+}
+
+form > button {
+  width: 100%;
+  padding: 10px;
+  background: var(--color-primary);
+  border: none;
+  border-radius: calc(var(--border-raduis-pr) / 4);
+  color: #fff;
+  cursor: pointer;
+}
+
+.error-message {
+  color: red;
+  font-size: 13px;
+  margin-top: 8px;
+}
+
+/* Responsive */
+@media only screen and (max-width: 768px) {
+  .login-wrapper {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .main-left {
+    display: none;
+  }
+
+  .main-right {
+    width: 100%;
+    padding: 30px 20px;
+  }
+}

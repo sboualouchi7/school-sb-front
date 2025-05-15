@@ -1,0 +1,58 @@
+<h1>Les Modules De L'École</h1>
+<div class="cont">
+  <table mat-table [dataSource]="listModules" matSort class="mat-elevation-z8">
+
+    <ng-container matColumnDef="id">
+      <th mat-header-cell id="th" *matHeaderCellDef> ID </th>
+      <td mat-cell *matCellDef="let module"> {{ module.id }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="libelle">
+      <th mat-header-cell id="th" *matHeaderCellDef mat-sort-header> Libellé </th>
+      <td mat-cell *matCellDef="let module"> {{ module.libelle }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="typeModule">
+      <th mat-header-cell id="th" *matHeaderCellDef mat-sort-header> Type </th>
+      <td mat-cell *matCellDef="let module"> {{ module.typeModule }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="volumeHoraire">
+      <th mat-header-cell id="th" *matHeaderCellDef mat-sort-header> Volume Horaire </th>
+      <td mat-cell *matCellDef="let module"> {{ module.volumeHoraire }} h </td>
+    </ng-container>
+
+    <ng-container matColumnDef="coefficient">
+      <th mat-header-cell id="th" *matHeaderCellDef mat-sort-header> Coefficient </th>
+      <td mat-cell *matCellDef="let module"> {{ module.coefficient }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nomClasse">
+      <th mat-header-cell id="th" *matHeaderCellDef mat-sort-header> Classe </th>
+      <td mat-cell *matCellDef="let module"> {{ module.nomClasse }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nomEnseignant">
+      <th mat-header-cell id="th" *matHeaderCellDef mat-sort-header> Enseignant </th>
+      <td mat-cell *matCellDef="let module"> {{ module.nomEnseignant }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell id="th" *matHeaderCellDef> Actions </th>
+      <td mat-cell *matCellDef="let module">
+        <div class="action-buttons">
+          <button class="edit-btn" (click)="editModule(module)">
+            <span class="material-icons">edit</span> Modifier
+          </button>
+          <button class="delete-btn" (click)="deleteModule(module.id)">
+            <span class="material-icons">delete</span> Supprimer
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
+    <!-- Header and Row Declarations -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

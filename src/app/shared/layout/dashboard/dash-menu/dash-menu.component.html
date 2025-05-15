@@ -1,0 +1,73 @@
+<div class="main">
+  <div class="menu"></div>
+
+  <ul>
+    <li>
+      <a
+        routerLink="/dashboard/admin/student"
+        (click)="setActiveLink('/dashboard/admin/student')"
+        [ngClass]="{ 'active': isLinkActive('/dashboard/admin/student') }">
+        <i class="pi pi-home"></i>
+        <p [ngClass]="{ 'active-p': isLinkActive('/dashboard/admin/student') }">Student</p>
+      </a>
+    </li>
+
+    <li>
+      <a
+        routerLink="/dashboard/admin/profs"
+        (click)="setActiveLink('/dashboard/admin/profs')"
+        [ngClass]="{ 'active': isLinkActive('/dashboard/admin/profs') }">
+        <i class="pi pi-users"></i>
+        <p [ngClass]="{ 'active-p': isLinkActive('/dashboard/admin/profs') }">Profs</p>
+      </a>
+    </li>
+
+    <li>
+      <a
+        routerLink="/dashboard/admin/classe"
+        (click)="setActiveLink('/dashboard/admin/classe')"
+        [ngClass]="{ 'active': isLinkActive('/dashboard/admin/classe') }">
+        <i class="pi pi-sitemap"></i>
+        <p [ngClass]="{ 'active-p': isLinkActive('/dashboard/admin/classe') }">Classe</p>
+      </a>
+    </li>
+
+    <li>
+      <a
+        routerLink="/dashboard/admin/module"
+        (click)="setActiveLink('/dashboard/admin/module')"
+        [ngClass]="{ 'active': isLinkActive('/dashboard/admin/module') }">
+        <i class="pi pi-book"></i>
+        <p [ngClass]="{ 'active-p': isLinkActive('/dashboard/admin/module') }">Module</p>
+      </a>
+    </li>
+
+    <li>
+      <a
+        routerLink="/dashboard/admin/parent"
+        (click)="setActiveLink('/dashboard/admin/parent')"
+        [ngClass]="{ 'active': isLinkActive('/dashboard/admin/parent') }">
+        <i class="pi pi-user"></i>
+        <p [ngClass]="{ 'active-p': isLinkActive('/dashboard/admin/parent') }">Parent</p>
+      </a>
+    </li>
+
+    <li>
+      <a
+        routerLink="/dashboard/admin/session"
+        (click)="setActiveLink('/dashboard/admin/session')"
+        [ngClass]="{ 'active': isLinkActive('/dashboard/admin/session') }">
+        <i class="pi pi-calendar"></i>
+        <p [ngClass]="{ 'active-p': isLinkActive('/dashboard/admin/session') }">Session</p>
+      </a>
+    </li><li>
+      <a
+        routerLink="/dashboard/admin/evaluations"
+        (click)="setActiveLink('/dashboard/admin/evaluations')"
+        [ngClass]="{ 'active': isLinkActive('/dashboard/admin/evaluations') }">
+        <i class="pi pi-chart-bar"></i>
+        <p [ngClass]="{ 'active-p': isLinkActive('/dashboard/admin/evaluations') }">Evaluations</p>
+      </a>
+    </li>
+  </ul>
+</div>

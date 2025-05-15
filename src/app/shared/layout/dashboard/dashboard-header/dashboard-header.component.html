@@ -1,0 +1,41 @@
+<!-- dashboard-header.component.html -->
+<header>
+  <div class="logo">
+    <!-- Logo placeholder - can be customized per theme -->
+    <!-- <img src="../../../assets/images/logo.png" alt="Logo"> -->
+  </div>
+
+  <div class="search">
+    <input type="text" id="srch" placeholder="Search">
+    <label for="srch"><i class="pi pi-search-minus"></i></label>
+  </div>
+
+  <div class="controles">
+    <a (click)="toggleFullscreen()">
+      <i class="pi pi-window-maximize"></i>
+    </a>
+    <a href="#"><i class="pi pi-plus"></i></a>
+    <a href="#" class="notification-icon">
+      <i class="pi pi-bell"></i>
+      <span *ngIf="notifications > 0" class="notification-badge">{{ notifications }}</span>
+    </a>
+    <app-mode-home id="moon"></app-mode-home>
+  </div>
+
+  <div class="user-info">
+    <div class="profile-img">
+<!--      <img [src]="'assets/images/avatars/' + role + '.png'" alt="User Profile">-->
+      <img src='' alt="">
+    </div>
+    <h1>
+      <p *ngIf="username">{{ username }}</p>
+      <br>
+      <div>
+        <span *ngIf="role">{{ role }}</span>
+        <a (click)="logout()">
+          <i class="pi pi-sign-out"></i>
+        </a>
+      </div>
+    </h1>
+  </div>
+</header>

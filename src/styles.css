@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import "primeicons/primeicons.css";
+*{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  list-style: none;
+}
+
+::selection{
+  background: black !important;
+  color: white !important;
+}
+:root {
+  --primary-color: #fff !important;
+  --background-color: #F3F6FD !important;
+  --text-color: #000 !important;
+  --color-border:black ;
+  --color-primary :#FFD900 !important;
+  --color-secondary :#6844CC !important;
+  --bg-primary: #F6F3EF !important;
+  --color-light: #FFF !important;
+  --color-link : #0A5CDF !important;
+  --border-raduis-pr : 25px;
+  --bg-header:#00000030 !important;
+  --bg-service:#fff !important;
+  --color-border:#6c6c6c !important;
+  --hover-color:#fff !important;
+  --hover-bg:#1F2937 !important;
+  --tb-color:#6c757d !important;
+  --tb-color-hover:#d8e0e7 !important;
+  --logo:url("./assets/images/black.png");
+  --case-default :url("./assets/images/cas1.png");
+}
+::-webkit-scrollbar {
+  width: 3px;
+  height:3px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-border) !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--text-color) !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: black !important;
+}
+
+.dark-theme {
+  --primary-color: #111827 !important;
+  --background-color: #1F2937 !important;
+  --hover-color:#111827 !important;
+  --hover-bg:#F3F6FD !important;
+  --text-color: #fff !important;
+  --color-border:#6c6c6c !important;
+  --bg-header:#00000030 !important;
+  --gradient-color : linear-gradient(360deg , var(--background-color) , rgba(0, 0, 0, 0.023));
+  --bg-service: url("./assets/images/dfsdfdf-min.jpg") no-repeat top right/cover;
+  --tb-color:#d8e0e7;
+  --tb-color-hover:#393f43;
+  --logo:url("./assets/images/white.png");
+  --case-default :url("./assets/images/cas2.png");
+}
+
+body {
+  color: var(--text-color) !important;
+  background-color: var(--background-color) !important;
+  width: 100%;
+  height: 100vh;
+}
+
+.btn-primary {
+  background-color: var(--primary-color) !important;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

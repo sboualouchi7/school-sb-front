@@ -1,0 +1,31 @@
+<div class="login-wrapper">
+  <div class="main-left">
+    <img src="../../../assets/images/girl.jpg" alt="image" />
+  </div>
+  <div class="main-right">
+    <div class="logo"></div>
+    <div class="content1">
+      <h2 id="lets">Let the journey begin!</h2>
+    </div>
+
+    <form [formGroup]="formLogin" (ngSubmit)="onSubmit()">
+      <div class="group">
+        <label for="username">Username</label><br />
+        <div class="icon-input">
+          <input id="username" formControlName="username" type="text" placeholder="@enna.com" aria-label="Username" />
+          <i class="pi pi-user"></i>
+        </div>
+      </div>
+      <div class="group">
+        <label for="password">Password</label><br />
+        <div class="icon-input">
+          <input id="password" formControlName="password" type="password" placeholder="*******" aria-label="Password" />
+          <i class="pi pi-unlock"></i>
+        </div>
+      </div>
+      <a>Forgot password ?</a><br />
+      <button type="submit" [disabled]="formLogin.invalid || isLoading">Login</button>
+      <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+    </form>
+  </div>
+</div>

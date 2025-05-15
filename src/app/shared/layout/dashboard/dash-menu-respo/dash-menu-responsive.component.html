@@ -1,0 +1,25 @@
+<!-- dash-menu-responsive.component.html -->
+<div class="main">
+  <div class="menu"></div>
+
+  <ul>
+    <!-- Génération dynamique des éléments de menu en fonction du rôle -->
+    <ng-container *ngFor="let item of menuItems">
+      <li>
+        <a
+          [routerLink]="item.path"
+          (click)="setActiveLink(item.path)"
+          [ngClass]="{'active': isLinkActive(item.path)}">
+          <i class="{{item.icon}}"></i>
+        </a>
+      </li>
+    </ng-container>
+
+    <!-- Bouton de déconnexion (commun à tous les rôles) -->
+    <li>
+      <a (click)="logout()">
+        <i class="pi pi-sign-out"></i>
+      </a>
+    </li>
+  </ul>
+</div>

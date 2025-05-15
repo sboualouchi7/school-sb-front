@@ -1,0 +1,37 @@
+.main{
+    width: 100%;
+}
+.main-wrapper{
+    width: 100%;
+    padding: 10px;
+}
+.first-section{
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+}
+.add-prof{
+    width: 39%;
+}
+.exam{
+    width: 60%;
+    background: var(--background-color);
+    padding: 20px;
+    height: 375px;
+    max-height: 400px;
+    border-radius: 12px;
+}
+@media only screen and (max-width: 800px) {
+    .add-prof{
+        width: 100%;
+    }
+    .exam{
+        width: 100%;
+        margin-top: 10px;
+    }
+    .first-section{
+        display: block;
+    }
+}

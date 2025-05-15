@@ -1,0 +1,29 @@
+<!-- classroom-management.component.html -->
+<div class="main">
+  <div class="main-wrapper">
+    <div class="first-section">
+      <div class="prof">
+        <div class="header-section">
+           <button class="add-button" (click)="openModal()">Ajouter une classe</button>
+        </div>
+        <app-classroom-list (editClasseEvent)="onEditClass($event)"></app-classroom-list>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal pour créer/éditer une classe -->
+<div class="modal" *ngIf="showModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="close-button" (click)="closeModal()">&times;</span>
+    </div>
+    <div class="modal-body">
+      <app-classroom-create
+        [classeToEdit]="classeToEdit"
+        (classCreated)="onClassCreated()"
+        (classUpdated)="onClassUpdated()">
+      </app-classroom-create>
+    </div>
+  </div>
+</div>

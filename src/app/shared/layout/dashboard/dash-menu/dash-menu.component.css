@@ -1,0 +1,83 @@
+.main {
+  width: 8%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 20px 5px;
+}
+
+.menu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.menu > i {
+  font-size: 25px;
+}
+
+ul {
+  list-style: none;
+  padding: 40px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+li {
+  margin: 20px auto;
+}
+
+li > a {
+  font-size: 22px;
+  background: var(--primary-color);
+  color: var(--text-color);
+  padding: 10px 15px;
+  border-radius: 100%;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.089);
+  transition: .5s;
+  position: relative;
+}
+
+li > a:hover {
+  background: var(--hover-bg);
+  color: var(--hover-color);
+}
+
+li > a.active {
+  background: var(--hover-bg);
+  color: var(--hover-color);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+li:first-of-type > a.match {
+  background: var(--hover-bg);
+  color: var(--hover-color);
+}
+
+/* Paragraphe caché par défaut avec transition */
+li > a > p {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+  padding: 5px;
+  position: absolute;
+  font-size: 10px;
+  background: var(--hover-bg);
+  color: var(--hover-color);
+  left: 80%;
+  top: 15px;
+  border-radius: 12px;
+}
+
+li > a > p.active-p {
+  opacity: 1;
+  visibility: visible;
+}
+
+li > a:hover > p {
+  opacity: 1;
+  visibility: visible;
+}

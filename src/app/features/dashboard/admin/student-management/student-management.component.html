@@ -1,0 +1,29 @@
+<!-- student-management.component.html -->
+<div class="main">
+  <div class="main-wrapper">
+    <div class="first-section">
+      <div class="prof">
+        <div class="header-section">
+          <button class="add-button" (click)="openModal()">Ajouter un étudiant</button>
+        </div>
+        <app-student-list (editStudentEvent)="onEditStudent($event)"></app-student-list>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal pour créer/éditer un étudiant -->
+<div class="modal" *ngIf="showModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="close-button" (click)="closeModal()">&times;</span>
+    </div>
+    <div class="modal-body">
+      <app-student-create
+        [etudiantToEdit]="etudiantToEdit"
+        (studentCreated)="onStudentCreated()"
+        (studentUpdated)="onStudentUpdated()">
+      </app-student-create>
+    </div>
+  </div>
+</div>

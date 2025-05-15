@@ -1,0 +1,185 @@
+.cont {
+  width: 100%;
+  height: 80%;
+  overflow-y: auto !important;
+}
+
+h2 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: var(--text-color);
+}
+
+table {
+  background: transparent !important;
+  box-shadow: none;
+  width: 100%;
+}
+
+.tab-examen > table > th , td {
+  font-size: 12px;
+  color: var(--text-color);
+  vertical-align: middle;
+}
+
+#th {
+  background: var(--hover-bg);
+  font-size: 14px;
+  color: var(--hover-color) !important;
+  padding: 12px 10px;
+}
+
+.no-data {
+  padding: 20px;
+  text-align: center;
+  color: var(--text-color);
+  background: var(--primary-color);
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+/* Styles pour les boutons d'action */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.edit-btn, .delete-btn, .validate-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 10px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.3s ease;
+}
+
+.edit-btn {
+  background-color: #2196F3;
+  color: white;
+}
+
+.edit-btn:hover {
+  background-color: #0d8bf2;
+}
+
+.delete-btn {
+  background-color: #f44336;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #e53935;
+}
+
+.validate-btn {
+  background-color: #4CAF50;
+  color: white;
+  margin-left: 8px;
+}
+
+.validate-btn:hover {
+  background-color: #45a049;
+}
+
+.material-icons, .pi {
+  font-size: 16px;
+  margin-right: 4px;
+}
+
+/* Styles pour la colonne de validation */
+.validation-cell {
+  display: flex;
+  align-items: center;
+}
+
+.validation-status {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-right: 8px;
+}
+
+.validated {
+  background-color: rgba(76, 175, 80, 0.2);
+  color: #4CAF50;
+}
+
+.not-validated {
+  background-color: rgba(244, 67, 54, 0.2);
+  color: #f44336;
+}
+
+/* Modal de confirmation */
+.confirm-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.confirm-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.confirm-content h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+.confirm-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.cancel-btn, .confirm-btn {
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.cancel-btn {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.confirm-btn {
+  background-color: #f44336;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .action-buttons {
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .validation-cell {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .validate-btn {
+    margin-left: 0;
+    margin-top: 5px;
+  }
+}

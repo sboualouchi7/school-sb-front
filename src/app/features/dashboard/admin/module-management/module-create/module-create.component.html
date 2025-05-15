@@ -1,0 +1,139 @@
+<div class="container">
+  <h1>{{ isEditMode ? 'Modifier le Module' : 'Ajouter un Module' }}</h1>
+
+  <form [formGroup]="formModule" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="libelle">Libellé du Module:</label>
+      <input
+        type="text"
+        id="libelle"
+        class="form-control"
+        formControlName="libelle"
+        placeholder="Entrez le libellé du module"
+      />
+      <div *ngIf="formModule.get('libelle')?.invalid && formModule.get('libelle')?.touched" class="error-message">
+        Le libellé du module est requis
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="form-group">
+        <label for="volumeHoraire">Volume Horaire:</label>
+        <input
+          type="number"
+          id="volumeHoraire"
+          class="form-control"
+          formControlName="volumeHoraire"
+          placeholder="Entrez le volume horaire"
+        />
+        <div *ngIf="formModule.get('volumeHoraire')?.invalid && formModule.get('volumeHoraire')?.touched" class="error-message">
+          Le volume horaire est requis et doit être supérieur à 0
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="coefficient">Coefficient:</label>
+        <input
+          type="number"
+          id="coefficient"
+          class="form-control"
+          formControlName="coefficient"
+          placeholder="Entrez le coefficient"
+        />
+        <div *ngIf="formModule.get('coefficient')?.invalid && formModule.get('coefficient')?.touched" class="error-message">
+          Le coefficient est requis et doit être supérieur à 0
+        </div>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="form-group">
+        <label for="seuil">Seuil:</label>
+        <input
+          type="number"
+          id="seuil"
+          class="form-control"
+          formControlName="seuil"
+          placeholder="Entrez le seuil"
+        />
+        <div *ngIf="formModule.get('seuil')?.invalid && formModule.get('seuil')?.touched" class="error-message">
+          Le seuil est requis et ne peut pas être négatif
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="typeModule">Type de Module:</label>
+        <select id="typeModule" formControlName="typeModule" class="form-control">
+          <option value="" disabled>Sélectionnez un type</option>
+          <option *ngFor="let type of typeModules" [value]="type">{{type}}</option>
+        </select>
+        <div *ngIf="formModule.get('typeModule')?.invalid && formModule.get('typeModule')?.touched" class="error-message">
+          Le type de module est requis
+        </div>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="form-group">
+        <label for="niveauId">Niveau:</label>
+        <select id="niveauId" formControlName="niveauId" class="form-control">
+          <option value="" disabled>Sélectionnez un niveau</option>
+          <option *ngFor="let niveau of listNiveaux" [value]="niveau.id">{{niveau.label}}</option>
+        </select>
+        <div *ngIf="formModule.get('niveauId')?.invalid && formModule.get('niveauId')?.touched" class="error-message">
+          Le niveau est requis
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="classeId">Classe:</label>
+        <select id="classeId" formControlName="classeId" class="form-control" [disabled]="!formModule.get('niveauId')?.value">
+          <option value="" disabled>Sélectionnez une classe</option>
+          <option *ngFor="let classe of listClasses" [value]="classe.id">{{classe.nom}}</option>
+        </select>
+        <div *ngIf="formModule.get('classeId')?.invalid && formModule.get('classeId')?.touched" class="error-message">
+          La classe est requise
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="enseignantId">Enseignant:</label>
+      <select id="enseignantId" formControlName="enseignantId" class="form-control">
+        <option value="" disabled>Sélectionnez un enseignant</option>
+        <option *ngFor="let enseignant of listEnseignants" [value]="enseignant.id">{{enseignant.nom}} {{enseignant.prenom}}</option>
+      </select>
+      <div *ngIf="formModule.get('enseignantId')?.invalid && formModule.get('enseignantId')?.touched" class="error-message">
+        L'enseignant est requis
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description:</label>
+      <textarea
+        id="description"
+        class="form-control"
+        formControlName="description"
+        placeholder="Entrez une description (optionnel)"
+        rows="3"
+      ></textarea>
+    </div>
+
+    <div class="form-actions">
+      <button
+        type="submit"
+        class="btn-primary"
+        [disabled]="formModule.invalid">
+        {{ isEditMode ? 'Mettre à jour' : 'Ajouter' }}
+      </button>
+
+      <button
+        *ngIf="isEditMode"
+        type="button"
+        class="btn-secondary"
+        (click)="cancelEdit()">
+        Annuler
+      </button>
+    </div>
+  </form>
+</div>

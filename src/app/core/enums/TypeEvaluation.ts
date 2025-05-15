@@ -1,0 +1,8 @@
+export enum TypeEvaluation {
+  EXAMEN = 'EXAMEN',
+  CONTROLE = 'CONTROLE',
+  EXPOSE = 'EXPOSE',
+  PRESENTATION = 'PRESENTATION',
+  PROJET = 'PROJET',
+  ASSIDUITE = 'ASSIDUITE'
+}

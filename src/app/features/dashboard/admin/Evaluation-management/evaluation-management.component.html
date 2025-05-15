@@ -1,0 +1,62 @@
+<!-- evaluation-management.component.html -->
+<div class="main">
+  <div class="main-wrapper">
+    <div class="first-section">
+      <div class="filters">
+        <h1>Gestion des Évaluations</h1>
+        
+        <form [formGroup]="filterForm" class="filter-form">
+          <div class="form-group">
+            <label for="moduleId">Module</label>
+            <select id="moduleId" formControlName="moduleId" class="form-control">
+              <option value="" disabled>Sélectionnez un module</option>
+              <option *ngFor="let module of modules" [value]="module.id">{{ module.libelle }}</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="classeId">Classe</label>
+            <select id="classeId" formControlName="classeId" class="form-control">
+              <option value="" disabled>Sélectionnez une classe</option>
+              <option *ngFor="let classe of classes" [value]="classe.id">{{ classe.nom }}</option>
+            </select>
+          </div>
+          
+          <div class="form-actions">
+            <button type="button" class="reset-button" (click)="resetFilters()">
+              <i class="pi pi-refresh"></i> Réinitialiser
+            </button>
+          </div>
+        </form>
+        
+        <div class="header-actions">
+          <button class="add-button" (click)="openModal()">
+            <i class="pi pi-plus"></i> Ajouter une évaluation
+          </button>
+        </div>
+      </div>
+      
+      <div class="evaluation-list">
+        <app-evaluation-list 
+          (editEvaluationEvent)="onEditEvaluation($event)">
+        </app-evaluation-list>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal pour créer/éditer une évaluation -->
+<div class="modal" *ngIf="showModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="close-button" (click)="closeModal()">&times;</span>
+    </div>
+    <div class="modal-body">
+      <app-evaluation-create
+        [evaluationToEdit]="evaluationToEdit"
+        (evaluationCreated)="onEvaluationCreated()"
+        (evaluationUpdated)="onEvaluationUpdated()">
+      </app-evaluation-create>
+    </div>
+  </div>
+</div>

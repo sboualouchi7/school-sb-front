@@ -1,0 +1,29 @@
+<!-- teacher-management.component.html -->
+<div class="main">
+  <div class="main-wrapper">
+    <div class="first-section">
+      <div class="prof">
+        <div class="header-section">
+          <button class="add-button" (click)="openModal()">Ajouter un enseignant</button>
+        </div>
+        <app-teacher-list (editTeacherEvent)="onEditTeacher($event)"></app-teacher-list>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal pour créer/éditer un enseignant -->
+<div class="modal" *ngIf="showModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="close-button" (click)="closeModal()">&times;</span>
+    </div>
+    <div class="modal-body">
+      <app-teacher-create
+        [enseignantToEdit]="enseignantToEdit"
+        (teacherCreated)="onTeacherCreated()"
+        (teacherUpdated)="onTeacherUpdated()">
+      </app-teacher-create>
+    </div>
+  </div>
+</div>

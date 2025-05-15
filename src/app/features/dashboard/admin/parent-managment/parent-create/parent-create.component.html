@@ -1,0 +1,211 @@
+<!-- parent-create.component.html - Code complet -->
+<div class="container">
+  <h1>{{ isEditMode ? 'Modifier le parent' : 'Ajouter un parent' }}</h1>
+
+  <form [formGroup]="formParent" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="nom">Nom:</label>
+      <input
+        type="text"
+        id="nom"
+        class="form-control"
+        formControlName="nom"
+        placeholder="Entrez le nom du parent"
+      />
+      <div *ngIf="formParent.get('nom')?.invalid && formParent.get('nom')?.touched" class="error-message">
+        Le nom est requis
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="prenom">Prénom:</label>
+      <input
+        type="text"
+        id="prenom"
+        class="form-control"
+        formControlName="prenom"
+        placeholder="Entrez le prénom du parent"
+      />
+      <div *ngIf="formParent.get('prenom')?.invalid && formParent.get('prenom')?.touched" class="error-message">
+        Le prénom est requis
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input
+        type="email"
+        id="email"
+        class="form-control"
+        formControlName="email"
+        placeholder="Entrez l'email du parent"
+      />
+      <div *ngIf="formParent.get('email')?.invalid && formParent.get('email')?.touched" class="error-message">
+        Un email valide est requis
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="telephone">Téléphone:</label>
+      <input type="text" id="telephone" class="form-control"
+             formControlName="telephone" placeholder="Entrez le numéro de téléphone">
+    </div>
+
+    <div class="form-group">
+      <label for="dateNaissance">Date de naissance:</label>
+      <input type="date" id="dateNaissance" class="form-control"
+             formControlName="dateNaissance">
+      <div *ngIf="formParent.get('dateNaissance')?.invalid && formParent.get('dateNaissance')?.touched"
+           class="error-message">
+        La date de naissance est requise
+      </div>
+    </div>
+
+    <!-- ADRESSE -->
+    <div class="form-group">
+      <label for="adresse">Adresse:</label>
+      <input type="text" id="adresse" class="form-control"
+             formControlName="adresse" placeholder="Entrez l'adresse">
+    </div>
+
+    <div class="form-group">
+      <label for="sexe">Sexe:</label>
+      <select
+        id="sexe"
+        class="form-control"
+        formControlName="sexe"
+      >
+        <option *ngFor="let sexe of sexeOptions" [value]="sexe">
+          {{ sexe === 'MASCULIN' ? 'Masculin' : 'Féminin' }}
+        </option>
+      </select>
+      <div *ngIf="formParent.get('sexe')?.invalid && formParent.get('sexe')?.touched" class="error-message">
+        Le sexe est requis
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="username">Nom d'utilisateur:</label>
+      <input
+        type="text"
+        id="username"
+        class="form-control"
+        formControlName="username"
+        placeholder="Entrez le nom d'utilisateur"
+      />
+      <div *ngIf="formParent.get('username')?.invalid && formParent.get('username')?.touched" class="error-message">
+        Le nom d'utilisateur est requis
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="password">
+        Mot de passe:
+        <span *ngIf="isEditMode" class="optional-label">(optionnel pour la modification)</span>
+      </label>
+      <input
+        type="password"
+        id="password"
+        class="form-control"
+        formControlName="password"
+        placeholder="Entrez le mot de passe"
+      />
+      <div *ngIf="formParent.get('password')?.invalid && formParent.get('password')?.touched" class="error-message">
+        Le mot de passe est requis (6 caractères minimum)
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="relationAvecEtudiant">Relation avec l'étudiant:</label>
+      <input
+        type="text"
+        id="relationAvecEtudiant"
+        class="form-control"
+        formControlName="relationAvecEtudiant"
+        placeholder="Ex: Père, Mère, Tuteur..."
+      />
+      <div *ngIf="formParent.get('relationAvecEtudiant')?.invalid && formParent.get('relationAvecEtudiant')?.touched" class="error-message">
+        La relation avec l'étudiant est requise
+      </div>
+    </div>
+
+    <!-- Sélecteur d'étudiants -->
+    <div class="form-group">
+      <label>Sélection des enfants:</label>
+
+      <!-- Champ de recherche -->
+      <div class="search-container">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Rechercher un étudiant..."
+          [(ngModel)]="searchTerm"
+          [ngModelOptions]="{standalone: true}"
+          (input)="searchEtudiants()"
+        />
+        <button class="search-btn" type="button" (click)="searchEtudiants()">
+          <span class="material-icons">search</span>
+        </button>
+      </div>
+
+      <!-- Liste des étudiants filtrés -->
+      <div class="students-list-container" *ngIf="filteredEtudiants.length > 0">
+        <div class="students-list">
+          <div
+            *ngFor="let etudiant of filteredEtudiants"
+            class="student-item"
+            [class.selected]="isEtudiantSelected(etudiant.id)"
+            (click)="toggleEtudiantSelection(etudiant)"
+          >
+            <div class="student-info">
+              <div class="student-name">{{ etudiant.nom }} {{ etudiant.prenom }}</div>
+              <div class="student-details">
+                <span>{{ etudiant.numeroEtudiant }}</span>
+                <span *ngIf="etudiant.nomClasse">| {{ etudiant.nomClasse }}</span>
+              </div>
+            </div>
+            <div class="selection-indicator">
+              <span class="material-icons" *ngIf="isEtudiantSelected(etudiant.id)">check_circle</span>
+              <span class="material-icons" *ngIf="!isEtudiantSelected(etudiant.id)">radio_button_unchecked</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Message si aucun étudiant trouvé -->
+      <div *ngIf="searchPerformed && filteredEtudiants.length === 0" class="no-results">
+        Aucun étudiant ne correspond à votre recherche
+      </div>
+
+      <!-- Étudiants sélectionnés -->
+      <div class="selected-students" *ngIf="selectedEtudiants.length > 0">
+        <h4>Enfants sélectionnés:</h4>
+        <div class="selected-list">
+          <div *ngFor="let etudiant of selectedEtudiants" class="selected-item">
+            <div class="selected-info">
+              {{ etudiant.nom }} {{ etudiant.prenom }} ({{ etudiant.numeroEtudiant }})
+            </div>
+            <button type="button" class="remove-btn" (click)="removeEtudiant(etudiant)">
+              <span class="material-icons">close</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Message si aucun étudiant sélectionné -->
+      <div *ngIf="selectedEtudiants.length === 0" class="no-selection">
+        Aucun enfant sélectionné
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn-primary" [disabled]="formParent.invalid">
+        {{ isEditMode ? 'Mettre à jour' : 'Ajouter' }}
+      </button>
+
+      <button *ngIf="isEditMode" type="button" class="btn-secondary" (click)="cancelEdit()">
+        Annuler
+      </button>
+    </div>
+  </form>
+</div>

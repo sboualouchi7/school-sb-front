@@ -1,0 +1,65 @@
+<!--<div class="head">-->
+<!--    <h1>Professeurs</h1>-->
+<!--    <form [formGroup]="FromSearch" (ngSubmit)="search()">-->
+<!--        <div class="form-group">-->
+
+<!--            <select id="profId" formControlName="profId" class="form-control">-->
+<!--                <option value="" disabled>Rechercher par Prof</option>-->
+<!--                <option *ngFor="let prof of ListProfs" [value]="prof.id">{{prof.username}}</option>-->
+<!--            </select>-->
+
+<!--        </div>-->
+<!--        <div class="form-group">-->
+<!--            <button type="submit" class="btn btn-primary" [disabled]="FromSearch.invalid"><i class="pi pi-search"></i></button>-->
+<!--            <button (click)="realod()" class="btn btn-primary"><i class="pi pi-replay"></i></button>-->
+<!--        </div>-->
+<!--    </form>-->
+<!--</div>-->
+<!--<div class="cont">-->
+<!--    <table mat-table [dataSource]="ListExamens" class="mat-elevation-z8">-->
+<!--                    -->
+<!--                -->
+<!--        <ng-container matColumnDef="examen_name">-->
+<!--          <th mat-header-cell id="th" *matHeaderCellDef> Matière </th>-->
+<!--          <td mat-cell *matCellDef="let examen"> {{ examen.matter }} </td>-->
+<!--        </ng-container>-->
+<!--        -->
+<!--      -->
+<!--        <ng-container matColumnDef="matter">-->
+<!--          <th mat-header-cell id="th" *matHeaderCellDef>Nom de contrôle </th>-->
+<!--          <td mat-cell *matCellDef="let examen"> {{ examen.examen_name }} </td>-->
+<!--        </ng-container>-->
+<!--        -->
+<!--       -->
+<!--        <ng-container matColumnDef="semester">-->
+<!--          <th mat-header-cell id="th" *matHeaderCellDef> Semester de contrôle </th>-->
+<!--          <td mat-cell *matCellDef="let examen"> {{ examen.semester }} </td>-->
+<!--        </ng-container>-->
+<!--        -->
+<!--       -->
+<!--        <ng-container matColumnDef="examen_date">-->
+<!--          <th mat-header-cell id="th" *matHeaderCellDef> Date de contrôle </th>-->
+<!--          <td mat-cell *matCellDef="let examen"> {{ examen.examen_date }} </td>-->
+<!--        </ng-container>-->
+
+<!--        <ng-container matColumnDef="Delete" >-->
+<!--            <th mat-header-cell id="th" *matHeaderCellDef><i class="pi pi-delete-left"></i></th>-->
+<!--            <td mat-cell *matCellDef="let examen"> -->
+<!--                <button *ngIf="examen.assign !== 'ASSIGN'"><i class="pi pi-times"></i></button>-->
+<!--            </td>-->
+<!--        </ng-container>-->
+
+<!--        <ng-container matColumnDef="Update">-->
+<!--          <th mat-header-cell id="th" *matHeaderCellDef> <i class="pi pi-file-edit"></i></th>-->
+<!--          <td mat-cell *matCellDef="let examen"> -->
+<!--            <ng-container *ngIf="examen.assign !== 'ASSIGN'">-->
+<!--              <a [routerLink]="['update+examen/', examen.id]"><i class="pi pi-sync"></i></a>-->
+<!--            </ng-container>-->
+<!--          </td>-->
+<!--        </ng-container>-->
+<!--        -->
+<!--        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>-->
+<!--        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>-->
+<!--      </table>-->
+<!--</div>-->
+

@@ -1,0 +1,6 @@
+export enum StatusSeance {
+  PLANIFIEE = 'PLANIFIEE',
+  APPROUVEE = 'APPROUVEE',
+  REALISEE = 'REALISEE',
+  ANNULEE = 'ANNULEE'
+}

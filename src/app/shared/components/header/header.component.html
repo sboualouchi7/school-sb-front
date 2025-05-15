@@ -1,0 +1,31 @@
+<header class="navbar navbar-expand-lg fixed-top">
+  <div class="container-fluid container">
+    <a class="navbar-brand" href="#">
+      <img src="../../../assets/images/white.png" alt="Logo" class="logo">
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="mainMenu">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="#login" [ngClass]="{active: activeLink === 'home'}" (click)="setActive('home')">Home</a>
+        </li>
+      </ul>
+
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="#"><i class="pi pi-linkedin"></i></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#"><i class="pi pi-instagram"></i></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#"><i class="pi pi-github"></i></a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,196 @@
+<div class="container">
+  <h1 class="page-title">Gestion des Absences</h1>
+
+  <!-- Filtres -->
+  <div class="filter-section">
+    <form [formGroup]="filterForm" class="filter-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="classeId">Classe</label>
+          <select id="classeId" formControlName="classeId" class="form-control">
+            <option value="" disabled>Sélectionnez une classe</option>
+            <option *ngFor="let classe of classes" [value]="classe.id">
+              {{ classe.nom }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="moduleId">Module</label>
+          <select id="moduleId" formControlName="moduleId" class="form-control">
+            <option value="" disabled>Sélectionnez un module</option>
+            <option *ngFor="let module of modules" [value]="module.id">
+              {{ module.libelle }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-primary" (click)="applyFilter()" [disabled]="filterForm.invalid">
+            <i class="pi pi-filter"></i> Filtrer
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="resetFilter()">
+            <i class="pi pi-refresh"></i> Réinitialiser
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Bouton pour ajouter une absence -->
+  <div class="actions-bar">
+    <button class="btn btn-primary" (click)="toggleAddForm()">
+      <i class="pi pi-plus"></i> {{ showAddForm ? 'Annuler' : 'Ajouter une absence' }}
+    </button>
+  </div>
+
+  <!-- Formulaire pour ajouter/modifier une absence -->
+  <div *ngIf="showAddForm" class="add-absence-form">
+    <h2>{{ isEditMode ? 'Modifier l\'absence' : 'Ajouter une absence' }}</h2>
+    <form [formGroup]="absenceForm" (ngSubmit)="onSubmitAbsence()">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="etudiantId">Étudiant</label>
+          <select id="etudiantId" formControlName="etudiantId" class="form-control">
+            <option value="" disabled>Sélectionnez un étudiant</option>
+            <option *ngFor="let etudiant of etudiants" [value]="etudiant.id">
+              {{ etudiant.nom }} {{ etudiant.prenom }} ({{ etudiant.numeroEtudiant }})
+            </option>
+          </select>
+          <div *ngIf="absenceForm.get('etudiantId')?.invalid && absenceForm.get('etudiantId')?.touched" class="error-message">
+            L'étudiant est requis
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="seanceId">Séance</label>
+          <input type="number" id="seanceId" formControlName="seanceId" class="form-control" placeholder="ID de la séance">
+          <div *ngIf="absenceForm.get('seanceId')?.invalid && absenceForm.get('seanceId')?.touched" class="error-message">
+            La séance est requise
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="dateDebut">Date de début</label>
+          <input type="date" id="dateDebut" formControlName="dateDebut" class="form-control">
+          <div *ngIf="absenceForm.get('dateDebut')?.invalid && absenceForm.get('dateDebut')?.touched" class="error-message">
+            La date de début est requise
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="dateFin">Date de fin</label>
+          <input type="date" id="dateFin" formControlName="dateFin" class="form-control">
+          <div *ngIf="absenceForm.get('dateFin')?.invalid && absenceForm.get('dateFin')?.touched" class="error-message">
+            La date de fin est requise
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="motif">Motif</label>
+          <input type="text" id="motif" formControlName="motif" class="form-control" placeholder="Motif de l'absence">
+        </div>
+
+        <div class="form-group">
+          <label for="justification">Justification</label>
+          <input type="text" id="justification" formControlName="justification" class="form-control" placeholder="Justification">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group full-width">
+          <label for="commentaire">Commentaire</label>
+          <textarea id="commentaire" formControlName="commentaire" class="form-control" placeholder="Commentaire"></textarea>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="absenceForm.invalid">
+          {{ isEditMode ? 'Mettre à jour' : 'Ajouter' }}
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="resetAbsenceForm()">Réinitialiser</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Tableau des absences -->
+  <div class="absences-table">
+    <h2>Liste des absences</h2>
+    <div *ngIf="absences.length === 0" class="no-data">
+      Aucune absence trouvée.
+    </div>
+
+    <table mat-table [dataSource]="absences" class="mat-elevation-z8" *ngIf="absences.length > 0">
+      <!-- ID Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let absence">{{ absence.id }}</td>
+      </ng-container>
+
+      <!-- Étudiant Column -->
+      <ng-container matColumnDef="nomEtudiant">
+        <th mat-header-cell *matHeaderCellDef>Étudiant</th>
+        <td mat-cell *matCellDef="let absence">{{ absence.nomEtudiant }}</td>
+      </ng-container>
+
+      <!-- Module Column -->
+      <ng-container matColumnDef="moduleSeance">
+        <th mat-header-cell *matHeaderCellDef>Module</th>
+        <td mat-cell *matCellDef="let absence">{{ absence.moduleSeance }}</td>
+      </ng-container>
+
+      <!-- Date Début Column -->
+      <ng-container matColumnDef="dateDebut">
+        <th mat-header-cell *matHeaderCellDef>Date de début</th>
+        <td mat-cell *matCellDef="let absence">{{ absence.dateDebut }}</td>
+      </ng-container>
+
+      <!-- Date Fin Column -->
+      <ng-container matColumnDef="dateFin">
+        <th mat-header-cell *matHeaderCellDef>Date de fin</th>
+        <td mat-cell *matCellDef="let absence">{{ absence.dateFin }}</td>
+      </ng-container>
+
+      <!-- Motif Column -->
+      <ng-container matColumnDef="motif">
+        <th mat-header-cell *matHeaderCellDef>Motif</th>
+        <td mat-cell *matCellDef="let absence">{{ absence.motif || 'Non spécifié' }}</td>
+      </ng-container>
+
+      <!-- Validée Column -->
+      <ng-container matColumnDef="validee">
+        <th mat-header-cell *matHeaderCellDef>Justifié</th>
+        <td mat-cell *matCellDef="let absence">
+          <span class="status-badge" [ngClass]="absence.validee ? 'status-valid' : 'status-invalid'">
+            {{ absence.validee ? 'Oui' : 'Non' }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let absence">
+          <div class="action-buttons">
+            <button class="btn-icon btn-edit" (click)="editAbsence(absence)" title="Modifier">
+              <i class="pi pi-pencil"></i>
+            </button>
+            <button class="btn-icon btn-validate" (click)="validateAbsence(absence.id, absence.validee)" title="{{ absence.validee ? 'Invalider' : 'Valider' }}">
+              <i class="pi" [ngClass]="absence.validee ? 'pi-times' : 'pi-check'"></i>
+            </button>
+            <button class="btn-icon btn-delete" (click)="deleteAbsence(absence.id)" title="Supprimer">
+              <i class="pi pi-trash"></i>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+</div>

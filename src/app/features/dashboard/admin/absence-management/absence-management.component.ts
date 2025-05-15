@@ -137,16 +137,15 @@ export class AbsenceManagementComponent implements OnInit {
     });
   }
 
+  // Then, fix the loadEtudiantsByModuleAndClasse method in the AbsenceManagementComponent
   loadEtudiantsByModuleAndClasse(): void {
     if (!this.selectedModuleId || !this.selectedClasseId) {
-      console.warn('ModuleId ou ClasseId non défini');
+      console.warn('ModuleId or ClasseId not defined');
       return;
     }
 
-    console.log(`Chargement des étudiants pour moduleId=${this.selectedModuleId} et classeId=${this.selectedClasseId}`);
-
-    // Utilisez un enseignantId valide ou 0 si vous n'en avez pas besoin
-    const enseignantId = 0;
+    // Use a sensible default for enseignantId if not available
+    const enseignantId = 1; // or retrieve from the current user if applicable
 
     this.absenceService.getEtudiantsByModuleClasse(
       this.selectedModuleId,
@@ -154,17 +153,19 @@ export class AbsenceManagementComponent implements OnInit {
       enseignantId
     ).subscribe({
       next: (response) => {
-        console.log('Réponse de getEtudiantsByModuleClasse:', response);
+        console.log('Response from getEtudiantsByModuleClasse:', response);
 
         if (response.success) {
           this.etudiants = response.data;
-          console.log(`${this.etudiants.length} étudiants chargés`);
+          console.log(`${this.etudiants.length} students loaded`);
         } else {
-          console.error('Erreur lors du chargement des étudiants:', response.message);
+          console.error('Error loading students:', response.message);
+          this.etudiants = [];
         }
       },
       error: (error) => {
-        console.error('Erreur lors du chargement des étudiants:', error);
+        console.error('Error loading students:', error);
+        this.etudiants = [];
       }
     });
   }

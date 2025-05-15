@@ -1,1 +1,155 @@
-<p>document-management works!</p>
+<div class="container">
+  <h1 class="page-title">Gestion des Demandes de Documents</h1>
+
+  <!-- Bouton pour ajouter une demande -->
+  <div class="actions-bar">
+    <button class="btn btn-primary" (click)="toggleAddForm()">
+      <i class="pi pi-plus"></i> {{ showAddForm ? 'Annuler' : 'Ajouter une demande' }}
+    </button>
+  </div>
+
+  <!-- Formulaire de recherche et d'ajout -->
+  <div *ngIf="showAddForm" class="add-document-form">
+    <h2>Nouvelle demande de document</h2>
+
+    <!-- Recherche d'étudiant -->
+    <div class="search-section">
+      <form [formGroup]="searchForm" (ngSubmit)="searchEtudiants()">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="searchTerm">Rechercher un étudiant</label>
+            <div class="search-input-container">
+              <input type="text" id="searchTerm" formControlName="searchTerm" class="form-control" placeholder="Nom, prénom ou numéro d'étudiant">
+              <button type="submit" class="btn btn-search" [disabled]="searchForm.invalid">
+                <i class="pi pi-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <!-- Résultats de recherche -->
+      <div *ngIf="searchPerformed && filteredEtudiants.length > 0" class="search-results">
+        <div *ngFor="let etudiant of filteredEtudiants" class="search-result-item" (click)="selectEtudiant(etudiant)">
+          <div class="student-name">{{ etudiant.nom }} {{ etudiant.prenom }}</div>
+          <div class="student-details">
+            <span>{{ etudiant.numeroEtudiant }}</span>
+            <span *ngIf="etudiant.nomClasse">| Classe: {{ etudiant.nomClasse }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="searchPerformed && filteredEtudiants.length === 0" class="no-results">
+        Aucun étudiant trouvé avec ces critères de recherche.
+      </div>
+    </div>
+
+    <!-- Formulaire de demande de document -->
+    <form [formGroup]="documentForm" (ngSubmit)="submitDocument()" *ngIf="selectedEtudiant">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="type">Type de document</label>
+          <select id="type" formControlName="type" class="form-control">
+            <option *ngFor="let type of typeOptions" [value]="type">
+              {{ formatDocumentType(type) }}
+            </option>
+          </select>
+          <div *ngIf="documentForm.get('type')?.invalid && documentForm.get('type')?.touched" class="error-message">
+            Le type de document est requis
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group full-width">
+          <label for="commentaire">Commentaire (optionnel)</label>
+          <textarea id="commentaire" formControlName="commentaire" class="form-control" placeholder="Commentaire ou informations supplémentaires"></textarea>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group student-info">
+          <label>Étudiant sélectionné</label>
+          <div class="selected-student">
+            <span class="student-name">{{ selectedEtudiant.nom }} {{ selectedEtudiant.prenom }}</span>
+            <span class="student-id">{{ selectedEtudiant.numeroEtudiant }}</span>
+            <span *ngIf="selectedEtudiant.nomClasse" class="student-class">{{ selectedEtudiant.nomClasse }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="documentForm.invalid">
+          Soumettre la demande
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="resetDocumentForm()">Réinitialiser</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Tableau des demandes de documents -->
+  <div class="documents-table">
+    <h2>Liste des demandes de documents</h2>
+    <div *ngIf="documents.length === 0" class="no-data">
+      Aucune demande de document trouvée.
+    </div>
+
+    <table mat-table [dataSource]="documents" class="mat-elevation-z8" *ngIf="documents.length > 0">
+      <!-- ID Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let document">{{ document.id }}</td>
+      </ng-container>
+
+      <!-- Étudiant Column -->
+      <ng-container matColumnDef="nomEtudiant">
+        <th mat-header-cell *matHeaderCellDef>Étudiant</th>
+        <td mat-cell *matCellDef="let document">{{ document.nomEtudiant }}</td>
+      </ng-container>
+
+      <!-- Type Column -->
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef>Type</th>
+        <td mat-cell *matCellDef="let document">{{ formatDocumentType(document.type) }}</td>
+      </ng-container>
+
+      <!-- Date Création Column -->
+      <ng-container matColumnDef="dateCreation">
+        <th mat-header-cell *matHeaderCellDef>Date de création</th>
+        <td mat-cell *matCellDef="let document">{{ document.dateCreation}}</td>
+      </ng-container>
+
+      <!-- Statut Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Statut</th>
+        <td mat-cell *matCellDef="let document">
+          <span class="status-badge" [ngClass]="getStatusClass(document.status)">
+            {{ formatDocumentStatus(document.status) }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let document">
+          <div class="action-buttons">
+            <button
+              class="btn-icon btn-status"
+              (click)="updateDocumentStatus(document.id, getNextStatus(document.status))"
+              *ngIf="document.status !== 'ARCHIVE'"
+              title="Passer au statut suivant">
+              <i class="pi pi-arrow-right"></i>
+            </button>
+            <button class="btn-icon btn-delete" (click)="deleteDocument(document.id)" title="Supprimer">
+              <i class="pi pi-trash"></i>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+</div>

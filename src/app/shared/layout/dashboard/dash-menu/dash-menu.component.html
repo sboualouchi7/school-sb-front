@@ -78,5 +78,14 @@
         <p [ngClass]="{ 'active-p': isLinkActive('/dashboard/admin/absences') }">Absences</p>
       </a>
     </li>
+    <li>
+      <a
+        routerLink="/dashboard/admin/documents"
+        (click)="setActiveLink('/dashboard/admin/documents')"
+        [ngClass]="{ 'active': isLinkActive('/dashboard/admin/documents') }">
+        <i class="pi pi-calendar-times"></i>
+        <p [ngClass]="{ 'active-p': isLinkActive('/dashboard/admin/documents') }">Absences</p>
+      </a>
+    </li>
   </ul>
 </div>

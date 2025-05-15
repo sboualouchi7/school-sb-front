@@ -6,7 +6,9 @@ import { AbsenceRequest } from '../dto/absence/absence-request';
 import { AbsenceResponse } from '../dto/absence/absence-response';
 import { EtudiantResponse } from '../dto/etudiant/etudiant-response';
 import { ApiResponse } from '../dto/common/api-response';
-
+// First, modify the AbsenceService.getEtudiantsByModuleClasse method to add better error handling
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class AbsenceService {
   private apiUrl = `${environment.apiUrl}/absences`;
@@ -52,11 +54,27 @@ export class AbsenceService {
   }
 
   // Vérifiez cette méthode en particulier
+  // src/app/core/services/absence.service.ts
+
   getEtudiantsByModuleClasse(moduleId: number, classeId: number, enseignantId: number) {
+    console.log(`Fetching students for module ${moduleId}, class ${classeId}, teacher ${enseignantId}`);
+
     // Vérifiez que cette URL correspond à votre API backend
     return this.http.get<ApiResponse<EtudiantResponse[]>>(
       `${environment.apiUrl}/absences/module/${moduleId}/classe/${classeId}/etudiants`,
       { params: { enseignantId: enseignantId.toString() } }
+    ).pipe(
+      catchError(error => {
+        console.error('Error fetching students by module and class:', error);
+
+        // Return a properly formatted empty response instead of throwing an error
+        return of({
+          success: false,
+          message: 'Failed to fetch students: ' + (error.status === 401 ? 'Authorization error' : 'Server error'),
+          data: [],
+          errors: []
+        });
+      })
     );
   }
 

@@ -13,7 +13,6 @@ import { ClasseResponse } from '../../../../../core/dto/classe/classe-response';
 })
 export class SelectionClasseComponent implements OnInit {
   @Input() moduleId!: number;
-  @Input() enseignantId!: number;
   @Output() classeSelectionnee = new EventEmitter<ClasseResponse>();
   @Output() retour = new EventEmitter<void>();
 
@@ -31,7 +30,8 @@ export class SelectionClasseComponent implements OnInit {
     this.isLoading = true;
     this.error = null;
 
-    this.moduleService.getClassesByModuleAndEnseignant(this.moduleId, this.enseignantId).subscribe({
+    // Modifier pour utiliser un nouvel endpoint si nécessaire
+    this.moduleService.getClassesByModule(this.moduleId).subscribe({
       next: (response) => {
         if (response.success) {
           this.classes = response.data;

@@ -1,5 +1,5 @@
 // features/dashboard/enseignant/gestion-absences/gestion-absences.component.ts
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SelectionModuleComponent } from './selection-module/selection-module.component';
 import { SelectionClasseComponent } from './selection-classe/selection-classe.component';
@@ -19,24 +19,13 @@ import { ClasseResponse } from '../../../../core/dto/classe/classe-response';
   templateUrl: './gestion-absences.component.html',
   styleUrls: ['./gestion-absences.component.css']
 })
-export class GestionAbsencesComponent implements OnInit {
+export class GestionAbsencesComponent {
   // Étape actuelle du workflow
   etapeActuelle: 'module' | 'classe' | 'etudiants' = 'module';
 
   // Données sélectionnées
   moduleSelectionne: ModuleResponse | null = null;
   classeSelectionnee: ClasseResponse | null = null;
-
-  // Référence à l'enseignant connecté (sera récupérée via le service d'authentification)
-  enseignantId: number | null = null;
-
-  constructor() {}
-
-  ngOnInit(): void {
-    // Récupération de l'ID de l'enseignant (à implémenter avec le service d'authentification)
-    // this.enseignantId = this.authService.getCurrentUserId();
-    this.enseignantId = 1; // Valeur temporaire pour le développement
-  }
 
   // Méthode appelée lorsqu'un module est sélectionné
   onModuleSelectionne(module: ModuleResponse): void {

@@ -32,10 +32,16 @@ export class ModuleService {
     return this.http.get<ApiResponse<ModuleResponse[]>>(`${this.apiUrl}/enseignant/${enseignantId}`);
   }
 
+
   createModule(module: ModuleRequest): Observable<ApiResponse<ModuleResponse>> {
     return this.http.post<ApiResponse<ModuleResponse>>(`${this.apiUrl}`, module);
   }
-
+  getMesModules(): Observable<ApiResponse<ModuleResponse[]>> {
+    return this.http.get<ApiResponse<ModuleResponse[]>>(`${this.apiUrl}/mes-modules`);
+  }
+  getClassesByModule(moduleId: number): Observable<ApiResponse<ClasseResponse[]>> {
+    return this.http.get<ApiResponse<ClasseResponse[]>>(`${this.apiUrl}/module/${moduleId}/classes`);
+  }
   updateModule(id: number, module: ModuleRequest): Observable<ApiResponse<ModuleResponse>> {
     return this.http.put<ApiResponse<ModuleResponse>>(`${this.apiUrl}/${id}`, module);
   }

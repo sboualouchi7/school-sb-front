@@ -80,12 +80,7 @@ export class DashMenuComponent implements OnInit {
         icon: 'pi pi-user',
         roles: [Role.ADMIN]
       },
-      {
-        label: 'Sessions',
-        path: '/dashboard/admin/session',
-        icon: 'pi pi-calendar',
-        roles: [Role.ADMIN]
-      },
+
       {
         label: 'Évaluations',
         path: '/dashboard/admin/evaluations',

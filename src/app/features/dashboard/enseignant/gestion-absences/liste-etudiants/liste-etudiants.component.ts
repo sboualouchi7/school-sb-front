@@ -16,7 +16,6 @@ import { AbsenceRequest } from '../../../../../core/dto/absence/absence-request'
 export class ListeEtudiantsComponent implements OnInit {
   @Input() moduleId!: number;
   @Input() classeId!: number;
-  @Input() enseignantId!: number;
   @Output() retour = new EventEmitter<void>();
 
   etudiants: EtudiantResponse[] = [];
@@ -47,7 +46,7 @@ export class ListeEtudiantsComponent implements OnInit {
     this.isLoading = true;
     this.error = null;
 
-    this.absenceService.getEtudiantsByModuleClasse(this.moduleId, this.classeId, this.enseignantId).subscribe({
+    this.absenceService.getEtudiantsByModuleClasse(this.moduleId, this.classeId).subscribe({
       next: (response) => {
         if (response.success) {
           this.etudiants = response.data;
@@ -115,7 +114,7 @@ export class ListeEtudiantsComponent implements OnInit {
     }));
 
     // Envoyer les absences au backend
-    this.absenceService.createBulk(absenceRequests, this.enseignantId).subscribe({
+    this.absenceService.createBulk(absenceRequests).subscribe({
       next: (response) => {
         if (response.success) {
           this.successMessage = `${absenceRequests.length} absence(s) enregistrée(s) avec succès`;

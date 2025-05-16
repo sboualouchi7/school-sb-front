@@ -150,7 +150,7 @@ export class AbsenceManagementComponent implements OnInit {
     this.absenceService.getEtudiantsByModuleClasse(
       this.selectedModuleId,
       this.selectedClasseId,
-      enseignantId
+
     ).subscribe({
       next: (response) => {
         console.log('Response from getEtudiantsByModuleClasse:', response);

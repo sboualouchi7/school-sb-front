@@ -1,5 +1,5 @@
 // features/dashboard/enseignant/gestion-absences/selection-module/selection-module.component.ts
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ModuleService } from '../../../../../core/services/module.service';
 import { ModuleResponse } from '../../../../../core/dto/module/module-response';
@@ -12,7 +12,6 @@ import { ModuleResponse } from '../../../../../core/dto/module/module-response';
   styleUrls: ['./selection-module.component.css']
 })
 export class SelectionModuleComponent implements OnInit {
-  @Input() enseignantId!: number;
   @Output() moduleSelectionne = new EventEmitter<ModuleResponse>();
 
   modules: ModuleResponse[] = [];
@@ -29,10 +28,12 @@ export class SelectionModuleComponent implements OnInit {
     this.isLoading = true;
     this.error = null;
 
-    this.moduleService.getModulesByEnseignant(this.enseignantId).subscribe({
+    // Utiliser la nouvelle méthode qui récupère les modules de l'enseignant connecté
+    this.moduleService.getMesModules().subscribe({
       next: (response) => {
         if (response.success) {
           this.modules = response.data;
+          console.log('Modules chargés:', this.modules);
         } else {
           this.error = response.message || 'Erreur lors du chargement des modules';
         }

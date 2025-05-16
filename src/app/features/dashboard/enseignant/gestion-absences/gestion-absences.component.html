@@ -31,7 +31,6 @@
     <!-- Étape 1: Sélection du module -->
     <app-selection-module
       *ngIf="etapeActuelle === 'module'"
-      [enseignantId]="enseignantId!"
       (moduleSelectionne)="onModuleSelectionne($event)">
     </app-selection-module>
 
@@ -39,7 +38,6 @@
     <app-selection-classe
       *ngIf="etapeActuelle === 'classe' && moduleSelectionne"
       [moduleId]="moduleSelectionne.id"
-      [enseignantId]="enseignantId!"
       (classeSelectionnee)="onClasseSelectionnee($event)"
       (retour)="retourEtapePrecedente()">
     </app-selection-classe>
@@ -49,7 +47,6 @@
       *ngIf="etapeActuelle === 'etudiants' && moduleSelectionne && classeSelectionnee"
       [moduleId]="moduleSelectionne.id"
       [classeId]="classeSelectionnee.id"
-      [enseignantId]="enseignantId!"
       (retour)="retourEtapePrecedente()">
     </app-liste-etudiants>
   </div>

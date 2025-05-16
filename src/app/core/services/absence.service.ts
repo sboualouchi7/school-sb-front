@@ -56,18 +56,15 @@ export class AbsenceService {
   // Vérifiez cette méthode en particulier
   // src/app/core/services/absence.service.ts
 
-  getEtudiantsByModuleClasse(moduleId: number, classeId: number, enseignantId: number) {
-    console.log(`Fetching students for module ${moduleId}, class ${classeId}, teacher ${enseignantId}`);
+  // core/services/absence.service.ts
 
-    // Vérifiez que cette URL correspond à votre API backend
+// Méthode pour récupérer les étudiants par module et classe
+  getEtudiantsByModuleClasse(moduleId: number, classeId: number) {
     return this.http.get<ApiResponse<EtudiantResponse[]>>(
-      `${environment.apiUrl}/absences/module/${moduleId}/classe/${classeId}/etudiants`,
-      { params: { enseignantId: enseignantId.toString() } }
+      `${this.apiUrl}/module/${moduleId}/classe/${classeId}/etudiants`
     ).pipe(
       catchError(error => {
         console.error('Error fetching students by module and class:', error);
-
-        // Return a properly formatted empty response instead of throwing an error
         return of({
           success: false,
           message: 'Failed to fetch students: ' + (error.status === 401 ? 'Authorization error' : 'Server error'),
@@ -78,9 +75,9 @@ export class AbsenceService {
     );
   }
 
-  createBulk(data: AbsenceRequest[], enseignantId: number): Observable<ApiResponse<AbsenceResponse[]>> {
-    return this.http.post<ApiResponse<AbsenceResponse[]>>(`${this.apiUrl}/bulk`, data, {
-      params: { enseignantId }
-    });
+// Méthode pour créer des absences en bloc
+  createBulk(data: AbsenceRequest[]): Observable<ApiResponse<AbsenceResponse[]>> {
+    return this.http.post<ApiResponse<AbsenceResponse[]>>(`${this.apiUrl}/bulk`, data);
   }
+
 }

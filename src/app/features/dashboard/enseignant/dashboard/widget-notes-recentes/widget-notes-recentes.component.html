@@ -1,0 +1,39 @@
+<!-- features/dashboard/enseignant/dashboard/widget-notes-recentes/widget-notes-recentes.component.html -->
+<div class="widget-notes-recentes">
+  <div class="widget-header">
+    <h3>Notes récentes</h3>
+    <a [routerLink]="['/dashboard/enseignant/notes']" class="voir-tout">Voir tout</a>
+  </div>
+
+  <div *ngIf="isLoading" class="loading">
+    <p><i class="pi pi-spin pi-spinner"></i> Chargement...</p>
+  </div>
+
+  <div *ngIf="error" class="error">
+    <p>{{ error }}</p>
+  </div>
+
+  <div *ngIf="!isLoading && !error && notesRecentes.length === 0" class="no-data">
+    <p>Aucune note récente</p>
+  </div>
+
+  <div *ngIf="!isLoading && !error && notesRecentes.length > 0" class="notes-list">
+    <div *ngFor="let note of notesRecentes" class="note-item">
+      <div class="note-value">{{ note.note }}/20</div>
+      <div class="note-details">
+        <div class="note-etudiant">{{ note.nomEtudiant }}</div>
+        <div class="note-module">{{ note.libelleModule }}</div>
+        <div class="note-date">{{ note.dateEvaluation }}</div>
+      </div>
+      <div class="note-type" [ngClass]="note.type.toLowerCase()">
+        {{ note.type.replace('_', ' ') }}
+      </div>
+    </div>
+  </div>
+
+  <div class="widget-footer">
+    <a [routerLink]="['/dashboard/enseignant/notes']" class="btn-saisir-notes">
+      <i class="pi pi-pencil"></i> Saisir des notes
+    </a>
+  </div>
+</div>

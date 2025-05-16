@@ -196,4 +196,62 @@ export class EvaluationService {
   private formatTitreEvaluation(type: string): string {
     return type.replace('_', ' ').toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
   }
+  // Ajoutez ces méthodes à votre service EvaluationService existant
+
+  /**
+   * Valide une évaluation (marquage administratif)
+   * @param id ID de l'évaluation
+   * @param validation État de validation (true/false)
+   */
+  valider(id: number, validation: boolean): Observable<ApiResponse<EvaluationResponse>> {
+    return this.http.patch<ApiResponse<EvaluationResponse>>(`${this.apiUrl}/${id}/validation`, { estValidee: validation });
+  }
+
+  /**
+   * Supprime plusieurs évaluations en une seule opération
+   * @param ids Liste des IDs d'évaluations à supprimer
+   */
+  deleteBulk(ids: number[]): Observable<ApiResponse<void>> {
+    return this.http.post<ApiResponse<void>>(`${this.apiUrl}/delete-bulk`, { ids });
+  }
+  // Ajoutez ces méthodes à votre service EvaluationService existant (core/services/evaluation.service.ts)
+
+  /**
+   * Récupère les évaluations par classe
+   * @param classeId ID de la classe
+   */
+  getByClasse(classeId: number): Observable<ApiResponse<EvaluationResponse[]>> {
+    return this.http.get<ApiResponse<EvaluationResponse[]>>(`${this.apiUrl}/classe/${classeId}`);
+  }
+
+  /**
+   * Récupère les évaluations par module et session
+   * @param moduleId ID du module
+   * @param sessionId ID de la session
+   */
+  getByModuleAndSession(moduleId: number, sessionId: number): Observable<ApiResponse<EvaluationResponse[]>> {
+    return this.http.get<ApiResponse<EvaluationResponse[]>>(`${this.apiUrl}/module/${moduleId}/session/${sessionId}`);
+  }
+
+  /**
+   * Récupère les évaluations par étudiant, module et session
+   * @param etudiantId ID de l'étudiant
+   * @param moduleId ID du module
+   * @param sessionId ID de la session
+   */
+  getByEtudiantAndModule(etudiantId: number, moduleId: number, sessionId?: number): Observable<ApiResponse<EvaluationResponse[]>> {
+    let url = `${this.apiUrl}/etudiant/${etudiantId}/module/${moduleId}`;
+    if (sessionId) {
+      url += `/session/${sessionId}`;
+    }
+    return this.http.get<ApiResponse<EvaluationResponse[]>>(url);
+  }
+
+  /**
+   * Création en masse d'évaluations
+   * @param evaluations Liste des évaluations à créer
+   */
+  createBulk(evaluations: EvaluationRequest[]): Observable<ApiResponse<EvaluationResponse[]>> {
+    return this.http.post<ApiResponse<EvaluationResponse[]>>(`${this.apiUrl}/bulk`, evaluations);
+  }
 }

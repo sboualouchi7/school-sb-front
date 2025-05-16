@@ -1,0 +1,333 @@
+/* features/dashboard/enseignant/gestion-notes/tableau-notes/tableau-notes.component.css */
+.tableau-notes-container {
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header h2 {
+  font-size: 20px;
+  color: var(--text-color);
+  font-weight: 600;
+  margin-left: 15px;
+}
+
+.btn-back {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.btn-back:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.btn-back i {
+  margin-right: 5px;
+}
+
+.loading-message,
+.error-message,
+.success-message,
+.no-data {
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.loading-message {
+  background-color: rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-message i {
+  margin-right: 10px;
+  font-size: 18px;
+}
+
+.error-message {
+  background-color: rgba(244, 67, 54, 0.1);
+  color: #f44336;
+}
+
+.success-message {
+  background-color: rgba(76, 175, 80, 0.1);
+  color: #4CAF50;
+}
+
+.btn-retry {
+  background-color: var(--color-primary);
+  color: var(--text-color);
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+/* Section d'ajout de colonne */
+.add-column-section {
+  background-color: var(--primary-color);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.add-column-section h3 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: var(--text-color);
+}
+
+.add-column-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: flex-end;
+}
+
+.form-group {
+  flex: 1;
+  min-width: 200px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+.form-control {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  background-color: var(--primary-color);
+  color: var(--text-color);
+}
+
+.btn-add-column {
+  background-color: var(--color-primary);
+  color: var(--text-color);
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.btn-add-column i {
+  font-size: 16px;
+}
+
+/* Section du tableau des notes */
+.notes-table-section {
+  background-color: var(--primary-color);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.notes-table-section h3 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: var(--text-color);
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.notes-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.notes-table th, .notes-table td {
+  border: 1px solid var(--color-border);
+  padding: 12px;
+  text-align: center;
+}
+
+.notes-table th {
+  background-color: var(--hover-bg);
+  color: var(--hover-color);
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.notes-table tr:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.notes-table tr:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.etudiant-col {
+  min-width: 200px;
+  text-align: left;
+}
+
+.note-col {
+  min-width: 120px;
+}
+
+.moyenne-col {
+  min-width: 100px;
+}
+
+.etudiant-cell {
+  text-align: left;
+}
+
+.etudiant-nom {
+  font-weight: 500;
+}
+
+.etudiant-numero {
+  font-size: 12px;
+  color: var(--text-color);
+  opacity: 0.7;
+}
+
+.colonne-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.colonne-title {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.colonne-date {
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+
+.colonne-coef {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.btn-delete-col {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 12px;
+  opacity: 0.7;
+  transition: opacity 0.3s;
+}
+
+.btn-delete-col:hover {
+  opacity: 1;
+}
+
+.note-cell {
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.note-cell:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.note-cell.editing {
+  background-color: rgba(33, 150, 243, 0.1);
+}
+
+.note-display {
+  font-weight: 500;
+}
+
+.no-note, .no-moyenne {
+  opacity: 0.5;
+}
+
+.note-edit-mode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.note-input {
+  width: 60px;
+  padding: 8px;
+  text-align: center;
+  border: 1px solid var(--color-primary);
+  border-radius: 4px;
+}
+
+.edit-buttons {
+  display: flex;
+  gap: 5px;
+}
+
+.btn-save, .btn-cancel {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.btn-save {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.btn-cancel {
+  background-color: #f44336;
+  color: white;
+}
+
+.moyenne-cell {
+  font-weight: 600;
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+@media (max-width: 992px) {
+  .add-column-form {
+    flex-direction: column;
+  }
+
+  .form-group {
+    width: 100%;
+  }
+}

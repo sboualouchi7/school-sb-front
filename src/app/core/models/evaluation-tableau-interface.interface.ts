@@ -5,6 +5,7 @@ export interface EtudiantAvecNotes {
   prenom: string;
   numeroEtudiant: string;
   notes: Record<string, EvaluationTableau>;
+
 }
 
 export interface EvaluationTableau {
@@ -12,7 +13,8 @@ export interface EvaluationTableau {
   etudiantId: number;
   note: number | null;
   estModifiee: boolean; // Pour suivre si une note a été modifiée
-  estNouvelle: boolean; // Pour suivre si c'est une nouvelle note
+  estNouvelle: boolean;
+  commentaire?: string;// Pour suivre si c'est une nouvelle note
 }
 
 export interface ColonneEvaluation {

@@ -1,1 +1,144 @@
-<p>tableau-notes works!</p>
+<!-- features/dashboard/enseignant/gestion-notes/tableau-notes/tableau-notes.component.html -->
+<div class="tableau-notes-container">
+  <div class="header">
+    <button class="btn-back" (click)="retourSelectionClasse()">
+      <i class="pi pi-arrow-left"></i> Retour
+    </button>
+    <h2>Saisie des notes</h2>
+  </div>
+
+  <!-- Messages d'état -->
+  <div *ngIf="isLoading" class="loading-message">
+    <p><i class="pi pi-spin pi-spinner"></i> Chargement des données...</p>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    <p><i class="pi pi-exclamation-triangle"></i> {{ error }}</p>
+    <button (click)="chargerTableauNotes()" class="btn-retry">Réessayer</button>
+  </div>
+
+  <div *ngIf="successMessage" class="success-message">
+    <p><i class="pi pi-check-circle"></i> {{ successMessage }}</p>
+  </div>
+
+  <!-- Partie principale - Tableau de notes -->
+  <div *ngIf="!isLoading && !error" class="notes-content">
+    <!-- Section d'ajout de colonne -->
+    <div class="add-column-section">
+      <h3>Ajouter une évaluation</h3>
+      <div class="add-column-form">
+        <div class="form-group">
+          <label for="type">Type d'évaluation:</label>
+          <select id="type" [(ngModel)]="nouveauType" class="form-control">
+            <option value="" disabled>Sélectionnez un type</option>
+            <option *ngFor="let type of typesEvaluation" [value]="type">
+              {{ formatTitreEvaluation(type) }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="date">Date:</label>
+          <input type="date" id="date" [(ngModel)]="nouvelleDate" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label for="coefficient">Coefficient:</label>
+          <input type="number" id="coefficient" [(ngModel)]="nouveauCoefficient" min="1" max="10" class="form-control">
+        </div>
+
+        <button (click)="ajouterColonne()" class="btn-add-column">
+          <i class="pi pi-plus"></i> Ajouter
+        </button>
+      </div>
+    </div>
+
+    <!-- Tableau des notes -->
+    <div class="notes-table-section">
+      <h3>Tableau des notes</h3>
+
+      <div class="table-responsive">
+        <table class="notes-table">
+          <thead>
+          <tr>
+            <th class="etudiant-col">Étudiant</th>
+
+            <!-- Colonnes dynamiques pour les évaluations -->
+            <th *ngFor="let colonne of colonnes" class="note-col">
+              <div class="colonne-header">
+                <div class="colonne-title">{{ colonne.titre }}</div>
+                <div class="colonne-date">{{ colonne.date }}</div>
+                <div class="colonne-coef">Coefficient: {{ colonne.coefficient }}</div>
+                <button class="btn-delete-col" (click)="supprimerColonne(colonne.id)" title="Supprimer cette colonne">
+                  <i class="pi pi-trash"></i>
+                </button>
+              </div>
+            </th>
+
+            <th class="moyenne-col">Moyenne</th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <tr *ngFor="let etudiant of etudiants">
+            <td class="etudiant-cell">
+              <div class="etudiant-nom">{{ etudiant.nom }} {{ etudiant.prenom }}</div>
+              <div class="etudiant-numero">{{ etudiant.numeroEtudiant }}</div>
+            </td>
+
+            <!-- Cellules de notes dynamiques -->
+            <td *ngFor="let colonne of colonnes" class="note-cell"
+                [class.editing]="editingCell && editingCell.etudiantId === etudiant.id && editingCell.colonneId === colonne.id"
+                (click)="editCell(etudiant.id, colonne.id, etudiant.notes[colonne.id]?.note)">
+
+              <!-- Mode édition -->
+              <div *ngIf="editingCell && editingCell.etudiantId === etudiant.id && editingCell.colonneId === colonne.id"
+                   class="note-edit-mode">
+                <input type="number" [(ngModel)]="nouvelleNote" min="0" max="20" step="0.5" class="note-input"
+                       (mousedown)="$event.stopPropagation()"
+                       (keydown.enter)="sauvegarderNote(etudiant, colonne.id)"
+                       (keydown.escape)="annulerEdition()">
+
+                <div class="edit-buttons">
+                  <button class="btn-save" (click)="sauvegarderNote(etudiant, colonne.id)">
+                    <i class="pi pi-check"></i>
+                  </button>
+                  <button class="btn-cancel" (click)="annulerEdition()">
+                    <i class="pi pi-times"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Mode affichage -->
+              <div *ngIf="!editingCell || editingCell.etudiantId !== etudiant.id || editingCell.colonneId !== colonne.id"
+                   class="note-display">
+                  <span *ngIf="etudiant.notes[colonne.id]?.note !== null">
+                    {{ etudiant.notes[colonne.id]?.note }}
+                  </span>
+                <span *ngIf="etudiant.notes[colonne.id]?.note === null" class="no-note">
+                    -
+                  </span>
+              </div>
+            </td>
+
+            <!-- Cellule de moyenne -->
+            <td class="moyenne-cell">
+                <span *ngIf="calculerMoyenne(etudiant) !== null">
+                  {{ calculerMoyenne(etudiant) }}
+                </span>
+              <span *ngIf="calculerMoyenne(etudiant) === null" class="no-moyenne">
+                  -
+                </span>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Message si pas d'étudiants -->
+      <div *ngIf="etudiants.length === 0" class="no-data">
+        <p>Aucun étudiant trouvé dans cette classe.</p>
+      </div>
+    </div>
+  </div>
+</div>

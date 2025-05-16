@@ -1,0 +1,53 @@
+<!-- features/dashboard/enseignant/gestion-notes/gestion-notes.component.html -->
+<div class="container">
+  <div class="header">
+    <h1>Gestion des Notes</h1>
+
+    <!-- Navigation entre les étapes -->
+    <div class="breadcrumb">
+      <span
+        [class.active]="etapeActuelle === 'module'"
+        (click)="etapeActuelle = 'module'; moduleSelectionne = null; classeSelectionnee = null">
+        Sélection du module
+      </span>
+      <span *ngIf="moduleSelectionne"> > </span>
+      <span
+        *ngIf="moduleSelectionne"
+        [class.active]="etapeActuelle === 'classe'"
+        (click)="etapeActuelle = 'classe'; classeSelectionnee = null">
+        Sélection de la classe
+      </span>
+      <span *ngIf="classeSelectionnee"> > </span>
+      <span
+        *ngIf="classeSelectionnee"
+        [class.active]="etapeActuelle === 'notes'">
+        Saisie des notes
+      </span>
+    </div>
+  </div>
+
+  <!-- Contenu en fonction de l'étape actuelle -->
+  <div class="content">
+    <!-- Étape 1: Sélection du module -->
+    <app-selection-module
+      *ngIf="etapeActuelle === 'module'"
+      (moduleSelectionne)="onModuleSelectionne($event)">
+    </app-selection-module>
+
+    <!-- Étape 2: Sélection de la classe -->
+    <app-selection-classe
+      *ngIf="etapeActuelle === 'classe' && moduleSelectionne"
+      [moduleId]="moduleSelectionne.id"
+      (classeSelectionnee)="onClasseSelectionnee($event)"
+      (retour)="retourEtapePrecedente()">
+    </app-selection-classe>
+
+    <!-- Étape 3: Tableau de saisie des notes -->
+    <app-tableau-notes
+      *ngIf="etapeActuelle === 'notes' && moduleSelectionne && classeSelectionnee"
+      [moduleId]="moduleSelectionne.id"
+      [classeId]="classeSelectionnee.id"
+      (retour)="retourEtapePrecedente()">
+    </app-tableau-notes>
+  </div>
+</div>

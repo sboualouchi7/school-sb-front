@@ -1,6 +1,7 @@
 // features/dashboard/enseignant/enseignant.routes.ts
 import { Routes } from '@angular/router';
 import { GestionAbsencesComponent } from './gestion-absences/gestion-absences.component';
+import { GestionNotesComponent } from './gestion-notes/gestion-notes.component';
 
 export const ENSEIGNANT_ROUTES: Routes = [
   {
@@ -11,6 +12,9 @@ export const ENSEIGNANT_ROUTES: Routes = [
   {
     path: 'absences',
     component: GestionAbsencesComponent
+  },
+  {
+    path: 'notes',
+    component: GestionNotesComponent
   }
-  // Vous pouvez ajouter d'autres routes pour les fonctionnalités à venir
 ];

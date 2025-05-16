@@ -1,11 +1,11 @@
 <!-- evaluation-list.component.html -->
 <div class="cont">
   <h2>Liste des Évaluations</h2>
-  
+
   <div *ngIf="evaluations.length === 0" class="no-data">
     <p>Aucune évaluation disponible. Veuillez sélectionner un module et une classe, ou ajouter une nouvelle évaluation.</p>
   </div>
-  
+
   <table mat-table [dataSource]="evaluations" matSort class="mat-elevation-z8" *ngIf="evaluations.length > 0">
     <!-- ID Column -->
     <ng-container matColumnDef="id">
@@ -34,7 +34,7 @@
     <!-- Date Column -->
     <ng-container matColumnDef="dateEvaluation">
       <th mat-header-cell id="th" *matHeaderCellDef mat-sort-header> Date </th>
-      <td mat-cell *matCellDef="let evaluation"> {{ evaluation.dateEvaluation | date:'dd/MM/yyyy' }} </td>
+      <td mat-cell *matCellDef="let evaluation"> {{ evaluation.dateEvaluation  }} </td>
     </ng-container>
 
     <!-- Note Column -->

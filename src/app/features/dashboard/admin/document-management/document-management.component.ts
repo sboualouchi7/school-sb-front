@@ -39,7 +39,8 @@ export class DocumentManagementComponent implements OnInit {
   statusOptions = Object.values(StatusDocument);
   typeOptions = Object.values(TypeDocument);
 
-  displayedColumns: string[] = ['id', 'nomEtudiant', 'type', 'dateCreation', 'status', 'actions'];
+  displayedColumns: string[] = ['id', 'nomEtudiant', 'type', 'dateCreation', 'commentaire', 'status', 'actions'];
+
   searchPerformed = false;
 
   constructor(

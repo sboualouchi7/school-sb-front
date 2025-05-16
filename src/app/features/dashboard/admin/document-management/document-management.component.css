@@ -230,6 +230,7 @@ textarea.form-control {
 /* Styles du tableau */
 .documents-table {
   margin-top: 20px;
+  overflow-x: auto;
 }
 
 .documents-table h2 {

@@ -1,15 +1,91 @@
+<div class="container">
+  <h1 class="page-title">Gestion des Absences</h1>
 
-<!--<div class="main">-->
-<!--    <div class="main-wrapper">-->
-<!--        <div class="first-section">-->
-<!--            <div class="insert-absence">-->
-<!--                <app-dash-admin-insert-absence></app-dash-admin-insert-absence>-->
-<!--            </div>-->
+  <!-- Notification -->
+  <div *ngIf="showFeedback" class="notification" [ngClass]="feedbackType">
+    {{ feedback }}
+  </div>
 
-<!--            <div class="absence">-->
-<!--                &lt;!&ndash; <app-dash-admin-get-profs></app-dash-admin-get-profs> &ndash;&gt;-->
-<!--                <app-dash-admin-get-absences></app-dash-admin-get-absences>-->
-<!--            </div> -->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
+  <!-- Formulaire de sélection -->
+  <div class="selection-section">
+    <form [formGroup]="selectionForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="moduleId">Module</label>
+          <select id="moduleId" formControlName="moduleId" class="form-control">
+            <option value="" disabled>Sélectionnez un module</option>
+            <option *ngFor="let module of modules" [value]="module.id">
+              {{ module.libelle }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="classeId">Classe</label>
+          <select id="classeId" formControlName="classeId" class="form-control" [disabled]="!selectionForm.get('moduleId')?.value">
+            <option value="" disabled>Sélectionnez une classe</option>
+            <option *ngFor="let classe of classes" [value]="classe.id">
+              {{ classe.nom }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="seanceId">Séance</label>
+          <select id="seanceId" formControlName="seanceId" class="form-control" [disabled]="!selectionForm.get('classeId')?.value">
+            <option value="" disabled>Sélectionnez une séance</option>
+            <option *ngFor="let seance of seances" [value]="seance.id">
+              {{ seance.numeroSeance }} - {{ seance.date }} ({{ seance.heureDebut }}-{{ seance.heureFin }})
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="date">Date</label>
+          <input type="date" id="date" formControlName="date" class="form-control">
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Liste des étudiants -->
+  <div class="students-list" *ngIf="etudiants.length > 0">
+    <h2>Liste des étudiants</h2>
+    <p class="info-text">Cochez les étudiants absents (par défaut, tous les étudiants sont considérés présents)</p>
+
+    <div class="student-grid">
+      <div *ngFor="let etudiant of etudiants" class="student-card" [ngClass]="{'absent': !etudiantPresence[etudiant.id]}">
+        <div class="student-info">
+          <h3>{{ etudiant.nom }} {{ etudiant.prenom }}</h3>
+          <p>{{ etudiant.numeroEtudiant }}</p>
+        </div>
+        <div class="presence-toggle">
+          <label class="switch">
+            <input type="checkbox" [checked]="!etudiantPresence[etudiant.id]" (change)="togglePresence(etudiant.id)">
+            <span class="slider"></span>
+          </label>
+          <span class="status-text">{{ etudiantPresence[etudiant.id] ? 'Présent' : 'Absent' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-buttons">
+      <button class="btn btn-primary" (click)="saveAbsences()" [disabled]="isLoading || !selectionForm.valid">
+        <i class="pi pi-save"></i> Enregistrer les absences
+      </button>
+      <button class="btn btn-secondary" (click)="resetForm()">
+        <i class="pi pi-refresh"></i> Réinitialiser
+      </button>
+    </div>
+  </div>
+
+  <!-- Indicateur de chargement -->
+  <div *ngIf="isLoading" class="loading-indicator">
+    <i class="pi pi-spin pi-spinner"></i> Chargement en cours...
+  </div>
+
+  <!-- Message si aucun étudiant -->
+  <div *ngIf="selectionForm.get('classeId')?.value && etudiants.length === 0 && !isLoading" class="no-data">
+    Aucun étudiant trouvé pour ce module et cette classe.
+  </div>
+</div>

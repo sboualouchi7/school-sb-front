@@ -5,6 +5,7 @@ import { authGuard } from './core/guards/auth.guard';
 import { Role } from './core/enums/Role';
 import {roleGuard} from "./core/guards/role.guard";
 import {DashboardComponent} from "./shared/layout/dashboard/dashboard.component";
+import { UnauthorizedComponent } from './shared/pages/unauthorized/unauthorized.component';
 
 export const routes: Routes = [
   {
@@ -51,5 +52,15 @@ export const routes: Routes = [
   {
     path: 'home',
     component: HomeComponent
-  }
+  },// app.routes.ts - Assurez-vous que cette route existe
+  {
+    path: 'dashboard/enseignant',
+    loadChildren: () =>
+      import('./features/dashboard/enseignant/enseignant.routes').then(m => m.ENSEIGNANT_ROUTES),
+    canActivate: [authGuard, roleGuard([Role.ENSEIGNANT])]
+  },
+  {
+    path: 'unauthorized',
+    component: UnauthorizedComponent
+  },
 ];

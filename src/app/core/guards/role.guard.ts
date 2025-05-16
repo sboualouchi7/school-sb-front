@@ -1,3 +1,4 @@
+// src/app/core/guards/role.guard.ts
 import { inject } from '@angular/core';
 import { Router, CanActivateFn } from '@angular/router';
 import { AuthService } from '../services/auth-service';
@@ -17,6 +18,7 @@ export const roleGuard = (allowedRoles: Role[]): CanActivateFn => {
       return true;
     }
 
+    // Rediriger vers la page unauthorized
     router.navigate(['/unauthorized']);
     return false;
   };

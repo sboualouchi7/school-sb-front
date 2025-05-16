@@ -1,0 +1,46 @@
+/* features/dashboard/enseignant/gestion-absences/gestion-absences.component.css */
+.container {
+  padding: 20px;
+  background: var(--background-color);
+  border-radius: 15px;
+  width: 100%;
+}
+
+.header {
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  font-size: 24px;
+  color: var(--color-primary);
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: var(--text-color);
+  opacity: 0.8;
+}
+
+.breadcrumb span {
+  margin: 0 5px;
+}
+
+.breadcrumb span.active {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.breadcrumb span:not(.active) {
+  cursor: pointer;
+}
+
+.content {
+  background: var(--primary-color);
+  border-radius: 10px;
+  padding: 20px;
+  min-height: 400px;
+}

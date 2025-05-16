@@ -1,0 +1,56 @@
+<!-- features/dashboard/enseignant/gestion-absences/gestion-absences.component.html -->
+<div class="container">
+  <div class="header">
+    <h1>Gestion des Absences</h1>
+
+    <!-- Navigation entre les étapes -->
+    <div class="breadcrumb">
+      <span
+        [class.active]="etapeActuelle === 'module'"
+        (click)="etapeActuelle = 'module'; moduleSelectionne = null; classeSelectionnee = null">
+        Sélection du module
+      </span>
+      <span *ngIf="moduleSelectionne"> > </span>
+      <span
+        *ngIf="moduleSelectionne"
+        [class.active]="etapeActuelle === 'classe'"
+        (click)="etapeActuelle = 'classe'; classeSelectionnee = null">
+        Sélection de la classe
+      </span>
+      <span *ngIf="classeSelectionnee"> > </span>
+      <span
+        *ngIf="classeSelectionnee"
+        [class.active]="etapeActuelle === 'etudiants'">
+        Gestion des absences
+      </span>
+    </div>
+  </div>
+
+  <!-- Contenu en fonction de l'étape actuelle -->
+  <div class="content">
+    <!-- Étape 1: Sélection du module -->
+    <app-selection-module
+      *ngIf="etapeActuelle === 'module'"
+      [enseignantId]="enseignantId!"
+      (moduleSelectionne)="onModuleSelectionne($event)">
+    </app-selection-module>
+
+    <!-- Étape 2: Sélection de la classe -->
+    <app-selection-classe
+      *ngIf="etapeActuelle === 'classe' && moduleSelectionne"
+      [moduleId]="moduleSelectionne.id"
+      [enseignantId]="enseignantId!"
+      (classeSelectionnee)="onClasseSelectionnee($event)"
+      (retour)="retourEtapePrecedente()">
+    </app-selection-classe>
+
+    <!-- Étape 3: Liste des étudiants et gestion des absences -->
+    <app-liste-etudiants
+      *ngIf="etapeActuelle === 'etudiants' && moduleSelectionne && classeSelectionnee"
+      [moduleId]="moduleSelectionne.id"
+      [classeId]="classeSelectionnee.id"
+      [enseignantId]="enseignantId!"
+      (retour)="retourEtapePrecedente()">
+    </app-liste-etudiants>
+  </div>
+</div>

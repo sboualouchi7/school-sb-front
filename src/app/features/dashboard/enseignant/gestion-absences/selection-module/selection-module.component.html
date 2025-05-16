@@ -1,0 +1,34 @@
+<!-- features/dashboard/enseignant/gestion-absences/selection-module/selection-module.component.html -->
+<div class="selection-module-container">
+  <h2>Sélectionnez un module</h2>
+
+  <!-- Affichage du chargement -->
+  <div *ngIf="isLoading" class="loading">
+    <p>Chargement des modules...</p>
+  </div>
+
+  <!-- Affichage de l'erreur -->
+  <div *ngIf="error" class="error-message">
+    <p>{{ error }}</p>
+    <button (click)="chargerModules()" class="btn-retry">Réessayer</button>
+  </div>
+
+  <!-- Liste des modules -->
+  <div *ngIf="!isLoading && !error && modules.length === 0" class="no-data">
+    <p>Aucun module n'est assigné à cet enseignant.</p>
+  </div>
+
+  <div *ngIf="!isLoading && !error && modules.length > 0" class="module-grid">
+    <div *ngFor="let module of modules" class="module-card" (click)="selectionnerModule(module)">
+      <div class="module-content">
+        <h3>{{ module.libelle }}</h3>
+        <p>Type: {{ module.typeModule }}</p>
+        <p>Volume horaire: {{ module.volumeHoraire }}h</p>
+        <p>Coefficient: {{ module.coefficient }}</p>
+      </div>
+      <div class="module-footer">
+        <span class="classe-name">{{ module.nomClasse }}</span>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,34 @@
+<!-- features/dashboard/enseignant/gestion-absences/selection-classe/selection-classe.component.html -->
+<div class="selection-classe-container">
+  <div class="header">
+    <button class="btn-back" (click)="retourSelectionModule()">
+      <i class="pi pi-arrow-left"></i> Retour
+    </button>
+    <h2>Sélectionnez une classe</h2>
+  </div>
+
+  <!-- Affichage du chargement -->
+  <div *ngIf="isLoading" class="loading">
+    <p>Chargement des classes...</p>
+  </div>
+
+  <!-- Affichage de l'erreur -->
+  <div *ngIf="error" class="error-message">
+    <p>{{ error }}</p>
+    <button (click)="chargerClasses()" class="btn-retry">Réessayer</button>
+  </div>
+
+  <!-- Liste des classes -->
+  <div *ngIf="!isLoading && !error && classes.length === 0" class="no-data">
+    <p>Aucune classe n'est assignée à ce module pour cet enseignant.</p>
+  </div>
+
+  <div *ngIf="!isLoading && !error && classes.length > 0" class="classe-grid">
+    <div *ngFor="let classe of classes" class="classe-card" (click)="selectionnerClasse(classe)">
+      <h3>{{ classe.nom }}</h3>
+      <p class="niveau">Niveau: {{ classe.labelNiveau }}</p>
+      <p class="annee">Année scolaire: {{ classe.anneeScolaire }}</p>
+      <p class="capacite">Capacité: {{ classe.capacite }} élèves</p>
+    </div>
+  </div>
+</div>

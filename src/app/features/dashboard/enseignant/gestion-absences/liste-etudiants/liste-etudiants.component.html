@@ -1,0 +1,109 @@
+<!-- features/dashboard/enseignant/gestion-absences/liste-etudiants/liste-etudiants.component.html -->
+<div class="liste-etudiants-container">
+  <div class="header">
+    <button class="btn-back" (click)="retourSelectionClasse()">
+      <i class="pi pi-arrow-left"></i> Retour
+    </button>
+    <h2>Gestion des absences</h2>
+  </div>
+
+  <!-- Affichage du chargement -->
+  <div *ngIf="isLoading" class="loading">
+    <p>Chargement des étudiants...</p>
+  </div>
+
+  <!-- Affichage de l'erreur -->
+  <div *ngIf="error" class="error-message">
+    <p>{{ error }}</p>
+    <button *ngIf="!isSaving" (click)="chargerEtudiants()" class="btn-retry">Réessayer</button>
+  </div>
+
+  <!-- Message de succès -->
+  <div *ngIf="successMessage" class="success-message">
+    <p>{{ successMessage }}</p>
+  </div>
+
+  <!-- Formulaire d'absence -->
+  <div *ngIf="!isLoading && !error && etudiants.length > 0" class="absence-form">
+    <form [formGroup]="absenceForm">
+      <div class="form-group">
+        <label for="date">Date de l'absence:</label>
+        <input type="date" id="date" formControlName="date" class="form-control">
+        <div *ngIf="absenceForm.get('date')?.invalid && absenceForm.get('date')?.touched" class="error-feedback">
+          La date est requise
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="motif">Motif:</label>
+        <input type="text" id="motif" formControlName="motif" class="form-control" placeholder="Motif de l'absence">
+        <div *ngIf="absenceForm.get('motif')?.invalid && absenceForm.get('motif')?.touched" class="error-feedback">
+          Le motif est requis
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="commentaire">Commentaire (optionnel):</label>
+        <textarea id="commentaire" formControlName="commentaire" class="form-control" placeholder="Commentaire supplémentaire"></textarea>
+      </div>
+    </form>
+  </div>
+
+  <!-- Liste des étudiants -->
+  <div *ngIf="!isLoading && !error && etudiants.length === 0" class="no-data">
+    <p>Aucun étudiant trouvé pour cette classe.</p>
+  </div>
+
+  <div *ngIf="!isLoading && !error && etudiants.length > 0" class="etudiants-list">
+    <div class="list-header">
+      <h3>Liste des étudiants</h3>
+      <!-- suite du fichier features/dashboard/enseignant/gestion-absences/liste-etudiants/liste-etudiants.component.html -->
+      <button class="btn-select-all" (click)="selectAll()">
+        {{ etudiantsSelectionnes.length === etudiants.length ? 'Désélectionner tout' : 'Sélectionner tout' }}
+      </button>
+    </div>
+
+    <div class="students-table">
+      <table>
+        <thead>
+        <tr>
+          <th style="width: 50px">Absent</th>
+          <th>Numéro</th>
+          <th>Nom</th>
+          <th>Prénom</th>
+          <th>Classe</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let etudiant of etudiants">
+          <td>
+            <div class="checkbox-wrapper">
+              <input
+                type="checkbox"
+                [id]="'etudiant-' + etudiant.id"
+                [checked]="isEtudiantSelectionne(etudiant.id)"
+                (change)="toggleEtudiantSelection(etudiant.id)"
+              />
+              <label [for]="'etudiant-' + etudiant.id" class="checkbox-label"></label>
+            </div>
+          </td>
+          <td>{{ etudiant.numeroEtudiant }}</td>
+          <td>{{ etudiant.nom }}</td>
+          <td>{{ etudiant.prenom }}</td>
+          <td>{{ etudiant.nomClasse }}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="form-actions">
+      <button
+        class="btn-save"
+        [disabled]="isSaving || etudiantsSelectionnes.length === 0"
+        (click)="enregistrerAbsences()">
+        <i class="pi pi-save"></i>
+        {{ isSaving ? 'Enregistrement...' : 'Enregistrer les absences' }}
+      </button>
+    </div>
+  </div>
+</div>

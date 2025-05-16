@@ -46,7 +46,10 @@ export class DocumentService {
   }
 
   updateStatus(id: number, status: StatusDocument): Observable<ApiResponse<DocumentResponse>> {
-    return this.http.put<ApiResponse<DocumentResponse>>(`${this.apiUrl}/${id}/status`, { status });
+    return this.http.put<ApiResponse<DocumentResponse>>(
+      `${this.apiUrl}/${id}/status?status=${status}`,
+      {} // Corps vide
+    );
   }
 
   updateFichierUrl(id: number, fichierUrl: string): Observable<ApiResponse<DocumentResponse>> {

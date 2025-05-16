@@ -219,18 +219,7 @@ export class DocumentManagementComponent implements OnInit {
         return '';
     }
   }
-  getNextStatusLabel(currentStatus: string): string {
-    switch (currentStatus) {
-      case StatusDocument.DEMANDE:
-        return 'Traiter';
-      case StatusDocument.EN_TRAITEMENT:
-        return 'Marquer prêt';
-      case StatusDocument.PRET:
-        return 'Archiver';
-      default:
-        return 'Suivant';
-    }
-  }
+
   formatDocumentType(type: string): string {
     return type.replace('_', ' ').toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
   }

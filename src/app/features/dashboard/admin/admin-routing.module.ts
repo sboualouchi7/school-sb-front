@@ -31,9 +31,7 @@ export const AdminRoutes: Routes = [
   { path: 'parent',
     component: ParentManagmentComponent
   },
-  { path: 'session',
-    component: SessionManagmentComponent
-  },
+
   { path: 'evaluations',
     component: EvaluationManagementComponent
   },

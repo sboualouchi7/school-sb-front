@@ -39,8 +39,7 @@ export class DocumentManagementComponent implements OnInit {
   statusOptions = Object.values(StatusDocument);
   typeOptions = Object.values(TypeDocument);
 
-  displayedColumns: string[] = ['id', 'nomEtudiant', 'type', 'dateCreation', 'commentaire', 'status', 'actions'];
-
+  displayedColumns: string[] = ['id', 'nomEtudiant', 'type', 'dateCreation', 'status', 'actions'];
   searchPerformed = false;
 
   constructor(
@@ -144,36 +143,7 @@ export class DocumentManagementComponent implements OnInit {
     });
   }
 
-  /**submitDocument(): void {
-    if (this.documentForm.valid) {
-      const currentUserId = this.getCurrentUserId();
-      if (!currentUserId) {
-        console.error('Impossible de récupérer l\'ID de l\'utilisateur actuel');
-        return;
-      }
 
-      const documentRequest: DocumentRequest = {
-        etudiantId: this.documentForm.value.etudiantId,
-        demandeurId: currentUserId,
-        type: this.documentForm.value.type,
-        commentaire: this.documentForm.value.commentaire
-      };
-
-      this.documentService.createDocument(documentRequest).subscribe({
-        next: (response) => {
-          if (response.success) {
-            this.loadAllDocuments();
-            this.toggleAddForm();
-          } else {
-            console.error('Erreur lors de la création du document:', response.message);
-          }
-        },
-        error: (error) => {
-          console.error('Erreur lors de la création du document:', error);
-        }
-      });
-    }
-  }**/
   submitDocument(): void {
     if (this.documentForm.valid) {
       const currentUserId = this.getCurrentUserId();
@@ -214,7 +184,18 @@ export class DocumentManagementComponent implements OnInit {
     this.documentService.updateStatus(documentId, newStatus).subscribe({
       next: (response) => {
         if (response.success) {
-          this.loadAllDocuments();
+          // Au lieu de recharger tous les documents, mettre à jour uniquement celui qui a été modifié
+          const updatedDocument = response.data;
+
+          // Créer un nouveau tableau pour forcer la détection des changements
+          this.documents = this.documents.map(doc => {
+            if (doc.id === documentId) {
+              // Retourner le document mis à jour depuis la réponse de l'API
+              return updatedDocument;
+            }
+            // Retourner les autres documents inchangés
+            return doc;
+          });
         } else {
           console.error('Erreur lors de la mise à jour du statut:', response.message);
         }
@@ -224,7 +205,9 @@ export class DocumentManagementComponent implements OnInit {
       }
     });
   }
-
+  trackByDocId(index: number, document: DocumentResponse): number {
+    return document.id;
+  }
   deleteDocument(documentId: number): void {
     if (confirm('Êtes-vous sûr de vouloir supprimer cette demande de document ?')) {
       this.documentService.deleteDocument(documentId).subscribe({

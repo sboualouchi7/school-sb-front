@@ -54,14 +54,6 @@
 
     <li>
       <a
-        routerLink="/dashboard/admin/session"
-        (click)="setActiveLink('/dashboard/admin/session')"
-        [ngClass]="{ 'active': isLinkActive('/dashboard/admin/session') }">
-        <i class="pi pi-calendar"></i>
-        <p [ngClass]="{ 'active-p': isLinkActive('/dashboard/admin/session') }">Session</p>
-      </a>
-    </li><li>
-      <a
         routerLink="/dashboard/admin/evaluations"
         (click)="setActiveLink('/dashboard/admin/evaluations')"
         [ngClass]="{ 'active': isLinkActive('/dashboard/admin/evaluations') }">
@@ -83,8 +75,8 @@
         routerLink="/dashboard/admin/documents"
         (click)="setActiveLink('/dashboard/admin/documents')"
         [ngClass]="{ 'active': isLinkActive('/dashboard/admin/documents') }">
-        <i class="pi pi-calendar-times"></i>
-        <p [ngClass]="{ 'active-p': isLinkActive('/dashboard/admin/documents') }">Absences</p>
+        <i class="pi pi-file"></i>
+        <p [ngClass]="{ 'active-p': isLinkActive('/dashboard/admin/documents') }">Documents</p>
       </a>
     </li>
   </ul>

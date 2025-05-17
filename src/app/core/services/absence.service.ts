@@ -79,19 +79,28 @@ export class AbsenceService {
     );
   }
 
-  createBulk(data: any[], enseignantId?: number): Observable<ApiResponse<AbsenceResponse[]>> {
-    // Log pour déboguer
+  createBulk(data: AbsenceRequest[], enseignantId?: number): Observable<ApiResponse<AbsenceResponse[]>> {
     console.log('Service received data:', data);
-    console.log('First item moduleId:', data[0]?.moduleId);
-    console.log('JSON payload:', JSON.stringify(data));
 
     let url = `${this.apiUrl}/bulk`;
     if (enseignantId) {
       url += `?enseignantId=${enseignantId}`;
     }
 
-    // Envoyer les données sans les modifier
-    return this.http.post<ApiResponse<AbsenceResponse[]>>(url, data);
+    // S'assurer que les données sont conformes avant envoi
+    const validData = data.map(item => ({
+      etudiantId: item.etudiantId,
+      seanceId: item.seanceId,
+      moduleId: item.moduleId, // S'assurer que moduleId est présent
+      dateDebut: item.dateDebut,
+      dateFin: item.dateFin,
+      motif: item.motif || 'Absence non justifiée',
+      commentaire: item.commentaire || ''
+    }));
+
+    console.log('Final request payload:', JSON.stringify(validData));
+
+    return this.http.post<ApiResponse<AbsenceResponse[]>>(url, validData);
   }
 
 }

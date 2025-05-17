@@ -1,0 +1,122 @@
+<!-- src/app/features/dashboard/etudiant/absences/absences.component.html -->
+<div class="absences-container">
+  <div class="page-header">
+    <h1>Mes Absences</h1>
+    <p>Consultez et filtrez vos absences</p>
+  </div>
+
+  <!-- Carte récapitulative -->
+  <div class="summary-cards">
+    <div class="summary-card">
+      <div class="summary-icon">
+        <i class="pi pi-calendar-times"></i>
+      </div>
+      <div class="summary-content">
+        <div class="summary-title">Total des absences</div>
+        <div class="summary-value">{{ calculateTotalAbsences() }}</div>
+      </div>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-icon warning-icon">
+        <i class="pi pi-exclamation-triangle"></i>
+      </div>
+      <div class="summary-content">
+        <div class="summary-title">Non justifiées</div>
+        <div class="summary-value">{{ calculateNonJustifiedAbsences() }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtres -->
+  <div class="filter-section">
+    <div class="filter-row">
+      <div class="filter-group">
+        <label for="moduleFilter">Filtrer par module:</label>
+        <select
+          id="moduleFilter"
+          class="filter-control"
+          [(ngModel)]="selectedModuleId"
+          (change)="onModuleChange()">
+          <option [ngValue]="null">Tous les modules</option>
+          <option *ngFor="let module of modules" [ngValue]="module.id">
+            {{ module.libelle }}
+          </option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="dateDebutFilter">Date début:</label>
+        <input
+          type="date"
+          id="dateDebutFilter"
+          class="filter-control"
+          [(ngModel)]="dateDebut"
+          (change)="onDateFilterChange()">
+      </div>
+
+      <div class="filter-group">
+        <label for="dateFinFilter">Date fin:</label>
+        <input
+          type="date"
+          id="dateFinFilter"
+          class="filter-control"
+          [(ngModel)]="dateFin"
+          (change)="onDateFilterChange()">
+      </div>
+
+      <button class="btn reset-btn" (click)="resetFilters()">
+        <i class="pi pi-refresh"></i> Réinitialiser
+      </button>
+    </div>
+  </div>
+
+  <!-- Chargement -->
+  <div *ngIf="isLoading.absences" class="loading-container">
+    <div class="spinner">
+      <i class="pi pi-spin pi-spinner"></i>
+    </div>
+    <p>Chargement de vos absences...</p>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div *ngIf="error.absences" class="error-message">
+    <i class="pi pi-exclamation-circle"></i>
+    <span>{{ error.absences }}</span>
+  </div>
+
+  <!-- Tableau des absences -->
+  <div *ngIf="!isLoading.absences && !error.absences" class="absences-content">
+    <div *ngIf="absences.length === 0" class="no-data">
+      <i class="pi pi-calendar-check"></i>
+      <p>Aucune absence trouvée avec les filtres actuels.</p>
+    </div>
+
+    <div *ngIf="absences.length > 0" class="table-responsive">
+      <table class="absences-table">
+        <thead>
+        <tr>
+          <th>Date</th>
+          <th>Module</th>
+          <th>Motif</th>
+          <th>Statut</th>
+          <th>Commentaire</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let absence of absences">
+          <td>{{ formatDateForDisplay(absence.dateDebut) }}</td>
+          <td>{{ absence.moduleSeance || absence.nomModule }}</td>
+          <td>{{ absence.motif || 'Non spécifié' }}</td>
+          <td>
+              <span class="status-badge" [ngClass]="{'status-justified': absence.validee, 'status-unjustified': !absence.validee}">
+                {{ absence.validee ? 'Justifiée' : 'Non justifiée' }}
+              </span>
+          </td>
+          <td>{{ absence.commentaire || '-' }}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

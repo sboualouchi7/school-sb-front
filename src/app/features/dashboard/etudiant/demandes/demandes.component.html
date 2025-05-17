@@ -1,0 +1,117 @@
+<!-- src/app/features/dashboard/etudiant/demandes/demandes.component.html -->
+<div class="demandes-container">
+  <div class="page-header">
+    <h1>Mes Demandes de Documents</h1>
+    <p>Consultez l'état de vos demandes de documents administratifs</p>
+  </div>
+
+  <div class="actions-section">
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLScQ7ks5r3PFWZ_hvtJQHhpDdwvKzDJrB4H6_pZo2S8o_19iuA/viewform"
+       target="_blank"
+       class="btn new-request-btn">
+      <i class="pi pi-plus"></i> Nouvelle demande
+    </a>
+  </div>
+
+  <!-- Chargement -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="spinner">
+      <i class="pi pi-spin pi-spinner"></i>
+    </div>
+    <p>Chargement de vos demandes...</p>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div *ngIf="error" class="error-message">
+    <i class="pi pi-exclamation-circle"></i>
+    <span>{{ error }}</span>
+  </div>
+
+  <!-- Contenu des demandes -->
+  <div *ngIf="!isLoading && !error" class="demandes-content">
+    <div *ngIf="demandes.length === 0" class="no-data">
+      <i class="pi pi-file"></i>
+      <p>Aucune demande de document trouvée.</p>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLScQ7ks5r3PFWZ_hvtJQHhpDdwvKzDJrB4H6_pZo2S8o_19iuA/viewform"
+         target="_blank"
+         class="btn new-request-link">
+        Faire une demande
+      </a>
+    </div>
+
+    <div *ngIf="demandes.length > 0" class="demandes-list">
+      <div *ngFor="let demande of demandes" class="demande-card">
+        <div class="demande-icon">
+          <i class="pi {{ getDocumentTypeIcon(demande.type) }}"></i>
+        </div>
+
+        <div class="demande-details">
+          <div class="demande-header">
+            <h3>{{ formatDocumentType(demande.type) }}</h3>
+            <div class="demande-status" [ngClass]="getStatusClass(demande.status)">
+              {{ formatDocumentStatus(demande.status) }}
+            </div>
+          </div>
+
+          <div class="demande-info">
+            <div class="demande-date">
+              <i class="pi pi-calendar"></i>
+              <span>{{ formatDateForDisplay(demande.dateCreation) }}</span>
+            </div>
+
+            <div *ngIf="demande.commentaire" class="demande-comment">
+              <i class="pi pi-comment"></i>
+              <span>{{ demande.commentaire }}</span>
+            </div>
+          </div>
+
+          <div *ngIf="demande.fichierUrl" class="demande-action">
+            <a [href]="demande.fichierUrl" target="_blank" class="btn download-btn">
+              <i class="pi pi-download"></i> Télécharger
+            </a>
+          </div>
+
+          <div *ngIf="demande.status === 'PRET' && !demande.fichierUrl" class="demande-notification">
+            <i class="pi pi-check-circle"></i>
+            <span>Votre document est prêt. Veuillez vous présenter au secrétariat pour le récupérer.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section d'information -->
+  <div class="info-section">
+    <h2>Comment faire une demande de document ?</h2>
+    <p>Pour faire une demande de document administratif :</p>
+    <ol>
+      <li>Cliquez sur le bouton "Nouvelle demande"</li>
+      <li>Remplissez le formulaire en ligne avec les informations nécessaires</li>
+      <li>Soumettez votre demande</li>
+      <li>Suivez l'état de votre demande sur cette page</li>
+    </ol>
+    <p>Les documents sont généralement traités dans un délai de 48 à 72 heures ouvrables.</p>
+
+    <div class="status-info">
+      <h3>Signification des statuts :</h3>
+      <ul>
+        <li>
+          <span class="status-pill status-pending">Demandé</span>
+          <span>Votre demande a été reçue et est en attente de traitement</span>
+        </li>
+        <li>
+          <span class="status-pill status-processing">En traitement</span>
+          <span>Votre demande est en cours de traitement par l'administration</span>
+        </li>
+        <li>
+          <span class="status-pill status-ready">Prêt</span>
+          <span>Votre document est prêt et disponible au téléchargement ou au secrétariat</span>
+        </li>
+        <li>
+          <span class="status-pill status-archived">Archivé</span>
+          <span>Votre demande a été traitée et archivée</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

@@ -12,4 +12,6 @@ export interface AbsenceResponse {
   commentaire?: string;
   nomEtudiant: string;
   moduleSeance: string;
+  nomModule:string;
+
 }

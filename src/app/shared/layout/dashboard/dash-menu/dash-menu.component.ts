@@ -118,7 +118,30 @@ export class DashMenuComponent implements OnInit {
         icon: 'pi pi-chart-bar',
         roles: [Role.ENSEIGNANT]
       },
-      // Ajoutez ici d'autres items pour les autres rôles
+      {
+        label: 'Tableau de bord',
+        path: '/dashboard/etudiant',
+        icon: 'pi pi-home',
+        roles: [Role.ETUDIANT]
+      },
+      {
+        label: 'Mes absences',
+        path: '/dashboard/etudiant/absences',
+        icon: 'pi pi-calendar-times',
+        roles: [Role.ETUDIANT]
+      },
+      {
+        label: 'Mes notes',
+        path: '/dashboard/etudiant/notes',
+        icon: 'pi pi-chart-bar',
+        roles: [Role.ETUDIANT]
+      },
+      {
+        label: 'Mes demandes',
+        path: '/dashboard/etudiant/demandes',
+        icon: 'pi pi-file',
+        roles: [Role.ETUDIANT]
+      }
     ];
 
     // Filtrer les items en fonction du rôle de l'utilisateur

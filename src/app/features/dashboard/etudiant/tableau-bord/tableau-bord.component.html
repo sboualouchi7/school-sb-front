@@ -1,0 +1,149 @@
+<!-- src/app/features/dashboard/etudiant/tableau-bord/tableau-bord.component.html -->
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1>Bienvenue, {{ username }}</h1>
+    <p>Tableau de bord étudiant</p>
+  </div>
+
+  <div class="dashboard-widgets">
+    <!-- Widget Absences récentes -->
+    <div class="widget">
+      <div class="widget-header">
+        <h2>Absences récentes</h2>
+        <a [routerLink]="['/dashboard/etudiant/absences']" class="widget-link">Voir tout</a>
+      </div>
+
+      <div class="widget-content" *ngIf="!isLoading.absences && !error.absences">
+        <div *ngIf="absencesRecentes.length === 0" class="no-data">
+          Aucune absence récente.
+        </div>
+
+        <div *ngIf="absencesRecentes.length > 0" class="data-list">
+          <div class="data-item" *ngFor="let absence of absencesRecentes">
+            <div class="data-item-primary">
+              <div class="date-badge">{{ formatDate(absence.dateDebut) }}</div>
+              <div class="data-title">{{ absence.moduleSeance }}</div>
+            </div>
+            <div class="data-item-secondary">
+              <div class="data-status" [ngClass]="{'status-validated': absence.validee, 'status-pending': !absence.validee}">
+                {{ absence.validee ? 'Justifiée' : 'Non justifiée' }}
+              </div>
+              <div class="data-details" *ngIf="absence.motif">{{ absence.motif }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="isLoading.absences" class="loading-indicator">
+        <i class="pi pi-spin pi-spinner"></i> Chargement...
+      </div>
+
+      <div *ngIf="error.absences" class="error-message">
+        {{ error.absences }}
+      </div>
+    </div>
+
+    <!-- Widget Notes récentes -->
+    <div class="widget">
+      <div class="widget-header">
+        <h2>Notes récentes</h2>
+        <a [routerLink]="['/dashboard/etudiant/notes']" class="widget-link">Voir tout</a>
+      </div>
+
+      <div class="widget-content" *ngIf="!isLoading.notes && !error.notes">
+        <div *ngIf="notesRecentes.length === 0" class="no-data">
+          Aucune note récente.
+        </div>
+
+        <div *ngIf="notesRecentes.length > 0" class="data-list">
+          <div class="data-item" *ngFor="let note of notesRecentes">
+            <div class="data-item-primary">
+              <div class="note-value">{{ note.note }}/20</div>
+              <div class="data-title">{{ note.libelleModule }}</div>
+            </div>
+            <div class="data-item-secondary">
+              <div class="data-type">{{ note.type }}</div>
+              <div class="data-date">{{ formatDate(note.dateEvaluation) }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="isLoading.notes" class="loading-indicator">
+        <i class="pi pi-spin pi-spinner"></i> Chargement...
+      </div>
+
+      <div *ngIf="error.notes" class="error-message">
+        {{ error.notes }}
+      </div>
+    </div>
+
+    <!-- Widget Demandes récentes -->
+    <div class="widget">
+      <div class="widget-header">
+        <h2>Demandes de documents</h2>
+        <a [routerLink]="['/dashboard/etudiant/demandes']" class="widget-link">Voir tout</a>
+      </div>
+
+      <div class="widget-content" *ngIf="!isLoading.demandes && !error.demandes">
+        <div *ngIf="demandesRecentes.length === 0" class="no-data">
+          Aucune demande récente.
+        </div>
+
+        <div *ngIf="demandesRecentes.length > 0" class="data-list">
+          <div class="data-item" *ngFor="let demande of demandesRecentes">
+            <div class="data-item-primary">
+              <div class="document-icon">
+                <i class="pi pi-file-pdf"></i>
+              </div>
+              <div class="data-title">{{ demande.type }}</div>
+            </div>
+            <div class="data-item-secondary">
+              <div class="data-status" [ngClass]="{
+                'status-pending': demande.status === 'DEMANDE',
+                'status-processing': demande.status === 'EN_TRAITEMENT',
+                'status-ready': demande.status === 'PRET',
+                'status-archived': demande.status === 'ARCHIVE'
+              }">
+                {{ demande.status }}
+              </div>
+              <div class="data-date">{{ formatDate(demande.dateCreation) }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="isLoading.demandes" class="loading-indicator">
+        <i class="pi pi-spin pi-spinner"></i> Chargement...
+      </div>
+
+      <div *ngIf="error.demandes" class="error-message">
+        {{ error.demandes }}
+      </div>
+    </div>
+
+    <!-- Widget Liens rapides -->
+    <div class="widget">
+      <div class="widget-header">
+        <h2>Liens rapides</h2>
+      </div>
+
+      <div class="quick-links">
+        <a [routerLink]="['/dashboard/etudiant/absences']" class="quick-link-item">
+          <i class="pi pi-calendar-times"></i>
+          <span>Consulter mes absences</span>
+        </a>
+
+        <a [routerLink]="['/dashboard/etudiant/notes']" class="quick-link-item">
+          <i class="pi pi-chart-bar"></i>
+          <span>Consulter mes notes</span>
+        </a>
+
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLScQ7ks5r3PFWZ_hvtJQHhpDdwvKzDJrB4H6_pZo2S8o_19iuA/viewform" target="_blank" class="quick-link-item">
+          <i class="pi pi-file-o"></i>
+          <span>Nouvelle demande de document</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

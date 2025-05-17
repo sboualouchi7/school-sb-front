@@ -1,0 +1,95 @@
+<!-- src/app/features/dashboard/etudiant/notes/notes.component.html -->
+<div class="notes-container">
+  <div class="page-header">
+    <h1>Mes Notes</h1>
+    <p>Consultez et filtrez vos notes d'évaluation</p>
+  </div>
+
+  <!-- Filtres -->
+  <div class="filter-section">
+    <div class="filter-row">
+      <div class="filter-group">
+        <label for="moduleFilter">Filtrer par module:</label>
+        <select
+          id="moduleFilter"
+          class="filter-control"
+          [(ngModel)]="selectedModuleId"
+          (change)="onModuleChange()">
+          <option [ngValue]="null">Tous les modules</option>
+          <option *ngFor="let module of modules" [ngValue]="module.id">
+            {{ module.libelle }}
+          </option>
+        </select>
+      </div>
+
+      <button class="btn reset-btn" (click)="resetFilters()">
+        <i class="pi pi-refresh"></i> Réinitialiser
+      </button>
+    </div>
+  </div>
+
+  <!-- Chargement -->
+  <div *ngIf="isLoading.evaluations" class="loading-container">
+    <div class="spinner">
+      <i class="pi pi-spin pi-spinner"></i>
+    </div>
+    <p>Chargement de vos notes...</p>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div *ngIf="error.evaluations" class="error-message">
+    <i class="pi pi-exclamation-circle"></i>
+    <span>{{ error.evaluations }}</span>
+  </div>
+
+  <!-- Contenu des notes -->
+  <div *ngIf="!isLoading.evaluations && !error.evaluations" class="notes-content">
+    <!-- Pas de données -->
+    <div *ngIf="getObjectKeys(groupedEvaluations).length === 0" class="no-data">
+      <i class="pi pi-chart-bar"></i>
+      <p>Aucune note trouvée avec les filtres actuels.</p>
+    </div>
+
+    <!-- Modules et notes -->
+    <div *ngIf="getObjectKeys(groupedEvaluations).length > 0" class="modules-list">
+      <!-- Carte pour chaque module -->
+      <div *ngFor="let moduleId of getObjectKeys(groupedEvaluations)" class="module-card">
+        <div class="module-header">
+          <div class="module-title">{{ groupedEvaluations[moduleId].module }}</div>
+          <div class="module-moyenne" *ngIf="groupedEvaluations[moduleId].moyenne !== null">
+            <span class="moyenne-label">Moyenne:</span>
+            <span class="moyenne-value" [ngClass]="getMoyenneColorClass(groupedEvaluations[moduleId].moyenne)">
+              {{ groupedEvaluations[moduleId].moyenne }}/20
+            </span>
+          </div>
+        </div>
+
+        <!-- Tableau des notes -->
+        <div class="notes-table-container">
+          <table class="notes-table">
+            <thead>
+            <tr>
+              <th>Type</th>
+              <th>Date</th>
+              <th>Note</th>
+              <th>Commentaire</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let evaluation of groupedEvaluations[moduleId].evaluations">
+              <td>{{ formatEvaluationType(evaluation.type) }}</td>
+              <td>{{ formatDateForDisplay(evaluation.dateEvaluation) }}</td>
+              <td class="note-cell">
+                  <span class="note-value" [ngClass]="getNoteColorClass(evaluation.note)">
+                    {{ evaluation.note }}/20
+                  </span>
+              </td>
+              <td>{{ evaluation.commentaire || '-' }}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

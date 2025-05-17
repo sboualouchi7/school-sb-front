@@ -106,7 +106,8 @@ export class ListeEtudiantsComponent implements OnInit {
     // Créer une requête d'absence pour chaque étudiant sélectionné
     const absenceRequests: AbsenceRequest[] = this.etudiantsSelectionnes.map(etudiantId => ({
       etudiantId: etudiantId,
-      seanceId: 1, // Placeholder - à adapter selon votre modèle de données
+      seanceId: 1,
+      moduleId:formValues.moduleId,// Placeholder - à adapter selon votre modèle de données
       dateDebut: this.formatDateForBackend(formValues.date),
       dateFin: this.formatDateForBackend(formValues.date), // Même date pour simplifier
       motif: formValues.motif,

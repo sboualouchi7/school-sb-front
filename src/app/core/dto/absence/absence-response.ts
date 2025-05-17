@@ -2,6 +2,8 @@ export interface AbsenceResponse {
   id: number;
   etudiantId: number;
   seanceId: number;
+  moduleId?: number; // Nouveau champ
+
   dateDebut: string;
   dateFin: string;
   motif?: string;

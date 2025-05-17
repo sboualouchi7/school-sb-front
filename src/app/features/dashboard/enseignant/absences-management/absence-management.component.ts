@@ -171,7 +171,9 @@ export class AbsenceManagementComponent implements OnInit {
       }
     });
   }
-
+  togglePresence(etudiantId: number): void {
+    this.etudiantPresence[etudiantId] = !this.etudiantPresence[etudiantId];
+  }
   loadEtudiantsForModuleAndClasse(moduleId: number, classeId: number): void {
     if (!this.enseignantId) return;
 
@@ -198,12 +200,8 @@ export class AbsenceManagementComponent implements OnInit {
     });
   }
 
-  togglePresence(etudiantId: number): void {
-    this.etudiantPresence[etudiantId] = !this.etudiantPresence[etudiantId];
-  }
-
   saveAbsences(): void {
-    if (!this.enseignantId || !this.selectedSeance) {
+    if (!this.enseignantId || !this.selectedSeance || !this.selectedModule) {
       this.showNotification('Informations manquantes', 'error');
       return;
     }
@@ -214,18 +212,30 @@ export class AbsenceManagementComponent implements OnInit {
       return;
     }
 
-    const absenceRequests: AbsenceRequest[] = [];
+    const absenceRequests: any[] = []; // Utiliser any[] au lieu de AbsenceRequest[]
 
     // Créer une demande d'absence pour chaque étudiant marqué comme absent
     for (const etudiant of this.etudiants) {
       if (!this.etudiantPresence[etudiant.id]) {
-        const absenceRequest: AbsenceRequest = {
-          etudiantId: etudiant.id,
-          seanceId: this.selectedSeance.id,
-          dateDebut: this.formatDateForBackend(date),
-          dateFin: this.formatDateForBackend(date),
-          motif: 'Absence non justifiée'
-        };
+        // Créer un objet JavaScript normal (pas via l'interface TypeScript)
+        const moduleId = this.selectedModule.id;
+
+        const absenceRequest = this.etudiants
+          .filter(etudiant => !this.etudiantPresence[etudiant.id])
+          .map(etudiant => ({
+            etudiantId: etudiant.id,
+            seanceId: this.selectedSeance!.id,
+            moduleId: moduleId, // Utiliser la variable locale
+            dateDebut: this.formatDateForBackend(date),
+            dateFin: this.formatDateForBackend(date),
+            motif: 'Absence non justifiée',
+            commentaire: ''
+          }));
+
+        // Vérification explicite
+        console.log('Absence request created:', absenceRequest);
+       // console.log('ModuleId present:', absenceRequest.moduleId !== undefined);
+
         absenceRequests.push(absenceRequest);
       }
     }
@@ -234,6 +244,10 @@ export class AbsenceManagementComponent implements OnInit {
       this.showNotification('Aucune absence à enregistrer', 'info');
       return;
     }
+
+    // Log final avant envoi
+    console.log('Final absenceRequests array:', absenceRequests);
+    console.log('Stringified payload:', JSON.stringify(absenceRequests));
 
     this.isLoading = true;
     this.absenceService.createBulk(absenceRequests, this.enseignantId).subscribe({
@@ -253,8 +267,8 @@ export class AbsenceManagementComponent implements OnInit {
         this.isLoading = false;
       }
     });
+    console.log('Final payload:', JSON.stringify(absenceRequests));
   }
-
   resetForm(): void {
     this.selectionForm.reset({
       date: new Date().toISOString().split('T')[0]

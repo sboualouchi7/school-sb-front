@@ -59,10 +59,14 @@ export class AbsenceService {
   // core/services/absence.service.ts
 
 // Méthode pour récupérer les étudiants par module et classe
-  getEtudiantsByModuleClasse(moduleId: number, classeId: number) {
-    return this.http.get<ApiResponse<EtudiantResponse[]>>(
-      `${this.apiUrl}/module/${moduleId}/classe/${classeId}/etudiants`
-    ).pipe(
+  // Dans absence.service.ts
+
+  getEtudiantsByModuleClasse(moduleId: number, classeId: number, enseignantId?: number) {
+    let url = `${this.apiUrl}/module/${moduleId}/classe/${classeId}/etudiants`;
+    if (enseignantId) {
+      url += `?enseignantId=${enseignantId}`;
+    }
+    return this.http.get<ApiResponse<EtudiantResponse[]>>(url).pipe(
       catchError(error => {
         console.error('Error fetching students by module and class:', error);
         return of({
@@ -75,9 +79,19 @@ export class AbsenceService {
     );
   }
 
-// Méthode pour créer des absences en bloc
-  createBulk(data: AbsenceRequest[]): Observable<ApiResponse<AbsenceResponse[]>> {
-    return this.http.post<ApiResponse<AbsenceResponse[]>>(`${this.apiUrl}/bulk`, data);
+  createBulk(data: any[], enseignantId?: number): Observable<ApiResponse<AbsenceResponse[]>> {
+    // Log pour déboguer
+    console.log('Service received data:', data);
+    console.log('First item moduleId:', data[0]?.moduleId);
+    console.log('JSON payload:', JSON.stringify(data));
+
+    let url = `${this.apiUrl}/bulk`;
+    if (enseignantId) {
+      url += `?enseignantId=${enseignantId}`;
+    }
+
+    // Envoyer les données sans les modifier
+    return this.http.post<ApiResponse<AbsenceResponse[]>>(url, data);
   }
 
 }

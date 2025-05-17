@@ -84,6 +84,7 @@ export class AbsenceManagementComponent implements OnInit {
     this.absenceForm = this.fb.group({
       etudiantId: ['', Validators.required],
       seanceId: ['', Validators.required],
+
       dateDebut: ['', Validators.required],
       dateFin: ['', Validators.required],
       motif: [''],
@@ -217,6 +218,7 @@ export class AbsenceManagementComponent implements OnInit {
       const absenceData: AbsenceRequest = {
         etudiantId: this.absenceForm.value.etudiantId,
         seanceId: this.absenceForm.value.seanceId,
+
         dateDebut: this.formatDate(this.absenceForm.value.dateDebut),
         dateFin: this.formatDate(this.absenceForm.value.dateFin),
         motif: this.absenceForm.value.motif,

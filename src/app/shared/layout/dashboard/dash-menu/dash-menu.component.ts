@@ -141,6 +141,23 @@ export class DashMenuComponent implements OnInit {
         path: '/dashboard/etudiant/demandes',
         icon: 'pi pi-file',
         roles: [Role.ETUDIANT]
+      },{
+        label: 'Tableau de bord',
+        path: '/dashboard/parent',
+        icon: 'pi pi-home',
+        roles: [Role.PARENT]
+      },
+      {
+        label: 'Notes enfants',
+        path: '/dashboard/parent/notes-enfant',
+        icon: 'pi pi-chart-bar',
+        roles: [Role.PARENT]
+      },
+      {
+        label: 'Absences enfants',
+        path: '/dashboard/parent/absences-enfant',
+        icon: 'pi pi-calendar-times',
+        roles: [Role.PARENT]
       }
     ];
 

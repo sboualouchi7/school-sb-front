@@ -1,0 +1,91 @@
+<!-- src/app/features/dashboard/parent/selection-enfant/selection-enfant.component.html -->
+<div class="selection-enfant-container">
+  <div class="page-section">
+    <h2>
+      <i class="pi pi-users"></i>
+      Sélectionner un enfant
+    </h2>
+    <p>Choisissez l'enfant dont vous souhaitez consulter les informations</p>
+  </div>
+
+  <!-- Chargement -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="spinner">
+      <i class="pi pi-spin pi-spinner"></i>
+    </div>
+    <p>Chargement de vos enfants...</p>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div *ngIf="error" class="error-message">
+    <i class="pi pi-exclamation-circle"></i>
+    <span>{{ error }}</span>
+    <button class="retry-btn" (click)="chargerEnfants()">
+      <i class="pi pi-refresh"></i> Réessayer
+    </button>
+  </div>
+
+  <!-- Sélection de l'enfant -->
+  <div *ngIf="!isLoading && !error" class="selection-content">
+    <div *ngIf="enfants.length === 0" class="no-data">
+      <i class="pi pi-user-minus"></i>
+      <p>Aucun enfant trouvé dans votre liste.</p>
+      <small>Contactez l'administration si cette information semble incorrecte.</small>
+    </div>
+
+    <div *ngIf="enfants.length > 0" class="selection-wrapper">
+      <div class="selection-group">
+        <label for="enfantSelect" class="selection-label">
+          <i class="pi pi-user"></i>
+          Enfant :
+        </label>
+        <select
+          id="enfantSelect"
+          class="selection-control"
+          [(ngModel)]="selectedEnfantId"
+          (change)="onSelectionChange()">
+          <option [ngValue]="null">-- Sélectionnez un enfant --</option>
+          <option *ngFor="let enfant of enfants" [ngValue]="enfant.id">
+            {{ getEnfantCompleteName(enfant) }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Informations de l'enfant sélectionné -->
+      <div *ngIf="selectedEnfant" class="enfant-info">
+        <div class="info-card">
+          <div class="info-header">
+            <div class="enfant-avatar">
+              <i class="pi pi-user"></i>
+            </div>
+            <div class="enfant-details">
+              <h3>{{ selectedEnfant.prenom }} {{ selectedEnfant.nom }}</h3>
+              <span class="enfant-numero">N° {{ selectedEnfant.numeroEtudiant }}</span>
+            </div>
+          </div>
+
+          <div class="info-body">
+            <div class="info-item">
+              <span class="info-label">Classe :</span>
+              <span class="info-value">{{ selectedEnfant.nomClasse }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Année scolaire :</span>
+              <span class="info-value">{{ selectedEnfant.anneeScolaire }}</span>
+            </div>
+            <div class="info-item" *ngIf="selectedEnfant.filiere">
+              <span class="info-label">Filière :</span>
+              <span class="info-value">{{ selectedEnfant.filiere }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Statut :</span>
+              <span class="info-value" [ngClass]="{'status-active': selectedEnfant.actif, 'status-inactive': !selectedEnfant.actif}">
+                {{ selectedEnfant.actif ? 'Actif' : 'Inactif' }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,268 @@
+<!-- src/app/features/dashboard/parent/absences-enfant/absences-enfant.component.html -->
+<div class="absences-enfant-container">
+  <!-- Header de l'enfant avec statistiques -->
+  <div class="enfant-header">
+    <div class="enfant-info">
+      <div class="enfant-avatar">
+        <i class="pi pi-user"></i>
+      </div>
+      <div class="enfant-details">
+        <h2>{{ enfant.prenom }} {{ enfant.nom }}</h2>
+        <p>{{ enfant.nomClasse }} - {{ enfant.numeroEtudiant }}</p>
+      </div>
+    </div>
+
+    <!-- Statistiques des absences -->
+    <div class="stats-overview" *ngIf="!isLoading.absences && !error.absences">
+      <div class="stat-card total">
+        <div class="stat-icon">
+          <i class="pi pi-calendar-times"></i>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">{{ calculateTotalAbsences() }}</div>
+          <div class="stat-label">Total absences</div>
+        </div>
+      </div>
+
+      <div class="stat-card justified">
+        <div class="stat-icon">
+          <i class="pi pi-check-circle"></i>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">{{ calculateAbsencesJustifiees() }}</div>
+          <div class="stat-label">Justifiées</div>
+        </div>
+      </div>
+
+      <div class="stat-card unjustified">
+        <div class="stat-icon">
+          <i class="pi pi-exclamation-triangle"></i>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">{{ calculateAbsencesNonJustifiees() }}</div>
+          <div class="stat-label">Non justifiées</div>
+        </div>
+      </div>
+
+      <div class="stat-card percentage" *ngIf="calculateTotalAbsences() > 0">
+        <div class="stat-icon">
+          <i class="pi pi-percentage"></i>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">{{ getJustificationPercentage() }}%</div>
+          <div class="stat-label">Taux justification</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtres -->
+  <div class="filter-section">
+    <h3>
+      <i class="pi pi-filter"></i>
+      Filtrer les absences
+    </h3>
+
+    <div class="filter-row">
+      <div class="filter-group">
+        <label for="moduleFilter">
+          <i class="pi pi-book"></i>
+          Par module:
+        </label>
+        <select
+          id="moduleFilter"
+          class="filter-control"
+          [(ngModel)]="selectedModuleId"
+          (change)="onModuleChange()"
+          [disabled]="isLoading.modules">
+          <option [ngValue]="null">Tous les modules</option>
+          <option *ngFor="let module of modules" [ngValue]="module.id">
+            {{ module.libelle }}
+          </option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="dateDebutFilter">
+          <i class="pi pi-calendar"></i>
+          Date début:
+        </label>
+        <input
+          type="date"
+          id="dateDebutFilter"
+          class="filter-control"
+          [(ngModel)]="dateDebut"
+          (change)="onDateFilterChange()"
+          [max]="dateFin || undefined">
+      </div>
+
+      <div class="filter-group">
+        <label for="dateFinFilter">
+          <i class="pi pi-calendar"></i>
+          Date fin:
+        </label>
+        <input
+          type="date"
+          id="dateFinFilter"
+          class="filter-control"
+          [(ngModel)]="dateFin"
+          (change)="onDateFilterChange()"
+          [min]="dateDebut || undefined">
+      </div>
+
+      <button class="btn reset-btn" (click)="resetFilters(); loadAbsences();">
+        <i class="pi pi-refresh"></i> Réinitialiser
+      </button>
+    </div>
+
+    <!-- Message si erreur modules -->
+    <div *ngIf="!isLoading.modules && error.modules" class="module-error">
+      <i class="pi pi-exclamation-triangle"></i>
+      <span>{{ error.modules }}</span>
+    </div>
+
+    <!-- Filtres actifs -->
+    <div class="active-filters" *ngIf="selectedModuleId || (dateDebut && dateFin)">
+      <span class="filter-label">Filtres actifs:</span>
+      <span class="filter-tag" *ngIf="selectedModuleId">
+  <i class="pi pi-book"></i>
+        {{ getSelectedModuleLibelle() }}
+        <i class="pi pi-times" (click)="selectedModuleId = null; onModuleChange();"></i>
+</span>
+      <span class="filter-tag" *ngIf="dateDebut && dateFin">
+        <i class="pi pi-calendar"></i>
+        {{ formatDateForDisplay(dateDebut) }} - {{ formatDateForDisplay(dateFin) }}
+        <i class="pi pi-times" (click)="dateDebut = ''; dateFin = ''; onDateFilterChange();"></i>
+      </span>
+    </div>
+  </div>
+
+  <!-- Chargement -->
+  <div *ngIf="isLoading.absences" class="loading-container">
+    <div class="spinner">
+      <i class="pi pi-spin pi-spinner"></i>
+    </div>
+    <p>Chargement des absences de {{ enfant.prenom }}...</p>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div *ngIf="error.absences" class="error-message">
+    <i class="pi pi-exclamation-circle"></i>
+    <span>{{ error.absences }}</span>
+    <button class="retry-btn" (click)="loadAbsences()">
+      <i class="pi pi-refresh"></i> Réessayer
+    </button>
+  </div>
+
+  <!-- Contenu des absences -->
+  <div *ngIf="!isLoading.absences && !error.absences" class="absences-content">
+    <!-- Pas de données -->
+    <div *ngIf="absences.length === 0" class="no-data">
+      <i class="pi pi-calendar-check"></i>
+      <p>Aucune absence trouvée pour {{ enfant.prenom }}.</p>
+      <small *ngIf="selectedModuleId || (dateDebut && dateFin)">
+        Essayez de modifier vos filtres ou de voir toutes les absences.
+      </small>
+      <small *ngIf="!selectedModuleId && !dateDebut && !dateFin">
+        {{ enfant.prenom }} n'a aucune absence enregistrée. Excellent!
+      </small>
+    </div>
+
+    <!-- Liste des absences -->
+    <div *ngIf="absences.length > 0" class="absences-list">
+      <div class="list-header">
+        <h3>
+          <i class="pi pi-list"></i>
+          Liste des absences
+          <span class="count-badge">{{ absences.length }}</span>
+        </h3>
+        <div class="view-options">
+          <!-- Options d'affichage si nécessaire -->
+        </div>
+      </div>
+
+      <!-- Cartes des absences -->
+      <div class="absences-cards">
+        <div *ngFor="let absence of absences; trackBy: trackByAbsenceId"
+             class="absence-card"
+             [ngClass]="{
+               'recent': isRecentAbsence(absence),
+               'justified': absence.validee,
+               'unjustified': !absence.validee
+             }">
+
+          <div class="absence-header">
+            <div class="absence-date">
+              <i class="pi pi-calendar"></i>
+              <span class="date-value">{{ formatDateForDisplay(absence.dateDebut) }}</span>
+              <span class="duration" *ngIf="calculateAbsenceDuration(absence) > 1">
+                ({{ calculateAbsenceDuration(absence) }} jours)
+              </span>
+            </div>
+
+            <div class="absence-status" [ngClass]="getAbsenceStatusClass(absence)">
+              <i class="{{ getAbsenceStatusIcon(absence) }}"></i>
+              <span>{{ getAbsenceStatusLabel(absence) }}</span>
+            </div>
+          </div>
+
+          <div class="absence-body">
+            <div class="absence-details">
+              <div class="detail-item" *ngIf="absence.nomModule || absence.moduleSeance">
+                <i class="pi pi-book"></i>
+                <span class="detail-label">Module:</span>
+                <span class="detail-value">{{ absence.nomModule || absence.moduleSeance }}</span>
+              </div>
+
+              <div class="detail-item" *ngIf="absence.motif">
+                <i class="pi pi-comment"></i>
+                <span class="detail-label">Motif:</span>
+                <span class="detail-value">{{ absence.motif }}</span>
+              </div>
+
+              <div class="detail-item" *ngIf="absence.justification">
+                <i class="pi pi-file-o"></i>
+                <span class="detail-label">Justification:</span>
+                <span class="detail-value">{{ absence.justification }}</span>
+              </div>
+
+              <div class="detail-item" *ngIf="absence.commentaire">
+                <i class="pi pi-info-circle"></i>
+                <span class="detail-label">Commentaire:</span>
+                <span class="detail-value">{{ absence.commentaire }}</span>
+              </div>
+            </div>
+
+            <!-- Badge récent -->
+            <div class="recent-badge" *ngIf="isRecentAbsence(absence)">
+              <i class="pi pi-clock"></i>
+              Récent
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section d'information -->
+  <div class="info-section" *ngIf="!isLoading.absences && absences.length > 0">
+    <div class="info-card">
+      <div class="info-icon">
+        <i class="pi pi-info-circle"></i>
+      </div>
+      <div class="info-content">
+        <h3>Informations sur les absences</h3>
+        <ul>
+          <li><strong>Absences justifiées</strong> : Absences avec justificatif valide accepté par l'établissement</li>
+          <li><strong>Absences non justifiées</strong> : Absences sans justificatif ou avec justificatif non accepté</li>
+          <li><strong>Période récente</strong> : Absences survenues dans les 7 derniers jours</li>
+          <li><strong>Durée</strong> : Calculée du premier au dernier jour d'absence inclus</li>
+        </ul>
+        <p class="info-note">
+          <i class="pi pi-lock"></i>
+          Vous consultez les absences en lecture seule. Pour contester une absence ou fournir un justificatif, contactez l'administration.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,181 @@
+<!-- src/app/features/dashboard/parent/notes-enfant/notes-enfant.component.html -->
+<div class="notes-enfant-container">
+  <!-- Informations de l'enfant -->
+  <div class="enfant-header">
+    <div class="enfant-info">
+      <div class="enfant-avatar">
+        <i class="pi pi-user"></i>
+      </div>
+      <div class="enfant-details">
+        <h2>{{ enfant.prenom }} {{ enfant.nom }}</h2>
+        <p>{{ enfant.nomClasse }} - {{ enfant.numeroEtudiant }}</p>
+      </div>
+    </div>
+
+    <!-- Statistiques rapides -->
+    <div class="stats-overview" *ngIf="!isLoading.evaluations && !error.evaluations">
+      <div class="stat-item">
+        <div class="stat-value">{{ getEvaluationsCountForModule() }}</div>
+        <div class="stat-label">
+          {{ selectedModuleId ? 'Évaluations (module)' : 'Total évaluations' }}
+        </div>
+      </div>
+      <div class="stat-item" *ngIf="!selectedModuleId">
+        <div class="stat-value" [ngClass]="getMoyenneColorClass(calculateMoyenneGenerale())">
+          {{ calculateMoyenneGenerale() !== null ? calculateMoyenneGenerale() + '/20' : 'N/A' }}
+        </div>
+        <div class="stat-label">Moyenne générale</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtres -->
+  <div class="filter-section">
+    <div class="filter-row">
+      <div class="filter-group">
+        <label for="moduleFilter">
+          <i class="pi pi-book"></i>
+          Filtrer par module:
+        </label>
+        <select
+          id="moduleFilter"
+          class="filter-control"
+          [(ngModel)]="selectedModuleId"
+          (change)="onModuleChange()"
+          [disabled]="isLoading.modules">
+          <option [ngValue]="null">Tous les modules</option>
+          <option *ngFor="let module of modules" [ngValue]="module.id">
+            {{ module.libelle }}
+          </option>
+        </select>
+      </div>
+
+      <button class="btn reset-btn" (click)="resetFilters(); loadEvaluations();">
+        <i class="pi pi-refresh"></i> Réinitialiser
+      </button>
+    </div>
+
+    <!-- Message si aucun module -->
+    <div *ngIf="!isLoading.modules && error.modules" class="module-error">
+      <i class="pi pi-exclamation-triangle"></i>
+      <span>{{ error.modules }}</span>
+    </div>
+  </div>
+
+  <!-- Chargement -->
+  <div *ngIf="isLoading.evaluations" class="loading-container">
+    <div class="spinner">
+      <i class="pi pi-spin pi-spinner"></i>
+    </div>
+    <p>Chargement des notes de {{ enfant.prenom }}...</p>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div *ngIf="error.evaluations" class="error-message">
+    <i class="pi pi-exclamation-circle"></i>
+    <span>{{ error.evaluations }}</span>
+  </div>
+
+  <!-- Contenu des notes -->
+  <div *ngIf="!isLoading.evaluations && !error.evaluations" class="notes-content">
+    <!-- Pas de données -->
+    <div *ngIf="getObjectKeys(groupedEvaluations).length === 0" class="no-data">
+      <i class="pi pi-chart-bar"></i>
+      <p>Aucune note trouvée pour {{ enfant.prenom }}.</p>
+      <small *ngIf="selectedModuleId">Essayez de sélectionner un autre module ou de voir toutes les notes.</small>
+    </div>
+
+    <!-- Modules et notes -->
+    <div *ngIf="getObjectKeys(groupedEvaluations).length > 0" class="modules-list">
+      <!-- Carte pour chaque module -->
+      <div *ngFor="let moduleId of getObjectKeys(groupedEvaluations)" class="module-card">
+        <div class="module-header">
+          <div class="module-title">
+            <i class="pi pi-book"></i>
+            {{ groupedEvaluations[moduleId].module }}
+          </div>
+          <div class="module-moyenne" *ngIf="groupedEvaluations[moduleId].moyenne !== null">
+            <span class="moyenne-label">Moyenne:</span>
+            <span class="moyenne-value" [ngClass]="getMoyenneColorClass(groupedEvaluations[moduleId].moyenne)">
+              {{ groupedEvaluations[moduleId].moyenne }}/20
+            </span>
+          </div>
+          <div class="module-moyenne" *ngIf="groupedEvaluations[moduleId].moyenne === null">
+            <span class="moyenne-label">Moyenne:</span>
+            <span class="moyenne-value na">N/A</span>
+          </div>
+        </div>
+
+        <!-- Tableau des notes -->
+        <div class="notes-table-container">
+          <table class="notes-table">
+            <thead>
+            <tr>
+              <th>Type d'évaluation</th>
+              <th>Date</th>
+              <th>Note</th>
+              <th>Commentaire</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let evaluation of groupedEvaluations[moduleId].evaluations">
+              <td class="eval-type">
+                <span class="type-badge">{{ formatEvaluationType(evaluation.type) }}</span>
+              </td>
+              <td class="eval-date">{{ formatDateForDisplay(evaluation.dateEvaluation) }}</td>
+              <td class="note-cell">
+                <span class="note-value" [ngClass]="getNoteColorClass(evaluation.note)">
+                  {{ evaluation.note }}/20
+                </span>
+              </td>
+              <td class="eval-comment">
+                <span *ngIf="evaluation.commentaire">{{ evaluation.commentaire }}</span>
+                <span *ngIf="!evaluation.commentaire" class="no-comment">-</span>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Résumé statistique du module -->
+        <div class="module-stats">
+          <div class="stats-row">
+            <div class="stat-block">
+              <span class="stat-label">Évaluations</span>
+              <span class="stat-value">{{ groupedEvaluations[moduleId].evaluations.length }}</span>
+            </div>
+            <div class="stat-block" *ngIf="groupedEvaluations[moduleId].moyenne !== null">
+              <span class="stat-label">Note la plus haute</span>
+              <span class="stat-value">{{ getMaxNote(groupedEvaluations[moduleId].evaluations) }}/20</span>
+            </div>
+            <div class="stat-block" *ngIf="groupedEvaluations[moduleId].moyenne !== null">
+              <span class="stat-label">Note la plus basse</span>
+              <span class="stat-value">{{ getMinNote(groupedEvaluations[moduleId].evaluations) }}/20</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section d'information -->
+  <div class="info-section" *ngIf="!isLoading.evaluations && getObjectKeys(groupedEvaluations).length > 0">
+    <div class="info-card">
+      <div class="info-icon">
+        <i class="pi pi-info-circle"></i>
+      </div>
+      <div class="info-content">
+        <h3>À propos des notes</h3>
+        <ul>
+          <li><strong>Moyenne</strong> : Calculée automatiquement pour chaque module</li>
+          <li><strong>Moyenne générale</strong> : Moyenne de toutes les moyennes de modules</li>
+          <li><strong>Couleurs</strong> : Rouge (&lt; 8), Orange (8-10), Jaune (10-12), Vert clair (12-14), Vert (14-16), Bleu (&gt; 16)</li>
+        </ul>
+        <p class="info-note">
+          <i class="pi pi-lock"></i>
+          Vous consultez les notes en lecture seule. Pour toute question, contactez l'enseignant ou l'administration.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

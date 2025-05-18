@@ -1,0 +1,136 @@
+<!-- src/app/features/dashboard/parent/tableau-bord/tableau-bord.component.html -->
+<div class="parent-dashboard-container">
+  <div class="dashboard-header">
+    <h1>
+      <i class="pi pi-home"></i>
+      Bienvenue, {{ parentName }}
+    </h1>
+    <p>Espace parent - Consultez les informations de vos enfants</p>
+  </div>
+
+  <!-- Navigation principale -->
+  <div class="main-navigation" *ngIf="selectedEnfant">
+    <div class="nav-breadcrumb">
+      <span class="breadcrumb-item" (click)="backToSelection()">
+        <i class="pi pi-users"></i>
+        Sélection enfant
+      </span>
+      <i class="pi pi-angle-right separator"></i>
+      <span class="breadcrumb-item active">{{ getEnfantDisplayName() }}</span>
+      <i class="pi pi-angle-right separator" *ngIf="currentView !== 'selection'"></i>
+      <span class="breadcrumb-item active" *ngIf="currentView === 'notes'">Notes</span>
+      <span class="breadcrumb-item active" *ngIf="currentView === 'absences'">Absences</span>
+    </div>
+
+    <button class="btn btn-reset" (click)="resetSelection()">
+      <i class="pi pi-refresh"></i>
+      Changer d'enfant
+    </button>
+  </div>
+
+  <!-- Contenu principal -->
+  <div class="dashboard-content">
+    <!-- 1. Sélection d'enfant (toujours affichée quand aucun enfant sélectionné) -->
+    <div *ngIf="!selectedEnfant" class="content-section" [attr.data-reload]="reloadKey">
+      <app-selection-enfant (enfantSelectionne)="onEnfantSelectionne($event)"></app-selection-enfant>
+    </div>
+
+    <!-- 2. Options disponibles après sélection -->
+    <div *ngIf="selectedEnfant && currentView === 'selection'" class="content-section">
+      <div class="enfant-selected-info">
+        <div class="selected-card">
+          <div class="selected-header">
+            <div class="enfant-avatar">
+              <i class="pi pi-user"></i>
+            </div>
+            <div class="enfant-details">
+              <h2>{{ getEnfantDisplayName() }}</h2>
+              <p>{{ selectedEnfant.nomClasse }} - {{ selectedEnfant.numeroEtudiant }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="options-grid">
+        <div class="option-card notes-card" (click)="showNotes()">
+          <div class="option-icon">
+            <i class="pi pi-chart-bar"></i>
+          </div>
+          <div class="option-content">
+            <h3>Notes de l'enfant</h3>
+            <p>Consultez les évaluations et moyennes par module</p>
+            <div class="option-action">
+              <span>Voir les notes</span>
+              <i class="pi pi-arrow-right"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="option-card absences-card" (click)="showAbsences()">
+          <div class="option-icon">
+            <i class="pi pi-calendar-times"></i>
+          </div>
+          <div class="option-content">
+            <h3>Absences de l'enfant</h3>
+            <p>Consultez l'historique des absences et leur justification</p>
+            <div class="option-action">
+              <span>Voir les absences</span>
+              <i class="pi pi-arrow-right"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Affichage des notes -->
+    <div *ngIf="selectedEnfant && currentView === 'notes'" class="content-section">
+      <div class="section-header">
+        <h2>
+          <i class="pi pi-chart-bar"></i>
+          Notes de {{ getEnfantDisplayName() }}
+        </h2>
+        <button class="btn btn-back" (click)="backToSelection()">
+          <i class="pi pi-arrow-left"></i>
+          Retour aux options
+        </button>
+      </div>
+      <app-notes-enfant [enfant]="selectedEnfant"></app-notes-enfant>
+    </div>
+
+    <!-- 4. Affichage des absences -->
+    <div *ngIf="selectedEnfant && currentView === 'absences'" class="content-section">
+      <div class="section-header">
+        <h2>
+          <i class="pi pi-calendar-times"></i>
+          Absences de {{ getEnfantDisplayName() }}
+        </h2>
+        <button class="btn btn-back" (click)="backToSelection()">
+          <i class="pi pi-arrow-left"></i>
+          Retour aux options
+        </button>
+      </div>
+      <app-absences-enfant [enfant]="selectedEnfant"></app-absences-enfant>
+    </div>
+  </div>
+
+  <!-- Aide et information -->
+  <div class="help-section" *ngIf="!selectedEnfant">
+    <div class="help-card">
+      <div class="help-icon">
+        <i class="pi pi-info-circle"></i>
+      </div>
+      <div class="help-content">
+        <h3>Comment utiliser cet espace ?</h3>
+        <ol>
+          <li><strong>Sélectionnez un enfant</strong> dans la liste déroulante</li>
+          <li><strong>Choisissez l'information</strong> que vous souhaitez consulter (notes ou absences)</li>
+          <li><strong>Naviguez facilement</strong> entre les différentes sections</li>
+        </ol>
+        <p class="help-note">
+          <i class="pi pi-exclamation-triangle"></i>
+          Seule la consultation des données est disponible. Pour toute modification, contactez l'administration.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

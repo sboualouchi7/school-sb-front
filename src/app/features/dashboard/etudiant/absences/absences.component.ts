@@ -46,17 +46,19 @@ export class AbsencesComponent implements OnInit {
     this.loadModules();
     this.loadAbsences();
   }
-
   loadModules(): void {
     this.isLoading.modules = true;
     this.error.modules = null;
 
-    this.etudiantService.getMesModules().subscribe({
+    // Utiliser getAllModules comme solution temporaire
+    this.etudiantService.getAllModules().subscribe({
       next: (response) => {
         if (response.success) {
           this.modules = response.data;
+          console.log('Modules chargés:', this.modules);
         } else {
           this.error.modules = response.message || 'Erreur lors du chargement des modules';
+          console.error('Erreur de réponse:', response);
         }
         this.isLoading.modules = false;
       },
@@ -67,7 +69,6 @@ export class AbsencesComponent implements OnInit {
       }
     });
   }
-
   loadAbsences(): void {
     this.isLoading.absences = true;
     this.error.absences = null;

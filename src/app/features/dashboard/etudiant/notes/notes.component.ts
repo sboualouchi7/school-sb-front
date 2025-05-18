@@ -169,8 +169,42 @@ export class NotesComponent implements OnInit {
   formatDateForDisplay(dateString: string): string {
     if (!dateString) return '';
 
-    const date = new Date(dateString);
-    return date.toLocaleDateString('fr-FR', {
+    console.log('Date à formatter:', dateString); // Pour débugger
+
+    let dateObject: Date;
+
+    // Vérifier le format de la date
+    if (dateString.match(/^\d{2}-\d{2}-\d{4}$/)) {
+      // Format dd-MM-yyyy (comme 15-05-2025)
+      const parts = dateString.split('-');
+      const day = parts[0];
+      const month = parts[1];
+      const year = parts[2];
+      // Créer la date au format ISO pour JavaScript
+      dateObject = new Date(`${year}-${month}-${day}`);
+    } else if (dateString.match(/^\d{4}-\d{2}-\d{2}$/)) {
+      // Format yyyy-MM-dd (comme 2025-05-15)
+      dateObject = new Date(dateString);
+    } else if (dateString.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
+      // Format dd/MM/yyyy (comme 15/05/2025)
+      const parts = dateString.split('/');
+      const day = parts[0];
+      const month = parts[1];
+      const year = parts[2];
+      dateObject = new Date(`${year}-${month}-${day}`);
+    } else {
+      // Essayer de parser directement
+      dateObject = new Date(dateString);
+    }
+
+    // Vérifier si la date est valide
+    if (isNaN(dateObject.getTime())) {
+      console.error('Date invalide:', dateString);
+      return 'Date invalide';
+    }
+
+    // Formatter la date pour l'affichage
+    return dateObject.toLocaleDateString('fr-FR', {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric'

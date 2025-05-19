@@ -128,6 +128,7 @@ export class AbsenceManagementComponent implements OnInit {
       next: (response) => {
         if (response.success) {
           this.absences = response.data;
+          console.log(this.absences, 'absences loaded');
         } else {
           console.error('Erreur lors du chargement des absences:', response.message);
         }

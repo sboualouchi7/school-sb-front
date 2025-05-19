@@ -106,7 +106,7 @@
         <tbody>
         <tr *ngFor="let absence of absences">
           <td>{{ formatDateForDisplay(absence.dateDebut) }}</td>
-          <td>{{ absence.moduleSeance || absence.nomModule }}</td>
+          <td>{{ absence.nomModule || absence.nomModule }}</td>
           <td>{{ absence.motif || 'Non spécifié' }}</td>
           <td>
               <span class="status-badge" [ngClass]="{'status-justified': absence.validee, 'status-unjustified': !absence.validee}">

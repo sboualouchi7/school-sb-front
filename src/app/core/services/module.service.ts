@@ -65,4 +65,5 @@ export class ModuleService {
   getSessionsByEnseignant(enseignantId: number): Observable<ApiResponse<SessionResponse[]>> {
     return this.http.get<ApiResponse<SessionResponse[]>>(`${this.apiUrl}/enseignant/${enseignantId}/sessions`);
   }
+
 }

@@ -176,9 +176,26 @@ export class DocumentManagementComponent implements OnInit {
     }
   }
 
-  formatDate(dateCreation: any): string {
-        throw new Error('Method not implemented.');
+  formatDate(dateValue: any): string {
+    if (!dateValue) {
+      return new Date().toISOString();
     }
+
+    // Si c'est déjà une string (format YYYY-MM-DD depuis le input date)
+    if (typeof dateValue === 'string') {
+      // Convertir en Date puis en ISO string
+      const date = new Date(dateValue);
+      return date.toISOString();
+    }
+
+    // Si c'est déjà un objet Date
+    if (dateValue instanceof Date) {
+      return dateValue.toISOString();
+    }
+
+    // Par défaut, retourner la date actuelle
+    return new Date().toISOString();
+  }
 
   updateDocumentStatus(documentId: number, newStatus: StatusDocument): void {
     this.documentService.updateStatus(documentId, newStatus).subscribe({

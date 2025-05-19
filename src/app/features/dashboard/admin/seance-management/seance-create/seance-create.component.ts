@@ -32,6 +32,7 @@ export class SeanceCreateComponent implements OnInit, OnChanges {
   numeroSeanceOptions = Object.values(NumeroSeance);
 
   isEditMode = false;
+  isLoadingModules = false;
 
   constructor(
     private fb: FormBuilder,
@@ -43,14 +44,14 @@ export class SeanceCreateComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.initForm();
     this.loadEnseignants();
-    this.loadModules();
+    this.loadAllModules();
     this.setupFormSubscriptions();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['seanceToEdit'] && changes['seanceToEdit'].currentValue) {
       this.isEditMode = true;
-      this.updateFormWithSeanceData();
+      setTimeout(() => this.updateFormWithSeanceData(), 100);
     } else if (changes['seanceToEdit'] && !changes['seanceToEdit'].currentValue) {
       this.isEditMode = false;
       this.resetForm();
@@ -74,7 +75,13 @@ export class SeanceCreateComponent implements OnInit, OnChanges {
   setupFormSubscriptions(): void {
     // Filtrer les modules quand l'enseignant change
     this.seanceForm.get('enseignantId')?.valueChanges.subscribe(enseignantId => {
-      this.filterModulesByEnseignant(enseignantId);
+      console.log('Enseignant sélectionné:', enseignantId);
+      if (enseignantId) {
+        this.loadModulesByEnseignant(Number(enseignantId));
+      } else {
+        this.modules = [];
+        this.seanceForm.patchValue({ moduleId: '' });
+      }
     });
 
     // Mettre à jour le statut quand la case "effectuée" change
@@ -102,6 +109,9 @@ export class SeanceCreateComponent implements OnInit, OnChanges {
       next: (response) => {
         if (response.success) {
           this.enseignants = response.data;
+          console.log('Enseignants chargés:', this.enseignants.length);
+
+          // Si on est en mode édition, charger les modules après le chargement des enseignants
           if (this.isEditMode && this.seanceToEdit) {
             this.updateFormWithSeanceData();
           }
@@ -113,53 +123,66 @@ export class SeanceCreateComponent implements OnInit, OnChanges {
     });
   }
 
-  loadModules(): void {
+  loadAllModules(): void {
     this.moduleService.getAllModules().subscribe({
       next: (response) => {
         if (response.success) {
           this.allModules = response.data;
-          this.modules = [...this.allModules];
-          if (this.isEditMode && this.seanceToEdit) {
-            this.updateFormWithSeanceData();
-          }
+          console.log('Tous les modules chargés:', this.allModules.length);
         }
       },
       error: (error) => {
-        console.error('Erreur lors du chargement des modules:', error);
+        console.error('Erreur lors du chargement de tous les modules:', error);
       }
     });
   }
 
-  filterModulesByEnseignant(enseignantId: number | null): void {
-    if (!enseignantId) {
-      this.modules = [...this.allModules];
-    } else {
-      this.modules = this.allModules.filter(module =>
-        module.enseignantId === enseignantId
-      );
-    }
+  loadModulesByEnseignant(enseignantId: number): void {
+    this.isLoadingModules = true;
+    console.log('Chargement des modules pour l\'enseignant:', enseignantId);
 
-    // Réinitialiser le module sélectionné si nécessaire
-    const currentModuleId = this.seanceForm.get('moduleId')?.value;
-    if (currentModuleId && !this.modules.find(m => m.id === currentModuleId)) {
-      this.seanceForm.patchValue({ moduleId: '' });
-    }
+    this.moduleService.getModulesByEnseignant(enseignantId).subscribe({
+      next: (response) => {
+        this.isLoadingModules = false;
+        if (response.success) {
+          this.modules = response.data;
+          console.log('Modules trouvés pour l\'enseignant:', this.modules.length);
+
+          // Réinitialiser la sélection du module si celui actuellement sélectionné n'est pas disponible
+          const currentModuleId = this.seanceForm.get('moduleId')?.value;
+          if (currentModuleId && !this.modules.find(m => m.id === parseInt(currentModuleId))) {
+            this.seanceForm.patchValue({ moduleId: '' });
+          }
+        } else {
+          this.modules = [];
+          console.log('Aucun module trouvé pour cet enseignant');
+        }
+      },
+      error: (error) => {
+        this.isLoadingModules = false;
+        console.error('Erreur lors du chargement des modules par enseignant:', error);
+        this.modules = [];
+      }
+    });
   }
 
   updateFormWithSeanceData(): void {
     if (!this.seanceToEdit || !this.seanceForm) return;
+
+    console.log('Mise à jour du formulaire avec:', this.seanceToEdit);
 
     // Convertir la date au format yyyy-MM-dd pour l'input date
     let date = this.seanceToEdit.date;
     if (date && date.includes('-')) {
       const parts = date.split('-');
       if (parts.length === 3 && parts[0].length === 2) {
+        // Format dd-MM-yyyy vers yyyy-MM-dd
         date = `${parts[2]}-${parts[1]}-${parts[0]}`;
       }
     }
 
-    // Filtrer les modules pour l'enseignant sélectionné
-    this.filterModulesByEnseignant(this.seanceToEdit.enseignantId);
+    // Charger les modules pour l'enseignant d'abord
+    this.loadModulesByEnseignant(this.seanceToEdit.enseignantId);
 
     this.seanceForm.patchValue({
       enseignantId: this.seanceToEdit.enseignantId,
@@ -175,7 +198,7 @@ export class SeanceCreateComponent implements OnInit, OnChanges {
   }
 
   onSubmit(): void {
-    if (this.seanceForm.valid) {
+    if (this.seanceForm.valid && this.validateTimeRange()) {
       if (this.isEditMode) {
         this.updateSeance();
       } else {
@@ -187,19 +210,21 @@ export class SeanceCreateComponent implements OnInit, OnChanges {
   }
 
   createSeance(): void {
-    const dateInput = this.seanceForm.value.date;
-    const date = this.formatDateForBackend(dateInput);
+    const formValue = this.seanceForm.value;
+    const date = this.formatDateForBackend(formValue.date);
 
     const newSeance: SeanceRequest = {
-      enseignantId: this.seanceForm.value.enseignantId,
-      moduleId: this.seanceForm.value.moduleId,
+      enseignantId: parseInt(formValue.enseignantId),
+      moduleId: parseInt(formValue.moduleId),
       date: date,
-      heureDebut: this.seanceForm.value.heureDebut,
-      heureFin: this.seanceForm.value.heureFin,
-      numeroSeance: this.seanceForm.value.numeroSeance,
-      statut: this.seanceForm.value.statut,
-      description: this.seanceForm.value.description || undefined
+      heureDebut: formValue.heureDebut,
+      heureFin: formValue.heureFin,
+      numeroSeance: formValue.numeroSeance,
+      statut: formValue.statut,
+      description: formValue.description || undefined
     };
+
+    console.log('Création de la séance:', newSeance);
 
     this.seanceService.createSeance(newSeance).subscribe({
       next: (response) => {
@@ -220,19 +245,21 @@ export class SeanceCreateComponent implements OnInit, OnChanges {
   updateSeance(): void {
     if (!this.seanceToEdit) return;
 
-    const dateInput = this.seanceForm.value.date;
-    const date = this.formatDateForBackend(dateInput);
+    const formValue = this.seanceForm.value;
+    const date = this.formatDateForBackend(formValue.date);
 
     const updatedSeance: SeanceRequest = {
-      enseignantId: this.seanceForm.value.enseignantId,
-      moduleId: this.seanceForm.value.moduleId,
+      enseignantId: parseInt(formValue.enseignantId),
+      moduleId: parseInt(formValue.moduleId),
       date: date,
-      heureDebut: this.seanceForm.value.heureDebut,
-      heureFin: this.seanceForm.value.heureFin,
-      numeroSeance: this.seanceForm.value.numeroSeance,
-      statut: this.seanceForm.value.statut,
-      description: this.seanceForm.value.description || undefined
+      heureDebut: formValue.heureDebut,
+      heureFin: formValue.heureFin,
+      numeroSeance: formValue.numeroSeance,
+      statut: formValue.statut,
+      description: formValue.description || undefined
     };
+
+    console.log('Mise à jour de la séance:', updatedSeance);
 
     this.seanceService.updateSeance(this.seanceToEdit.id, updatedSeance).subscribe({
       next: (response) => {
@@ -256,6 +283,7 @@ export class SeanceCreateComponent implements OnInit, OnChanges {
 
     const parts = dateString.split('-');
     if (parts.length === 3) {
+      // Si c'est au format yyyy-MM-dd, convertir vers dd-MM-yyyy
       if (parts[0].length === 4) {
         return `${parts[2]}-${parts[1]}-${parts[0]}`;
       } else {
@@ -268,7 +296,7 @@ export class SeanceCreateComponent implements OnInit, OnChanges {
   resetForm(): void {
     this.seanceForm.reset();
     this.initForm();
-    this.modules = [...this.allModules];
+    this.modules = [];
   }
 
   cancelEdit(): void {
@@ -298,7 +326,6 @@ export class SeanceCreateComponent implements OnInit, OnChanges {
     }
   }
 
-  // Validation personnalisée pour vérifier que l'heure de fin est après l'heure de début
   validateTimeRange(): boolean {
     const heureDebut = this.seanceForm.get('heureDebut')?.value;
     const heureFin = this.seanceForm.get('heureFin')?.value;
@@ -309,10 +336,11 @@ export class SeanceCreateComponent implements OnInit, OnChanges {
     return true;
   }
 
-  // Suggérer l'heure de fin automatiquement (1h30 après le début)
   onHeureDebutChange(): void {
     const heureDebut = this.seanceForm.get('heureDebut')?.value;
-    if (heureDebut && !this.seanceForm.get('heureFin')?.value) {
+    const heureFin = this.seanceForm.get('heureFin')?.value;
+
+    if (heureDebut && !heureFin) {
       const [hours, minutes] = heureDebut.split(':').map(Number);
       const endTime = new Date();
       endTime.setHours(hours, minutes + 90); // Ajouter 1h30

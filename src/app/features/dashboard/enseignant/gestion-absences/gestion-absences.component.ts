@@ -31,6 +31,7 @@ export class GestionAbsencesComponent {
   onModuleSelectionne(module: ModuleResponse): void {
     this.moduleSelectionne = module;
     this.etapeActuelle = 'classe';
+    console.log('module ', module);
   }
 
   // Méthode appelée lorsqu'une classe est sélectionnée

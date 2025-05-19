@@ -1,3 +1,4 @@
+// src/app/features/dashboard/admin/admin-routing.module.ts
 import {RouterModule, Routes} from '@angular/router';
 import {NgModule} from "@angular/core";
 import {StudentManagementComponent} from "./student-management/student-management.component";
@@ -8,7 +9,8 @@ import {SessionManagmentComponent} from "./session-managment/session-managment.c
 import {ModuleManagementComponent} from "./module-management/module-management.component";
 import {EvaluationManagementComponent} from "./Evaluation-management/Evaluation-management.component";
 import { AbsenceManagementComponent } from './absence-management/absence-management.component';
-import { DocumentManagementComponent } from './document-management/document-management.component.spec';
+import { DocumentManagementComponent } from './document-management/document-management.component';
+import { SeanceManagementComponent } from './seance-management/seance-management.component';
 
 export const AdminRoutes: Routes = [
   {
@@ -31,7 +33,6 @@ export const AdminRoutes: Routes = [
   { path: 'parent',
     component: ParentManagmentComponent
   },
-
   { path: 'evaluations',
     component: EvaluationManagementComponent
   },
@@ -42,6 +43,10 @@ export const AdminRoutes: Routes = [
   {
     path: 'documents',
     component: DocumentManagementComponent
+  },
+  {
+    path: 'seances',
+    component: SeanceManagementComponent
   }
 ];
 

@@ -8,7 +8,7 @@ import { ApiResponse } from '../dto/common/api-response';
 
 @Injectable({ providedIn: 'root' })
 export class SeanceService {
-  private apiUrl = `${environment.apiUrl}/auth/seances`;
+  private apiUrl = `${environment.apiUrl}/seances`;
 
   constructor(private http: HttpClient) {}
 
@@ -62,5 +62,37 @@ export class SeanceService {
 
   activerSeance(id: number, actif: boolean): Observable<ApiResponse<SeanceResponse>> {
     return this.http.patch<ApiResponse<SeanceResponse>>(`${this.apiUrl}/${id}/actif`, { actif });
+  }
+  getSeancesByPeriode(dateDebut: string, dateFin: string): Observable<ApiResponse<SeanceResponse[]>> {
+    return this.http.get<ApiResponse<SeanceResponse[]>>(`${this.apiUrl}/periode`, {
+      params: { dateDebut, dateFin }
+    });
+  }
+
+// Récupérer les séances par enseignant et module
+  getSeancesByEnseignantAndModule(enseignantId: number, moduleId: number): Observable<ApiResponse<SeanceResponse[]>> {
+    return this.http.get<ApiResponse<SeanceResponse[]>>(`${this.apiUrl}/enseignant/${enseignantId}/module/${moduleId}`);
+  }
+
+// Marquer une séance comme effectuée ou non
+  markSeanceAsCompleted(seanceId: number, completed: boolean): Observable<ApiResponse<SeanceResponse>> {
+    const statut = completed ? 'REALISEE' : 'PLANIFIEE';
+    return this.updateStatut(seanceId, statut);
+  }
+
+// Dupliquer une séance (utile pour créer des séances récurrentes)
+  duplicateSeance(seanceId: number, newDate: string): Observable<ApiResponse<SeanceResponse>> {
+    return this.http.post<ApiResponse<SeanceResponse>>(`${this.apiUrl}/${seanceId}/duplicate`, {
+      dateSeance: newDate
+    });
+  }
+
+// Statistiques des séances pour un enseignant
+  getSeanceStats(enseignantId: number, startDate?: string, endDate?: string): Observable<ApiResponse<any>> {
+    const params: any = {};
+    if (startDate) params.startDate = startDate;
+    if (endDate) params.endDate = endDate;
+
+    return this.http.get<ApiResponse<any>>(`${this.apiUrl}/stats/enseignant/${enseignantId}`, { params });
   }
 }

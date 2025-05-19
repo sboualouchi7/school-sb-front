@@ -92,6 +92,8 @@ export class ListeEtudiantsComponent implements OnInit {
       return;
     }
 
+    console.log(this.moduleId)
+    console.log(this.classeId)
     if (this.absenceForm.invalid) {
       this.markFormGroupTouched(this.absenceForm);
       return;
@@ -107,7 +109,7 @@ export class ListeEtudiantsComponent implements OnInit {
     const absenceRequests: AbsenceRequest[] = this.etudiantsSelectionnes.map(etudiantId => ({
       etudiantId: etudiantId,
       seanceId: 1,
-      moduleId:formValues.moduleId,// Placeholder - à adapter selon votre modèle de données
+      moduleId:this.moduleId,// Placeholder - à adapter selon votre modèle de données
       dateDebut: this.formatDateForBackend(formValues.date),
       dateFin: this.formatDateForBackend(formValues.date), // Même date pour simplifier
       motif: formValues.motif,

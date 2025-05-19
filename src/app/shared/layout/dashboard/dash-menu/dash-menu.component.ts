@@ -158,6 +158,12 @@ export class DashMenuComponent implements OnInit {
         path: '/dashboard/parent/absences-enfant',
         icon: 'pi pi-calendar-times',
         roles: [Role.PARENT]
+      },
+      {
+        label: 'Suivi Hebdomadaire',
+        path: '/dashboard/admin/seances',
+        icon: 'pi pi-calendar-times',
+        roles: [Role.ADMIN]
       }
     ];
 

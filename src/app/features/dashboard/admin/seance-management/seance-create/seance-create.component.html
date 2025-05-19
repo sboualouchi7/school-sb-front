@@ -1,0 +1,188 @@
+<!-- seance-create.component.html -->
+<div class="container">
+  <h1>{{ isEditMode ? 'Modifier la séance' : 'Ajouter une séance' }}</h1>
+
+  <form [formGroup]="seanceForm" (ngSubmit)="onSubmit()">
+    <!-- Enseignant et Module -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="enseignantId">Enseignant <span class="required">*</span></label>
+        <select id="enseignantId" formControlName="enseignantId" class="form-control">
+          <option value="" disabled>Sélectionnez un enseignant</option>
+          <option *ngFor="let enseignant of enseignants" [value]="enseignant.id">
+            {{ enseignant.prenom }} {{ enseignant.nom }}
+          </option>
+        </select>
+        <div *ngIf="seanceForm.get('enseignantId')?.invalid && seanceForm.get('enseignantId')?.touched" class="error-message">
+          L'enseignant est requis
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="moduleId">Module <span class="required">*</span></label>
+        <select id="moduleId" formControlName="moduleId" class="form-control">
+          <option value="" disabled>Sélectionnez un module</option>
+          <option *ngFor="let module of modules" [value]="module.id">
+            {{ module.libelle }}
+          </option>
+        </select>
+        <div *ngIf="seanceForm.get('moduleId')?.invalid && seanceForm.get('moduleId')?.touched" class="error-message">
+          Le module est requis
+        </div>
+      </div>
+    </div>
+
+    <!-- Module et Date -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="moduleId">Module <span class="required">*</span></label>
+        <select id="moduleId" formControlName="moduleId" class="form-control">
+          <option value="" disabled>Sélectionnez un module</option>
+          <option *ngFor="let module of modules" [value]="module.id">
+            {{ module.libelle }}
+          </option>
+        </select>
+        <div *ngIf="seanceForm.get('moduleId')?.invalid && seanceForm.get('moduleId')?.touched" class="error-message">
+          Le module est requis
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="date">Date de la séance <span class="required">*</span></label>
+        <input
+          type="date"
+          id="date"
+          formControlName="date"
+          class="form-control"
+        >
+        <div *ngIf="seanceForm.get('date')?.invalid && seanceForm.get('date')?.touched" class="error-message">
+          La date de la séance est requise
+        </div>
+      </div>
+    </div>
+
+    <!-- Heures -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="heureDebut">Heure de début <span class="required">*</span></label>
+        <input
+          type="time"
+          id="heureDebut"
+          formControlName="heureDebut"
+          class="form-control"
+          (change)="onHeureDebutChange()"
+        >
+        <div *ngIf="seanceForm.get('heureDebut')?.invalid && seanceForm.get('heureDebut')?.touched" class="error-message">
+          L'heure de début est requise
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="heureFin">Heure de fin <span class="required">*</span></label>
+        <input
+          type="time"
+          id="heureFin"
+          formControlName="heureFin"
+          class="form-control"
+        >
+        <div *ngIf="seanceForm.get('heureFin')?.invalid && seanceForm.get('heureFin')?.touched" class="error-message">
+          L'heure de fin est requise
+        </div>
+        <div *ngIf="!validateTimeRange()" class="error-message">
+          L'heure de fin doit être après l'heure de début
+        </div>
+      </div>
+    </div>
+
+    <!-- Numéro de séance et Statut -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="numeroSeance">Numéro de séance <span class="required">*</span></label>
+        <select id="numeroSeance" formControlName="numeroSeance" class="form-control">
+          <option value="" disabled>Sélectionnez le numéro</option>
+          <option *ngFor="let numero of numeroSeanceOptions" [value]="numero">
+            {{ numero }}
+          </option>
+        </select>
+        <div *ngIf="seanceForm.get('numeroSeance')?.invalid && seanceForm.get('numeroSeance')?.touched" class="error-message">
+          Le numéro de séance est requis
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="statut">Statut <span class="required">*</span></label>
+        <select id="statut" formControlName="statut" class="form-control">
+          <option *ngFor="let status of statusOptions" [value]="status">
+            {{ formatStatus(status) }}
+          </option>
+        </select>
+        <div *ngIf="seanceForm.get('statut')?.invalid && seanceForm.get('statut')?.touched" class="error-message">
+          Le statut est requis
+        </div>
+      </div>
+    </div>
+
+    <!-- Séance effectuée -->
+    <div class="form-row">
+      <div class="form-group checkbox-group">
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            formControlName="effectuee"
+            class="checkbox-input"
+          >
+          <span class="checkbox-custom"></span>
+          <span class="checkbox-text">Séance effectuée</span>
+        </label>
+        <div class="checkbox-help">
+          Cocher cette case marquera automatiquement la séance comme "Réalisée"
+        </div>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="form-row">
+      <div class="form-group full-width">
+        <label for="description">Description</label>
+        <textarea
+          id="description"
+          formControlName="description"
+          class="form-control"
+          placeholder="Description de la séance (optionnel)"
+          rows="4"
+        ></textarea>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="form-actions">
+      <button
+        type="submit"
+        class="btn-primary"
+        [disabled]="seanceForm.invalid || !validateTimeRange()"
+      >
+        <i class="pi pi-check"></i>
+        {{ isEditMode ? 'Mettre à jour' : 'Créer la séance' }}
+      </button>
+
+      <button
+        *ngIf="isEditMode"
+        type="button"
+        class="btn-secondary"
+        (click)="cancelEdit()"
+      >
+        <i class="pi pi-times"></i>
+        Annuler
+      </button>
+
+      <button
+        type="button"
+        class="btn-secondary"
+        (click)="resetForm()"
+      >
+        <i class="pi pi-refresh"></i>
+        Réinitialiser
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,50 @@
+
+<!-- seance-management.component.html -->
+<div class="main">
+  <div class="main-wrapper">
+    <div class="first-section">
+      <div class="seances-container">
+        <div class="page-header">
+          <h1>Suivi Hebdomadaire des Séances</h1>
+          <div class="header-actions">
+            <button class="btn btn-export">
+              <i class="pi pi-download"></i> Exporter
+            </button>
+            <button class="btn btn-calendar">
+              <i class="pi pi-calendar"></i> Vue Calendrier
+            </button>
+            <button class="btn btn-primary" (click)="openModal()">
+              <i class="pi pi-plus"></i> Ajouter une séance
+            </button>
+          </div>
+        </div>
+
+        <!-- Filtres -->
+        <div class="filters-section">
+          <app-seance-filters (filtersChanged)="onFiltersChanged($event)"></app-seance-filters>
+        </div>
+
+        <!-- Liste des séances -->
+        <div class="seances-table">
+          <app-seance-list (editSeanceEvent)="onEditSeance($event)"></app-seance-list>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal pour créer/éditer une séance -->
+<div class="modal" *ngIf="showModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="close-button" (click)="closeModal()">&times;</span>
+    </div>
+    <div class="modal-body">
+      <app-seance-create
+        [seanceToEdit]="seanceToEdit"
+        (seanceCreated)="onSeanceCreated()"
+        (seanceUpdated)="onSeanceUpdated()">
+      </app-seance-create>
+    </div>
+  </div>
+</div>

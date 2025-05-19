@@ -1,0 +1,67 @@
+<!-- seance-filters.component.html -->
+<div class="filters-container">
+  <h2>Filtres de recherche</h2>
+
+  <form [formGroup]="filterForm" class="filter-form">
+    <div class="form-row">
+      <!-- Sélection de semaine -->
+      <div class="form-group week-selector">
+        <label for="semaine">Semaine</label>
+        <div class="week-controls">
+          <button type="button" class="btn-week" (click)="setWeek(-1)" title="Semaine précédente">
+            <i class="pi pi-chevron-left"></i>
+          </button>
+          <input
+            type="date"
+            id="semaine"
+            formControlName="semaine"
+            class="form-control week-input"
+          >
+          <button type="button" class="btn-week" (click)="setWeek(1)" title="Semaine suivante">
+            <i class="pi pi-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Sélection d'enseignant -->
+      <div class="form-group">
+        <label for="enseignantId">Enseignant</label>
+        <select id="enseignantId" formControlName="enseignantId" class="form-control">
+          <option value="">Tous les enseignants</option>
+          <option *ngFor="let enseignant of enseignants" [value]="enseignant.id">
+            {{ enseignant.prenom }} {{ enseignant.nom }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Sélection de module -->
+      <div class="form-group">
+        <label for="moduleId">Module</label>
+        <select id="moduleId" formControlName="moduleId" class="form-control">
+          <option value="">Tous les modules</option>
+          <option *ngFor="let module of modules" [value]="module.id">
+            {{ module.libelle }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Sélection de statut -->
+      <div class="form-group">
+        <label for="statut">Statut</label>
+        <select id="statut" formControlName="statut" class="form-control">
+          <option value="">Tous les statuts</option>
+          <option *ngFor="let status of statusOptions" [value]="status">
+            {{ formatStatus(status) }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Boutons d'action -->
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="resetFilters()">
+          <i class="pi pi-refresh"></i> Réinitialiser
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

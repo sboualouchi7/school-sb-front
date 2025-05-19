@@ -164,7 +164,12 @@ export class DashMenuComponent implements OnInit {
         path: '/dashboard/admin/seances',
         icon: 'pi pi-calendar-times',
         roles: [Role.ADMIN]
-      }
+      },{
+        label: 'Dashboard',
+        path: '/dashboard/admin/dashboard',
+        icon: 'pi pi-home',
+        roles: [Role.ADMIN]
+      },
     ];
 
     // Filtrer les items en fonction du rôle de l'utilisateur

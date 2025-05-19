@@ -1,39 +1,48 @@
-// src/app/features/dashboard/admin/admin-routing.module.ts
-import {RouterModule, Routes} from '@angular/router';
-import {NgModule} from "@angular/core";
-import {StudentManagementComponent} from "./student-management/student-management.component";
-import {TeacherManagementComponent} from "./teacher-management/teacher-management.component";
-import {ClassroomManagementComponent} from "./classroom-management/classroom-management.component";
-import {ParentManagmentComponent} from "./parent-managment/parent-managment.component";
-import {SessionManagmentComponent} from "./session-managment/session-managment.component";
-import {ModuleManagementComponent} from "./module-management/module-management.component";
-import {EvaluationManagementComponent} from "./Evaluation-management/Evaluation-management.component";
+// admin-routing.module.ts - Mise à jour
+import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
+import { StudentManagementComponent } from './student-management/student-management.component';
+import { TeacherManagementComponent } from './teacher-management/teacher-management.component';
+import { ClassroomManagementComponent } from './classroom-management/classroom-management.component';
+import { ParentManagmentComponent } from './parent-managment/parent-managment.component';
+import { ModuleManagementComponent } from './module-management/module-management.component';
+import { EvaluationManagementComponent } from './Evaluation-management/Evaluation-management.component';
 import { AbsenceManagementComponent } from './absence-management/absence-management.component';
 import { DocumentManagementComponent } from './document-management/document-management.component';
 import { SeanceManagementComponent } from './seance-management/seance-management.component';
+import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 
 export const AdminRoutes: Routes = [
   {
-    path: '',
-    redirectTo: 'student',
-    pathMatch: 'full'
+    path: 'dashboard',
+    component: AdminDashboardComponent  // Dashboard par défaut
   },
-  { path: 'student',
+  {
+    path: 'dashboard',
+    component: AdminDashboardComponent
+  },
+  {
+    path: 'student',
     component: StudentManagementComponent
   },
-  { path: 'profs',
+  {
+    path: 'profs',
     component: TeacherManagementComponent
   },
-  { path: 'classe',
+  {
+    path: 'classe',
     component: ClassroomManagementComponent
   },
-  { path: 'module',
+  {
+    path: 'module',
     component: ModuleManagementComponent
   },
-  { path: 'parent',
+  {
+    path: 'parent',
     component: ParentManagmentComponent
   },
-  { path: 'evaluations',
+  {
+    path: 'evaluations',
     component: EvaluationManagementComponent
   },
   {

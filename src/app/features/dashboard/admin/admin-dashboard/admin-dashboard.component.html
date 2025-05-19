@@ -1,0 +1,22 @@
+<!-- admin-dashboard.component.html -->
+<div class="admin-dashboard">
+  <div class="dashboard-header">
+    <h1>Tableau de Bord Administrateur</h1>
+    <p>Vue d'ensemble des activités de l'établissement</p>
+  </div>
+
+  <!-- Filtres -->
+  <div class="filters-section">
+    <app-dashboard-filters (filtersChanged)="onFiltersChanged($event)"></app-dashboard-filters>
+  </div>
+
+  <!-- Cartes statistiques -->
+  <div class="stats-section">
+    <app-stats-cards [filters]="currentFilters"></app-stats-cards>
+  </div>
+
+  <!-- Tableau récapitulatif -->
+  <div class="summary-section">
+    <app-summary-table [filters]="currentFilters"></app-summary-table>
+  </div>
+</div>

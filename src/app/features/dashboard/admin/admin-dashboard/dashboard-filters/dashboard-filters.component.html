@@ -1,0 +1,71 @@
+<!-- dashboard-filters.component.html -->
+<div class="dashboard-filters">
+  <div class="filters-header">
+    <h3>Filtres</h3>
+    <button
+      *ngIf="hasActiveFilters()"
+      (click)="resetFilters()"
+      class="reset-btn">
+      <i class="pi pi-refresh"></i>
+      Réinitialiser
+    </button>
+  </div>
+
+  <form [formGroup]="filterForm" class="filters-form">
+    <div class="filters-row">
+
+      <!-- Filtre par période -->
+      <div class="filter-group">
+        <label for="periode">Période</label>
+        <select id="periode" formControlName="periode" class="filter-select">
+          <option *ngFor="let option of periodeOptions" [value]="option.value">
+            {{ option.label }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Filtre par statut -->
+      <div class="filter-group">
+        <label for="statut">Statut</label>
+        <select id="statut" formControlName="statut" class="filter-select">
+          <option *ngFor="let option of statutOptions" [value]="option.value">
+            {{ option.label }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Filtre par année scolaire -->
+      <div class="filter-group">
+        <label for="anneeScolaire">Année Scolaire</label>
+        <select id="anneeScolaire" formControlName="anneeScolaire" class="filter-select">
+          <option *ngFor="let option of anneeScolaireOptions" [value]="option.value">
+            {{ option.label }}
+          </option>
+        </select>
+      </div>
+
+    </div>
+
+    <!-- Indicateur de filtres actifs -->
+    <div *ngIf="hasActiveFilters()" class="active-filters">
+      <span class="active-filters-label">
+        <i class="pi pi-filter"></i>
+        Filtres actifs
+      </span>
+      <div class="filter-tags">
+        <span *ngIf="filterForm.get('periode')?.value" class="filter-tag">
+          {{ periodeOptions.find(ps => ps.value === filterForm.get('periode')?.value)?.label }}
+          <i class="pi pi-times" (click)="filterForm.patchValue({periode: ''})"></i>
+        </span>
+        <span *ngIf="filterForm.get('statut')?.value" class="filter-tag">
+          {{ statutOptions.find(s => s.value === filterForm.get('statut')?.value)?.label }}
+          <i class="pi pi-times" (click)="filterForm.patchValue({statut: ''})"></i>
+        </span>
+        <span *ngIf="filterForm.get('anneeScolaire')?.value" class="filter-tag">
+          {{ anneeScolaireOptions.find(a => a.value === filterForm.get('anneeScolaire')?.value)?.label }}
+          <i class="pi pi-times" (click)="filterForm.patchValue({anneeScolaire: ''})"></i>
+        </span>
+      </div>
+    </div>
+  </form>
+</div>

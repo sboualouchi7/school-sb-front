@@ -87,14 +87,44 @@
     </form>
   </div>
 
+  <!-- Filtres des documents -->
+  <div class="filters-section">
+    <h2>Filtres</h2>
+    <form [formGroup]="filterForm" class="filter-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="typeFilter">Type de document</label>
+          <select id="typeFilter" formControlName="typeFilter" class="form-control">
+            <option value="">Tous les types</option>
+            <option *ngFor="let type of typeOptions" [value]="type">
+              {{ formatDocumentType(type) }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="etudiantFilter">Prénom étudiant</label>
+          <input type="text" id="etudiantFilter" formControlName="etudiantFilter" class="form-control"
+                 placeholder="Filtrer par prénom">
+        </div>
+
+        <div class="form-actions-filter">
+          <button type="button" class="btn btn-secondary" (click)="resetFilters()">
+            <i class="pi pi-filter-slash"></i> Réinitialiser les filtres
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
   <!-- Tableau des demandes de documents -->
   <div class="documents-table">
     <h2>Liste des demandes de documents</h2>
-    <div *ngIf="documents.length === 0" class="no-data">
+    <div *ngIf="filteredDocuments.length === 0" class="no-data">
       Aucune demande de document trouvée.
     </div>
 
-    <table mat-table [dataSource]="documents" class="mat-elevation-z8" *ngIf="documents.length > 0">
+    <table mat-table [dataSource]="filteredDocuments" class="mat-elevation-z8" *ngIf="filteredDocuments.length > 0">
       <!-- ID Column -->
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef>ID</th>
@@ -125,13 +155,13 @@
         <th mat-header-cell *matHeaderCellDef>Statut</th>
         <td mat-cell *matCellDef="let document">
           <span class="status-badge" [ngClass]="getStatusClass(document.status)">
-                  {{ formatDocumentStatus(document.status) }}
-                </span>
+            {{ formatDocumentStatus(document.status) }}
+          </span>
 
           <!-- Affichage du commentaire à côté du statut -->
           <span *ngIf="document.commentaire" class="comment-text">
-                  | {{ document.commentaire }}
-                </span>
+            | {{ document.commentaire }}
+          </span>
         </td>
       </ng-container>
 

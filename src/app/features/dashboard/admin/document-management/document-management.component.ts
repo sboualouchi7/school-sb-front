@@ -1,3 +1,4 @@
+
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -29,7 +30,9 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 export class DocumentManagementComponent implements OnInit {
   documentForm!: FormGroup;
   searchForm!: FormGroup;
+  filterForm!: FormGroup; // Nouveau formulaire pour les filtres
   documents: DocumentResponse[] = [];
+  filteredDocuments: DocumentResponse[] = []; // Pour stocker les documents filtrés
   etudiants: EtudiantResponse[] = [];
   filteredEtudiants: EtudiantResponse[] = [];
   selectedEtudiant: EtudiantResponse | null = null;
@@ -52,6 +55,7 @@ export class DocumentManagementComponent implements OnInit {
   ngOnInit(): void {
     this.initSearchForm();
     this.initDocumentForm();
+    this.initFilterForm(); // Initialiser le formulaire de filtres
     this.loadAllDocuments();
     this.loadAllEtudiants();
   }
@@ -66,8 +70,21 @@ export class DocumentManagementComponent implements OnInit {
     this.documentForm = this.fb.group({
       etudiantId: ['', Validators.required],
       type: [TypeDocument.ATTESTATION, Validators.required],
-      dateCreation: [new Date().toISOString().split('T')[0], Validators.required], // Ajout de la date avec valeur par défaut d'aujourd'hui
+      dateCreation: [new Date().toISOString().split('T')[0], Validators.required],
       commentaire: ['']
+    });
+  }
+
+  // Initialisation du formulaire de filtres
+  initFilterForm(): void {
+    this.filterForm = this.fb.group({
+      typeFilter: [''],
+      etudiantFilter: ['']
+    });
+
+    // Réagir aux changements dans les filtres
+    this.filterForm.valueChanges.subscribe(() => {
+      this.applyFilters();
     });
   }
 
@@ -76,6 +93,8 @@ export class DocumentManagementComponent implements OnInit {
       next: (response) => {
         if (response.success) {
           this.documents = response.data;
+          this.filteredDocuments = [...this.documents]; // Copie initiale pour les filtres
+          this.applyFilters(); // Appliquer les filtres au chargement
         } else {
           console.error('Erreur lors du chargement des documents:', response.message);
         }
@@ -84,6 +103,33 @@ export class DocumentManagementComponent implements OnInit {
         console.error('Erreur lors du chargement des documents:', error);
       }
     });
+  }
+
+  // Méthode pour appliquer les filtres
+  applyFilters(): void {
+    const typeFilter = this.filterForm.get('typeFilter')?.value;
+    const etudiantFilter = this.filterForm.get('etudiantFilter')?.value.toLowerCase();
+
+    this.filteredDocuments = this.documents.filter(doc => {
+      // Filtre par type de document
+      const typeMatch = !typeFilter || doc.type === typeFilter;
+
+      // Filtre par prénom de l'étudiant
+      const etudiantMatch = !etudiantFilter ||
+        (doc.nomEtudiant && doc.nomEtudiant.toLowerCase().includes(etudiantFilter));
+
+      // Retourner le document uniquement s'il correspond à tous les filtres actifs
+      return typeMatch && etudiantMatch;
+    });
+  }
+
+  // Réinitialiser les filtres
+  resetFilters(): void {
+    this.filterForm.reset({
+      typeFilter: '',
+      etudiantFilter: ''
+    });
+    this.filteredDocuments = [...this.documents];
   }
 
   loadAllEtudiants(): void {
@@ -143,7 +189,6 @@ export class DocumentManagementComponent implements OnInit {
     });
   }
 
-
   submitDocument(): void {
     if (this.documentForm.valid) {
       const currentUserId = this.getCurrentUserId();
@@ -156,7 +201,7 @@ export class DocumentManagementComponent implements OnInit {
         etudiantId: this.documentForm.value.etudiantId,
         demandeurId: currentUserId,
         type: this.documentForm.value.type,
-        dateCreation: this.formatDate(this.documentForm.value.dateCreation), // Ajoutez cette ligne
+        dateCreation: this.formatDate(this.documentForm.value.dateCreation),
         commentaire: this.documentForm.value.commentaire
       };
 
@@ -181,19 +226,15 @@ export class DocumentManagementComponent implements OnInit {
       return new Date().toISOString();
     }
 
-    // Si c'est déjà une string (format YYYY-MM-DD depuis le input date)
     if (typeof dateValue === 'string') {
-      // Convertir en Date puis en ISO string
       const date = new Date(dateValue);
       return date.toISOString();
     }
 
-    // Si c'est déjà un objet Date
     if (dateValue instanceof Date) {
       return dateValue.toISOString();
     }
 
-    // Par défaut, retourner la date actuelle
     return new Date().toISOString();
   }
 
@@ -201,18 +242,17 @@ export class DocumentManagementComponent implements OnInit {
     this.documentService.updateStatus(documentId, newStatus).subscribe({
       next: (response) => {
         if (response.success) {
-          // Au lieu de recharger tous les documents, mettre à jour uniquement celui qui a été modifié
           const updatedDocument = response.data;
 
-          // Créer un nouveau tableau pour forcer la détection des changements
           this.documents = this.documents.map(doc => {
             if (doc.id === documentId) {
-              // Retourner le document mis à jour depuis la réponse de l'API
               return updatedDocument;
             }
-            // Retourner les autres documents inchangés
             return doc;
           });
+
+          // Appliquer à nouveau les filtres après mise à jour
+          this.applyFilters();
         } else {
           console.error('Erreur lors de la mise à jour du statut:', response.message);
         }
@@ -222,15 +262,19 @@ export class DocumentManagementComponent implements OnInit {
       }
     });
   }
-  trackByDocId(index: number, document: DocumentResponse): number {
+
+  trackByDocumentId(index: number, document: DocumentResponse): number {
     return document.id;
   }
+
   deleteDocument(documentId: number): void {
     if (confirm('Êtes-vous sûr de vouloir supprimer cette demande de document ?')) {
       this.documentService.deleteDocument(documentId).subscribe({
         next: (response) => {
           if (response.success) {
-            this.loadAllDocuments();
+            // Mettre à jour la liste des documents après suppression
+            this.documents = this.documents.filter(doc => doc.id !== documentId);
+            this.applyFilters(); // Réappliquer les filtres
           } else {
             console.error('Erreur lors de la suppression du document:', response.message);
           }
@@ -289,7 +333,6 @@ export class DocumentManagementComponent implements OnInit {
     }
   }
 
-  // Méthode pour obtenir l'ID de l'utilisateur connecté
   getCurrentUserId(): number | null {
     const currentUser = this.authService.currentUserSubject.value;
     return currentUser ? currentUser.id : null;

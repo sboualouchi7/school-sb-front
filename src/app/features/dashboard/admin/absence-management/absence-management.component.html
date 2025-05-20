@@ -1,35 +1,85 @@
 <div class="container">
   <h1 class="page-title">Gestion des Absences</h1>
 
-  <!-- Filtres -->
+  <!-- Message d'erreur global -->
+  <div *ngIf="errorMessage" class="error-alert">
+    <i class="pi pi-exclamation-triangle"></i> {{ errorMessage }}
+    <button class="close-btn" (click)="errorMessage = null">&times;</button>
+  </div>
+
+  <!-- Indicateur de chargement -->
+  <div *ngIf="isLoading" class="loading-indicator">
+    <i class="pi pi-spin pi-spinner"></i> Chargement en cours...
+  </div>
+
+  <!-- Section de filtres améliorée -->
   <div class="filter-section">
+    <h2 class="section-title">Filtres de recherche</h2>
     <form [formGroup]="filterForm" class="filter-form">
       <div class="form-row">
-        <div class="form-group">
+       <!-- <div class="form-group">
           <label for="classeId">Classe</label>
-          <select id="classeId" formControlName="classeId" class="form-control">
-            <option value="" disabled>Sélectionnez une classe</option>
+          <select id="classeId" formControlName="classeId" class="form-control" (change)="onClasseChange()">
+            <option value="">Toutes les classes</option>
             <option *ngFor="let classe of classes" [value]="classe.id">
               {{ classe.nom }}
             </option>
           </select>
         </div>
-
+-->
         <div class="form-group">
           <label for="moduleId">Module</label>
-          <select id="moduleId" formControlName="moduleId" class="form-control">
-            <option value="" disabled>Sélectionnez un module</option>
+          <select id="moduleId" formControlName="moduleId" class="form-control" (change)="onModuleChange()">
+            <option value="">Tous les modules</option>
             <option *ngFor="let module of modules" [value]="module.id">
               {{ module.libelle }}
             </option>
           </select>
         </div>
 
-        <div class="form-actions">
-          <button type="button" class="btn btn-primary" (click)="applyFilter()" [disabled]="filterForm.invalid">
-            <i class="pi pi-filter"></i> Filtrer
-          </button>
-          <button type="button" class="btn btn-secondary" (click)="resetFilter()">
+        <div class="form-group">
+          <label for="etudiantId">Étudiant</label>
+          <select id="etudiantId" formControlName="etudiantId" class="form-control">
+            <option value="">Tous les étudiants</option>
+            <option *ngFor="let etudiant of etudiants" [value]="etudiant.id">
+              {{ etudiant.nom }} {{ etudiant.prenom }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="dateDebut">Date début</label>
+          <input
+            type="date"
+            id="dateDebut"
+            formControlName="dateDebut"
+            class="form-control"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="dateFin">Date fin</label>
+          <input
+            type="date"
+            id="dateFin"
+            formControlName="dateFin"
+            class="form-control"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="validee">Statut de justification</label>
+          <select id="validee" formControlName="validee" class="form-control">
+            <option value="">Tous les statuts</option>
+            <option value="true">Justifiée</option>
+            <option value="false">Non justifiée</option>
+          </select>
+        </div>
+
+        <div class="form-actions filter-buttons">
+          <button type="button" class="btn btn-secondary" (click)="resetFilters()">
             <i class="pi pi-refresh"></i> Réinitialiser
           </button>
         </div>
@@ -50,7 +100,7 @@
     <form [formGroup]="absenceForm" (ngSubmit)="onSubmitAbsence()">
       <div class="form-row">
         <div class="form-group">
-          <label for="etudiantId">Étudiant</label>
+          <label for="etudiantId">Étudiant <span class="required">*</span></label>
           <select id="etudiantId" formControlName="etudiantId" class="form-control">
             <option value="" disabled>Sélectionnez un étudiant</option>
             <option *ngFor="let etudiant of etudiants" [value]="etudiant.id">
@@ -63,7 +113,20 @@
         </div>
 
         <div class="form-group">
-          <label for="seanceId">Séance</label>
+          <label for="moduleId">Module <span class="required">*</span></label>
+          <select id="moduleId" formControlName="moduleId" class="form-control">
+            <option value="" disabled>Sélectionnez un module</option>
+            <option *ngFor="let module of modules" [value]="module.id">
+              {{ module.libelle }}
+            </option>
+          </select>
+          <div *ngIf="absenceForm.get('moduleId')?.invalid && absenceForm.get('moduleId')?.touched" class="error-message">
+            Le module est requis
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="seanceId">Séance <span class="required">*</span></label>
           <input type="number" id="seanceId" formControlName="seanceId" class="form-control" placeholder="ID de la séance">
           <div *ngIf="absenceForm.get('seanceId')?.invalid && absenceForm.get('seanceId')?.touched" class="error-message">
             La séance est requise
@@ -73,7 +136,7 @@
 
       <div class="form-row">
         <div class="form-group">
-          <label for="dateDebut">Date de début</label>
+          <label for="dateDebut">Date de début <span class="required">*</span></label>
           <input type="date" id="dateDebut" formControlName="dateDebut" class="form-control">
           <div *ngIf="absenceForm.get('dateDebut')?.invalid && absenceForm.get('dateDebut')?.touched" class="error-message">
             La date de début est requise
@@ -81,7 +144,7 @@
         </div>
 
         <div class="form-group">
-          <label for="dateFin">Date de fin</label>
+          <label for="dateFin">Date de fin <span class="required">*</span></label>
           <input type="date" id="dateFin" formControlName="dateFin" class="form-control">
           <div *ngIf="absenceForm.get('dateFin')?.invalid && absenceForm.get('dateFin')?.touched" class="error-message">
             La date de fin est requise
@@ -109,7 +172,8 @@
       </div>
 
       <div class="form-actions">
-        <button type="submit" class="btn btn-primary" [disabled]="absenceForm.invalid">
+        <button type="submit" class="btn btn-primary" [disabled]="absenceForm.invalid || isLoading">
+          <i *ngIf="isLoading" class="pi pi-spin pi-spinner"></i>
           {{ isEditMode ? 'Mettre à jour' : 'Ajouter' }}
         </button>
         <button type="button" class="btn btn-secondary" (click)="resetAbsenceForm()">Réinitialiser</button>
@@ -120,11 +184,11 @@
   <!-- Tableau des absences -->
   <div class="absences-table">
     <h2>Liste des absences</h2>
-    <div *ngIf="absences.length === 0" class="no-data">
-      Aucune absence trouvée.
+    <div *ngIf="filteredAbsences.length === 0" class="no-data">
+      Aucune absence trouvée avec les critères sélectionnés.
     </div>
 
-    <table mat-table [dataSource]="absences" class="mat-elevation-z8" *ngIf="absences.length > 0">
+    <table mat-table [dataSource]="filteredAbsences" class="mat-elevation-z8" *ngIf="filteredAbsences.length > 0">
       <!-- ID Column -->
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef>ID</th>

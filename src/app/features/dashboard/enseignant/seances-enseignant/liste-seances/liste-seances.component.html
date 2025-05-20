@@ -1,0 +1,115 @@
+<!-- src/app/features/dashboard/enseignant/seances-enseignant/liste-seances/liste-seances.component.html -->
+<div class="liste-seances-container">
+  <div class="header">
+    <h3>Liste des séances</h3>
+    <div class="stats" *ngIf="seances.length > 0">
+      <div class="stat-item">
+        <span class="stat-label">Total:</span>
+        <span class="stat-value">{{ getTotalSeances() }}</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Effectuées:</span>
+        <span class="stat-value">{{ getSeancesEffectuees() }}</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Taux:</span>
+        <span class="stat-value">{{ getTauxRealisation() }}%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Indicateur de chargement -->
+  <div *ngIf="isLoading" class="loading">
+    <p><i class="pi pi-spin pi-spinner"></i> Chargement des séances...</p>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div *ngIf="error" class="error-message">
+    <p><i class="pi pi-exclamation-triangle"></i> {{ error }}</p>
+    <button (click)="chargerSeances()" class="btn-retry">Réessayer</button>
+  </div>
+
+  <!-- Message si aucune séance -->
+  <div *ngIf="!isLoading && !error && seances.length === 0" class="no-data">
+    <p>Aucune séance trouvée pour les critères sélectionnés.</p>
+  </div>
+
+  <!-- Tableau des séances -->
+  <div *ngIf="!isLoading && !error && seances.length > 0" class="table-container">
+    <table mat-table [dataSource]="seances" matSort class="seances-table">
+
+      <!-- Colonne Date -->
+      <ng-container matColumnDef="date">
+        <th mat-header-cell class="table-header" *matHeaderCellDef mat-sort-header>Date</th>
+        <td mat-cell *matCellDef="let seance" class="date-cell">
+          <div class="date-info">
+            <span class="date">{{ formatDate(seance.date) }}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Colonne Module -->
+      <ng-container matColumnDef="module">
+        <th mat-header-cell class="table-header" *matHeaderCellDef mat-sort-header>Module</th>
+        <td mat-cell *matCellDef="let seance" class="module-cell">
+          <div class="module-info">
+            <span class="module-name">{{ seance.libelleModule }}</span>
+            <span class="classe-name">{{ seance.nomClasse }}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Colonne Heures -->
+      <ng-container matColumnDef="heures">
+        <th mat-header-cell class="table-header" *matHeaderCellDef>Horaires</th>
+        <td mat-cell *matCellDef="let seance" class="heures-cell">
+          {{ formatTime(seance.heureDebut) }} - {{ formatTime(seance.heureFin) }}
+        </td>
+      </ng-container>
+
+      <!-- Colonne Numéro de séance -->
+      <ng-container matColumnDef="numeroSeance">
+        <th mat-header-cell class="table-header" *matHeaderCellDef>Séance</th>
+        <td mat-cell *matCellDef="let seance" class="numero-cell">
+          <span class="numero-badge">{{ seance.numeroSeance }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Colonne Statut -->
+      <ng-container matColumnDef="statut">
+        <th mat-header-cell class="table-header" *matHeaderCellDef mat-sort-header>Statut</th>
+        <td mat-cell *matCellDef="let seance" class="statut-cell">
+          <span class="status-badge" [ngClass]="getStatutClass(seance.statut)">
+            {{ formatStatut(seance.statut) }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Colonne Actions -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell class="table-header" *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let seance" class="actions-cell">
+          <!--<div class="action-buttons">
+            <button
+              class="btn-action btn-details"
+              (click)="voirDetails(seance)"
+              title="Voir les détails">
+              <i class="pi pi-eye"></i>
+            </button>
+            <button
+              class="btn-action btn-toggle"
+              [ngClass]="{'btn-completed': isSeanceEffectuee(seance)}"
+              (click)="marquerCommeEffectuee(seance)"
+              [title]="isSeanceEffectuee(seance) ? 'Marquer comme non effectuée' : 'Marquer comme effectuée'">
+              <i class="pi" [ngClass]="isSeanceEffectuee(seance) ? 'pi-check-circle' : 'pi-circle'"></i>
+            </button>
+          </div>-->
+        </td>
+      </ng-container>
+
+      <!-- En-têtes et lignes du tableau -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="seance-row"></tr>
+    </table>
+  </div>
+</div>

@@ -95,4 +95,34 @@ export class SeanceService {
 
     return this.http.get<ApiResponse<any>>(`${this.apiUrl}/stats/enseignant/${enseignantId}`, { params });
   }
+  getMesSeances(): Observable<ApiResponse<SeanceResponse[]>> {
+    return this.http.get<ApiResponse<SeanceResponse[]>>(`${this.apiUrl}/me`);
+  }
+
+  /**
+   * Récupère les séances de l'enseignant pour une période donnée
+   * @param dateDebut Date de début (format yyyy-MM-dd)
+   * @param dateFin Date de fin (format yyyy-MM-dd)
+   */
+  getMesSeancesParPeriode(dateDebut: string, dateFin: string): Observable<ApiResponse<SeanceResponse[]>> {
+    return this.http.get<ApiResponse<SeanceResponse[]>>(`${this.apiUrl}/me/periode`, {
+      params: { dateDebut, dateFin }
+    });
+  }
+
+  /**
+   * Récupère les séances de l'enseignant pour une date spécifique
+   * @param date Date spécifique (format yyyy-MM-dd)
+   */
+  getMesSeancesParDate(date: string): Observable<ApiResponse<SeanceResponse[]>> {
+    return this.http.get<ApiResponse<SeanceResponse[]>>(`${this.apiUrl}/me/date/${date}`);
+  }
+
+  /**
+   * Obtient les détails d'une séance spécifique
+   * @param id ID de la séance
+   */
+  getDetailSeance(id: number): Observable<ApiResponse<SeanceResponse>> {
+    return this.http.get<ApiResponse<SeanceResponse>>(`${this.apiUrl}/${id}`);
+  }
 }

@@ -1,0 +1,294 @@
+/* src/app/features/dashboard/enseignant/seances-enseignant/liste-seances/liste-seances.component.css */
+.liste-seances-container {
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header h3 {
+  margin: 0;
+  color: var(--color-primary);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.stats {
+  display: flex;
+  gap: 20px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 12px;
+  background-color: var(--background-color);
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--text-color);
+  opacity: 0.8;
+  margin-bottom: 2px;
+}
+
+.stat-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+/* Messages d'état */
+.loading,
+.error-message,
+.no-data {
+  padding: 20px;
+  text-align: center;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.loading {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: var(--text-color);
+}
+
+.error-message {
+  background-color: rgba(244, 67, 54, 0.1);
+  color: #f44336;
+}
+
+.no-data {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: var(--text-color);
+}
+
+.btn-retry {
+  background-color: var(--color-primary);
+  color: var(--text-color);
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+/* Tableau */
+.table-container {
+  overflow-x: auto;
+  background-color: var(--primary-color);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.seances-table {
+  width: 100%;
+  background: transparent !important;
+}
+
+.table-header {
+  background-color: var(--hover-bg) !important;
+  color: var(--hover-color) !important;
+  font-weight: 600 !important;
+  font-size: 14px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.seance-row {
+  transition: background-color 0.3s ease;
+}
+
+.seance-row:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* Cellules du tableau */
+.seances-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--text-color);
+}
+
+.date-cell {
+  min-width: 140px;
+}
+
+.date-info .date {
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.module-cell {
+  min-width: 200px;
+}
+
+.module-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.module-name {
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.classe-name {
+  font-size: 12px;
+  color: var(--text-color);
+  opacity: 0.7;
+}
+
+.heures-cell {
+  min-width: 120px;
+  font-family: monospace;
+  color: var(--text-color);
+}
+
+.numero-cell {
+  text-align: center;
+  min-width: 80px;
+}
+
+.numero-badge {
+  display: inline-block;
+  background-color: var(--background-color);
+  color: var(--color-primary);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.statut-cell {
+  min-width: 120px;
+  text-align: center;
+}
+
+/* Badges de statut */
+.status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-planned {
+  background-color: rgba(255, 152, 0, 0.2);
+  color: #ff9800;
+}
+
+.status-approved {
+  background-color: rgba(33, 150, 243, 0.2);
+  color: #2196F3;
+}
+
+.status-completed {
+  background-color: rgba(76, 175, 80, 0.2);
+  color: #4CAF50;
+}
+
+.status-cancelled {
+  background-color: rgba(244, 67, 54, 0.2);
+  color: #f44336;
+}
+
+/* Boutons d'action */
+.actions-cell {
+  min-width: 120px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.btn-action {
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: 6px;
+  cursor: pointer;
+  color: var(--text-color);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+}
+
+.btn-details:hover {
+  background-color: #2196F3;
+  border-color: #2196F3;
+  color: white;
+}
+
+.btn-toggle:hover {
+  background-color: #4CAF50;
+  border-color: #4CAF50;
+  color: white;
+}
+
+.btn-toggle.btn-completed {
+  background-color: #4CAF50;
+  border-color: #4CAF50;
+  color: white;
+}
+
+.btn-action i {
+  font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+
+  .stats {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .stats {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .stat-item {
+    flex: 1;
+    min-width: 100px;
+  }
+
+  .table-container {
+    border-radius: 0;
+    margin: 0 -15px;
+  }
+
+  .seances-table td,
+  .table-header {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  .module-cell,
+  .date-cell {
+    min-width: auto;
+  }
+}

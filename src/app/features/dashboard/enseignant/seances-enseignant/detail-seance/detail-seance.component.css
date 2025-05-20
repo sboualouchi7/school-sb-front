@@ -1,0 +1,308 @@
+/* src/app/features/dashboard/enseignant/seances-enseignant/detail-seance/detail-seance.component.css */
+.detail-seance-container {
+  width: 100%;
+}
+
+/* Messages d'état */
+.loading,
+.error-message {
+  padding: 20px;
+  text-align: center;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.loading {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: var(--text-color);
+}
+
+.error-message {
+  background-color: rgba(244, 67, 54, 0.1);
+  color: #f44336;
+}
+
+/* En-tête */
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: var(--primary-color);
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 1px solid var(--color-border);
+}
+
+.title-section h3 {
+  margin: 0;
+  color: var(--color-primary);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.title-section .classe {
+  margin: 5px 0 0 0;
+  color: var(--text-color);
+  opacity: 0.8;
+  font-size: 14px;
+}
+
+.status-section .status-badge {
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Grille des détails */
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.detail-section {
+  background-color: var(--primary-color);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.detail-section.full-width {
+  grid-column: 1 / -1;
+}
+
+.detail-section h4 {
+  margin: 0 0 15px 0;
+  color: var(--color-primary);
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.detail-section h4 i {
+  font-size: 18px;
+}
+
+.detail-content-section {
+  color: var(--text-color);
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.detail-item:last-child {
+  border-bottom: none;
+}
+
+.detail-item label {
+  font-weight: 500;
+  color: var(--text-color);
+  opacity: 0.8;
+}
+
+.detail-item span {
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.numero-badge {
+  background-color: var(--background-color);
+  color: var(--color-primary);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+/* Description */
+.description-text {
+  background-color: var(--background-color);
+  padding: 15px;
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+/* Gestion du statut */
+.status-management {
+  width: 100%;
+}
+
+.status-info {
+  margin-bottom: 15px;
+  color: var(--text-color);
+}
+
+.current-status {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.status-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.btn-status {
+  color: white;
+  border: 2px solid transparent;
+}
+
+.btn-status:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-status:not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Status badges et boutons */
+.status-planned,
+.btn-status.status-planned {
+  background-color: #ff9800;
+  color: white;
+}
+
+.status-approved,
+.btn-status.status-approved {
+  background-color: #2196F3;
+  color: white;
+}
+
+.status-completed,
+.btn-status.status-completed {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.status-cancelled,
+.btn-status.status-cancelled {
+  background-color: #f44336;
+  color: white;
+}
+
+/* Actions rapides */
+.quick-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.btn-primary {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.btn-danger {
+  background-color: #f44336;
+  color: white;
+}
+
+.btn-success {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.quick-actions .btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+}
+
+.quick-actions .btn i {
+  font-size: 16px;
+}
+
+.quick-actions .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .detail-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .detail-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .detail-section {
+    padding: 15px;
+  }
+
+  .detail-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .status-actions,
+  .quick-actions {
+    flex-direction: column;
+  }
+
+  .btn-status,
+  .quick-actions .btn {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 576px) {
+  .detail-header,
+  .detail-section {
+    padding: 12px;
+  }
+
+  .title-section h3 {
+    font-size: 18px;
+  }
+
+  .detail-section h4 {
+    font-size: 14px;
+  }
+
+  .quick-actions .btn {
+    padding: 12px 16px;
+  }
+}

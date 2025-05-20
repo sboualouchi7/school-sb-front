@@ -1,0 +1,147 @@
+<!-- src/app/features/dashboard/enseignant/seances-enseignant/detail-seance/detail-seance.component.html -->
+<div class="detail-seance-container">
+  <!-- Indicateur de chargement -->
+  <div *ngIf="isLoading" class="loading">
+    <p><i class="pi pi-spin pi-spinner"></i> Chargement des détails...</p>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div *ngIf="error" class="error-message">
+    <p><i class="pi pi-exclamation-triangle"></i> {{ error }}</p>
+  </div>
+
+  <!-- Contenu principal -->
+  <div *ngIf="seanceDetails" class="detail-content">
+
+    <!-- En-tête avec informations principales -->
+    <div class="detail-header">
+      <div class="title-section">
+        <h3>{{ seanceDetails.moduleId}}</h3>
+      </div>
+      <div class="status-section">
+        <span class="status-badge" [ngClass]="getStatutClass(seanceDetails.statut)">
+          {{ formatStatut(seanceDetails.statut) }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Informations détaillées -->
+    <div class="detail-grid">
+
+      <!-- Section Date et Heure -->
+      <div class="detail-section">
+        <h4><i class="pi pi-calendar"></i> Date et Horaires</h4>
+        <div class="detail-content-section">
+          <div class="detail-item">
+            <label>Date:</label>
+            <span>{{ formatDate(seanceDetails.date) }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Heure de début:</label>
+            <span>{{ formatTime(seanceDetails.heureDebut) }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Heure de fin:</label>
+            <span>{{ formatTime(seanceDetails.heureFin) }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Durée:</label>
+            <span>{{ getDuree() }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section Séance -->
+      <div class="detail-section">
+        <h4><i class="pi pi-bookmark"></i> Informations de la séance</h4>
+        <div class="detail-content-section">
+          <div class="detail-item">
+            <label>Numéro de séance:</label>
+            <span class="numero-badge">{{ seanceDetails.numeroSeance }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Module:</label>
+            <span>{{ seanceDetails.moduleId }}</span>
+          </div>
+
+          <div class="detail-item">
+            <label>Enseignant:</label>
+            <span>{{ seanceDetails.enseignantId }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section Description -->
+      <div class="detail-section full-width" *ngIf="seanceDetails.description">
+        <h4><i class="pi pi-file-text"></i> Description</h4>
+        <div class="detail-content-section">
+          <div class="description-text">
+            {{ seanceDetails.description }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Section Gestion du statut -->
+      <div class="detail-section full-width">
+        <h4><i class="pi pi-cog"></i> Gestion du statut</h4>
+        <div class="detail-content-section">
+          <div class="status-management">
+            <p class="status-info">
+              Statut actuel:
+              <span class="current-status" [ngClass]="getStatutClass(seanceDetails.statut)">
+                {{ formatStatut(seanceDetails.statut) }}
+              </span>
+            </p>
+            <div class="status-actions">
+              <button
+                *ngFor="let statut of getStatutsDisponibles()"
+                [disabled]="statut.value === seanceDetails.statut"
+                class="btn btn-status"
+                [ngClass]="getStatutClass(statut.value)"
+                (click)="changerStatut(statut.value)">
+                {{ statut.label }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section Actions rapides -->
+      <div class="detail-section full-width">
+        <h4><i class="pi pi-bolt"></i> Actions rapides</h4>
+        <div class="detail-content-section">
+          <div class="quick-actions">
+            <button
+              *ngIf="seanceDetails.statut !== StatusSeance.REALISEE"
+              class="btn btn-primary"
+              (click)="changerStatut(StatusSeance.REALISEE)">
+              <i class="pi pi-check"></i> Marquer comme effectuée
+            </button>
+
+            <button
+              *ngIf="seanceDetails.statut === StatusSeance.REALISEE"
+              class="btn btn-secondary"
+              (click)="changerStatut(StatusSeance.PLANIFIEE)">
+              <i class="pi pi-undo"></i> Marquer comme non effectuée
+            </button>
+
+            <button
+              *ngIf="seanceDetails.statut !== StatusSeance.ANNULEE"
+              class="btn btn-danger"
+              (click)="changerStatut(StatusSeance.ANNULEE)">
+              <i class="pi pi-times"></i> Annuler la séance
+            </button>
+
+            <button
+              *ngIf="seanceDetails.statut === StatusSeance.ANNULEE"
+              class="btn btn-success"
+              (click)="changerStatut(StatusSeance.PLANIFIEE)">
+              <i class="pi pi-refresh"></i> Rétablir la séance
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

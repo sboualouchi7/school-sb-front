@@ -1,0 +1,41 @@
+<!-- src/app/features/dashboard/enseignant/seances-enseignant/seances-enseignant.component.html -->
+<div class="container">
+  <div class="header">
+    <h1>Mes Séances</h1>
+    <p class="subtitle">Consultez et gérez vos séances d'enseignement</p>
+  </div>
+
+  <!-- Section des filtres -->
+  <div class="filtres-section">
+    <app-filtres-seances
+      (filtresChanged)="onFiltresChange($event)"
+      [filtresInitiaux]="filtresActuels">
+    </app-filtres-seances>
+  </div>
+
+  <!-- Liste des séances -->
+  <div class="seances-section">
+    <app-liste-seances
+      [filtres]="filtresActuels"
+      (seanceSelectionnee)="onSeanceSelectionnee($event)">
+    </app-liste-seances>
+  </div>
+</div>
+
+<!-- Modal pour les détails d'une séance -->
+<div class="modal-overlay" *ngIf="showDetailModal" (click)="onCloseDetailModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Détails de la séance</h2>
+      <button class="btn-close" (click)="onCloseDetailModal()">
+        <i class="pi pi-times"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <app-detail-seance
+        [seance]="seanceSelectionnee"
+        *ngIf="seanceSelectionnee">
+      </app-detail-seance>
+    </div>
+  </div>
+</div>

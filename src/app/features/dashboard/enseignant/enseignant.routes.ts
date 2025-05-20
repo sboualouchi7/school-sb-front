@@ -1,8 +1,9 @@
-// features/dashboard/enseignant/enseignant.routes.ts
+// features/dashboard/enseignant/enseignant.routes.ts - Mise à jour
 import { Routes } from '@angular/router';
 import { GestionAbsencesComponent } from './gestion-absences/gestion-absences.component';
 import { GestionNotesComponent } from './gestion-notes/gestion-notes.component';
-import {WidgetNotesRecentesComponent} from "./dashboard/widget-notes-recentes/widget-notes-recentes.component";
+import { WidgetNotesRecentesComponent } from "./dashboard/widget-notes-recentes/widget-notes-recentes.component";
+import { SeancesEnseignantComponent } from './seances-enseignant/seances-enseignant.component';
 
 export const ENSEIGNANT_ROUTES: Routes = [
   {
@@ -27,5 +28,8 @@ export const ENSEIGNANT_ROUTES: Routes = [
     redirectTo: 'notes',
     pathMatch: 'full'
   },
-
+  {
+    path: 'seances',
+    component: SeancesEnseignantComponent
+  }
 ];

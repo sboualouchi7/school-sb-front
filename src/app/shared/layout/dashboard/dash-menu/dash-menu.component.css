@@ -39,17 +39,27 @@ li > a {
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.089);
   transition: .5s;
   position: relative;
+  text-decoration: none;
+  cursor: pointer;
 }
 
+/* État hover normal */
 li > a:hover {
   background: var(--hover-bg);
   color: var(--hover-color);
 }
 
+/* État actif - MÊME STYLE QUE HOVER mais permanent */
 li > a.active {
-  background: var(--hover-bg);
-  color: var(--hover-color);
+  background: var(--hover-bg) !important;
+  color: var(--hover-color) !important;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Pour s'assurer que l'état actif prime sur hover */
+li > a.active:hover {
+  background: var(--hover-bg) !important;
+  color: var(--hover-color) !important;
 }
 
 li:first-of-type > a.match {
@@ -80,4 +90,38 @@ li > a > p.active-p {
 li > a:hover > p {
   opacity: 1;
   visibility: visible;
+}
+
+/* Bouton de déconnexion */
+.logout-item {
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid var(--color-border);
+}
+
+.logout-btn {
+  background: #f44336 !important;
+  color: white !important;
+}
+
+.logout-btn:hover {
+  background: #d32f2f !important;
+  color: white !important;
+}
+
+.logout-btn > p {
+  background: #f44336;
+  color: white;
+}
+
+.logout-btn > p::before {
+  border-right-color: #f44336;
+}
+
+.logout-btn:hover > p {
+  background: #d32f2f;
+}
+
+.logout-btn:hover > p::before {
+  border-right-color: #d32f2f;
 }

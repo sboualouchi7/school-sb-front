@@ -38,18 +38,27 @@ export class DashMenuComponent implements OnInit {
     // Définir les éléments du menu
     this.defineMenuItems();
 
+    // Écouter les changements de route
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        this.updateActiveLink(this.router.url);
+        this.updateActiveLink(event.url);
       }
     });
 
+    // Initialiser avec l'URL actuelle
     this.updateActiveLink(this.router.url);
   }
 
   defineMenuItems(): void {
     // Liste complète des items du menu, avec les rôles autorisés pour chacun
     const allMenuItems: MenuItem[] = [
+      // Menu Admin
+      {
+        label: 'Dashboard',
+        path: '/dashboard/admin/dashboard',
+        icon: 'pi pi-home',
+        roles: [Role.ADMIN]
+      },
       {
         label: 'Étudiants',
         path: '/dashboard/admin/student',
@@ -59,7 +68,7 @@ export class DashMenuComponent implements OnInit {
       {
         label: 'Enseignants',
         path: '/dashboard/admin/profs',
-        icon: 'pi pi-users',
+        icon: 'pi pi-user-edit',
         roles: [Role.ADMIN]
       },
       {
@@ -80,7 +89,6 @@ export class DashMenuComponent implements OnInit {
         icon: 'pi pi-user',
         roles: [Role.ADMIN]
       },
-
       {
         label: 'Évaluations',
         path: '/dashboard/admin/evaluations',
@@ -99,6 +107,13 @@ export class DashMenuComponent implements OnInit {
         icon: 'pi pi-file',
         roles: [Role.ADMIN]
       },
+      {
+        label: 'Séances',
+        path: '/dashboard/admin/seances',
+        icon: 'pi pi-calendar',
+        roles: [Role.ADMIN]
+      },
+
       // Menu pour les enseignants
       {
         label: 'Tableau de bord',
@@ -113,11 +128,19 @@ export class DashMenuComponent implements OnInit {
         roles: [Role.ENSEIGNANT]
       },
       {
-        label: 'Évaluations',
-        path: '/dashboard/enseignant/evaluations',
+        label: 'Notes',
+        path: '/dashboard/enseignant/notes',
         icon: 'pi pi-chart-bar',
         roles: [Role.ENSEIGNANT]
       },
+      {
+        label: 'Mes Séances',
+        path: '/dashboard/enseignant/seances',
+        icon: 'pi pi-calendar',
+        roles: [Role.ENSEIGNANT]
+      },
+
+      // Menu pour les étudiants
       {
         label: 'Tableau de bord',
         path: '/dashboard/etudiant',
@@ -141,7 +164,10 @@ export class DashMenuComponent implements OnInit {
         path: '/dashboard/etudiant/demandes',
         icon: 'pi pi-file',
         roles: [Role.ETUDIANT]
-      },{
+      },
+
+      // Menu pour les parents
+      {
         label: 'Tableau de bord',
         path: '/dashboard/parent',
         icon: 'pi pi-home',
@@ -158,22 +184,6 @@ export class DashMenuComponent implements OnInit {
         path: '/dashboard/parent/absences-enfant',
         icon: 'pi pi-calendar-times',
         roles: [Role.PARENT]
-      },
-      {
-        label: 'Suivi Hebdomadaire',
-        path: '/dashboard/admin/seances',
-        icon: 'pi pi-calendar-times',
-        roles: [Role.ADMIN]
-      },{
-        label: 'Dashboard',
-        path: '/dashboard/admin/dashboard',
-        icon: 'pi pi-home',
-        roles: [Role.ADMIN]
-      },{
-        label: 'Mes Séances',
-        path: '/dashboard/enseignant/seances',
-        icon: 'pi pi-calendar',
-        roles: [Role.ENSEIGNANT]
       }
     ];
 
@@ -190,10 +200,48 @@ export class DashMenuComponent implements OnInit {
   }
 
   updateActiveLink(url: string): void {
-    this.activeLink = url;
+    // Nettoyer l'URL
+    const cleanUrl = url.split('?')[0].split('#')[0];
+
+    // Chercher une correspondance exacte d'abord
+    const exactMatch = this.menuItems.find(item => item.path === cleanUrl);
+    if (exactMatch) {
+      this.activeLink = exactMatch.path;
+      return;
+    }
+
+    // Si pas de correspondance exacte, chercher la plus longue correspondance
+    let bestMatch = '';
+    let maxLength = 0;
+
+    for (const item of this.menuItems) {
+      if (cleanUrl.startsWith(item.path) && item.path.length > maxLength) {
+        bestMatch = item.path;
+        maxLength = item.path.length;
+      }
+    }
+
+    if (bestMatch) {
+      this.activeLink = bestMatch;
+    }
   }
 
   isLinkActive(link: string): boolean {
     return this.activeLink === link;
+  }
+
+  // Méthode pour gérer le clic
+  onMenuItemClick(item: MenuItem): void {
+    this.setActiveLink(item.path);
+  }
+
+  // Déconnexion
+  logout(): void {
+    this.authService.logout();
+  }
+
+  // TrackBy pour performance
+  trackByPath(index: number, item: MenuItem): string {
+    return item.path;
   }
 }

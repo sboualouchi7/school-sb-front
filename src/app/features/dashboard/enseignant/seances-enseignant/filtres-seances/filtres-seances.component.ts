@@ -32,6 +32,11 @@ export class FiltresSeancesComponent implements OnInit {
     this.initForm();
     this.chargerModules();
     this.setupFormSubscriptions();
+
+    // Émettre les filtres initiaux après un court délai pour permettre au parent de se charger
+    setTimeout(() => {
+      this.emittreFiltres();
+    }, 100);
   }
 
   initForm(): void {
@@ -46,8 +51,11 @@ export class FiltresSeancesComponent implements OnInit {
   }
 
   setupFormSubscriptions(): void {
+    // Débouncer les changements pour éviter trop d'appels
     this.filtresForm.valueChanges.subscribe(() => {
-      this.emittreFiltres();
+      setTimeout(() => {
+        this.emittreFiltres();
+      }, 300);
     });
   }
 
@@ -57,6 +65,9 @@ export class FiltresSeancesComponent implements OnInit {
       next: (response) => {
         if (response.success) {
           this.modules = response.data;
+          console.log('Modules chargés pour filtres:', this.modules);
+        } else {
+          console.error('Erreur lors du chargement des modules:', response.message);
         }
         this.isLoading = false;
       },
@@ -71,6 +82,7 @@ export class FiltresSeancesComponent implements OnInit {
     const formValue = this.filtresForm.value;
     const filtres: FiltresSeances = {};
 
+    // Gestion des filtres de date
     if (formValue.typeFiltre === 'periode') {
       if (formValue.dateDebut) filtres.dateDebut = formValue.dateDebut;
       if (formValue.dateFin) filtres.dateFin = formValue.dateFin;
@@ -78,9 +90,14 @@ export class FiltresSeancesComponent implements OnInit {
       if (formValue.date) filtres.date = formValue.date;
     }
 
+    // Gestion des autres filtres
     if (formValue.statut) filtres.statut = formValue.statut;
-    if (formValue.moduleId) filtres.moduleId = formValue.moduleId;
+    if (formValue.moduleId) {
+      // Convertir en nombre car les select HTML renvoient des strings
+      filtres.moduleId = parseInt(formValue.moduleId, 10);
+    }
 
+    console.log('Émission des filtres:', filtres);
     this.filtresChanged.emit(filtres);
   }
 
@@ -108,6 +125,11 @@ export class FiltresSeancesComponent implements OnInit {
       statut: '',
       moduleId: ''
     });
+
+    // Forcer l'émission après reset
+    setTimeout(() => {
+      this.emittreFiltres();
+    }, 100);
   }
 
   setSemaineActuelle(): void {

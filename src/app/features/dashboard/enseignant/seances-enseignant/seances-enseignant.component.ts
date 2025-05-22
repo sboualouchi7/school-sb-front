@@ -32,11 +32,16 @@ export class SeancesEnseignantComponent implements OnInit {
   showDetailModal = false;
 
   ngOnInit(): void {
-    // Initialiser avec les filtres par défaut (semaine courante)
-    this.initialiserFiltresParDefaut();
+    // Ne plus initialiser avec des filtres par défaut restrictifs
+    // Laisser vide pour afficher toutes les séances au démarrage
+    this.filtresActuels = {};
+
+    console.log('Composant SeancesEnseignant initialisé avec filtres:', this.filtresActuels);
   }
 
   private initialiserFiltresParDefaut(): void {
+    // Cette méthode est conservée mais n'est plus appelée automatiquement
+    // Elle peut être utilisée par le bouton "Semaine actuelle" des filtres
     const aujourdhui = new Date();
     const lundiSemaine = new Date(aujourdhui);
     lundiSemaine.setDate(aujourdhui.getDate() - aujourdhui.getDay() + 1);
@@ -51,7 +56,8 @@ export class SeancesEnseignantComponent implements OnInit {
   }
 
   onFiltresChange(filtres: FiltresSeances): void {
-    this.filtresActuels = filtres;
+    console.log('Nouveaux filtres reçus:', filtres);
+    this.filtresActuels = { ...filtres }; // Créer une nouvelle référence pour déclencher ngOnChanges
   }
 
   onSeanceSelectionnee(seance: SeanceResponse): void {

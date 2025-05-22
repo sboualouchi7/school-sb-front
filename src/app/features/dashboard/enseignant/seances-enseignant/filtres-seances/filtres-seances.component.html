@@ -17,16 +17,16 @@
 
   <form [formGroup]="filtresForm" class="filtres-form">
     <div class="form-row">
-      <!-- Type de filtre de date -->
-      <!--<div class="form-group">
+      <!-- Type de filtre de date --><!--
+      <div class="form-group">
         <label>Filtrage par date:</label>
         <select formControlName="typeFiltre" (change)="onTypeChangement()" class="form-control">
           <option value="periode">Période</option>
           <option value="date">Date spécifique</option>
         </select>
-      </div>-->
+      </div>
 
-      <!-- Filtre par période -->
+      &lt;!&ndash; Filtre par période &ndash;&gt;
       <div *ngIf="filtresForm.get('typeFiltre')?.value === 'periode'" class="form-group-dates">
         <div class="form-group">
           <label>Date de début:</label>
@@ -36,13 +36,13 @@
           <label>Date de fin:</label>
           <input type="date" formControlName="dateFin" class="form-control">
         </div>
-      </div>
+      </div>-->
 
       <!-- Filtre par date spécifique -->
-      <div *ngIf="filtresForm.get('typeFiltre')?.value === 'date'" class="form-group">
+      <!--<div *ngIf="filtresForm.get('typeFiltre')?.value === 'date'" class="form-group">
         <label>Date:</label>
         <input type="date" formControlName="date" class="form-control">
-      </div>
+      </div>-->
 
       <!-- Filtre par module -->
       <div class="form-group">
@@ -67,4 +67,11 @@
       </div>
     </div>
   </form>
+
+  <!-- Debug info (à supprimer en production) -->
+  <div *ngIf="false" style="margin-top: 10px; padding: 10px; background: #f0f0f0; font-size: 12px;">
+    <p><strong>Debug - Modules chargés:</strong> {{ modules.length }}</p>
+    <p><strong>Valeurs du formulaire:</strong></p>
+    <pre>{{ filtresForm.value | json }}</pre>
+  </div>
 </div>

@@ -79,7 +79,7 @@ export class SeanceCreateComponent implements OnInit, OnChanges {
       if (enseignantId) {
         this.loadModulesByEnseignant(Number(enseignantId));
       } else {
-        this.modules = [];
+        this.modules = [...this.allModules];
         this.seanceForm.patchValue({ moduleId: '' });
       }
     });
@@ -128,6 +128,7 @@ export class SeanceCreateComponent implements OnInit, OnChanges {
       next: (response) => {
         if (response.success) {
           this.allModules = response.data;
+          this.modules = [...this.allModules];
           console.log('Tous les modules chargés:', this.allModules.length);
         }
       },
@@ -141,29 +142,17 @@ export class SeanceCreateComponent implements OnInit, OnChanges {
     this.isLoadingModules = true;
     console.log('Chargement des modules pour l\'enseignant:', enseignantId);
 
-    this.moduleService.getModulesByEnseignant(enseignantId).subscribe({
-      next: (response) => {
-        this.isLoadingModules = false;
-        if (response.success) {
-          this.modules = response.data;
-          console.log('Modules trouvés pour l\'enseignant:', this.modules.length);
+    // Filtrer les modules par enseignant depuis la liste complète
+    this.modules = this.allModules.filter(module => module.enseignantId === enseignantId);
+    this.isLoadingModules = false;
 
-          // Réinitialiser la sélection du module si celui actuellement sélectionné n'est pas disponible
-          const currentModuleId = this.seanceForm.get('moduleId')?.value;
-          if (currentModuleId && !this.modules.find(m => m.id === parseInt(currentModuleId))) {
-            this.seanceForm.patchValue({ moduleId: '' });
-          }
-        } else {
-          this.modules = [];
-          console.log('Aucun module trouvé pour cet enseignant');
-        }
-      },
-      error: (error) => {
-        this.isLoadingModules = false;
-        console.error('Erreur lors du chargement des modules par enseignant:', error);
-        this.modules = [];
-      }
-    });
+    console.log('Modules filtrés pour l\'enseignant:', this.modules.length);
+
+    // Réinitialiser la sélection du module si celui actuellement sélectionné n'est pas disponible
+    const currentModuleId = this.seanceForm.get('moduleId')?.value;
+    if (currentModuleId && !this.modules.find(m => m.id === parseInt(currentModuleId))) {
+      this.seanceForm.patchValue({ moduleId: '' });
+    }
   }
 
   updateFormWithSeanceData(): void {
@@ -171,13 +160,22 @@ export class SeanceCreateComponent implements OnInit, OnChanges {
 
     console.log('Mise à jour du formulaire avec:', this.seanceToEdit);
 
-    // Convertir la date au format yyyy-MM-dd pour l'input date
-    let date = this.seanceToEdit.date;
-    if (date && date.includes('-')) {
-      const parts = date.split('-');
-      if (parts.length === 3 && parts[0].length === 2) {
-        // Format dd-MM-yyyy vers yyyy-MM-dd
-        date = `${parts[2]}-${parts[1]}-${parts[0]}`;
+    // Convertir la date pour l'input HTML (format yyyy-MM-dd)
+    let dateForInput = '';
+    if (this.seanceToEdit.date) {
+      const dateStr = this.seanceToEdit.date;
+
+      if (dateStr.includes('-')) {
+        const parts = dateStr.split('-');
+        if (parts.length === 3) {
+          if (parts[0].length === 2) {
+            // Format dd-MM-yyyy vers yyyy-MM-dd
+            dateForInput = `${parts[2]}-${parts[1]}-${parts[0]}`;
+          } else if (parts[0].length === 4) {
+            // Déjà au format yyyy-MM-dd
+            dateForInput = dateStr;
+          }
+        }
       }
     }
 
@@ -187,9 +185,9 @@ export class SeanceCreateComponent implements OnInit, OnChanges {
     this.seanceForm.patchValue({
       enseignantId: this.seanceToEdit.enseignantId,
       moduleId: this.seanceToEdit.moduleId,
-      date: date,
-      heureDebut: this.seanceToEdit.heureDebut,
-      heureFin: this.seanceToEdit.heureFin,
+      date: dateForInput,
+      heureDebut: this.formatTimeForDisplay(this.seanceToEdit.heureDebut),
+      heureFin: this.formatTimeForDisplay(this.seanceToEdit.heureFin),
       numeroSeance: this.seanceToEdit.numeroSeance,
       statut: this.seanceToEdit.statut,
       description: this.seanceToEdit.description || '',
@@ -198,6 +196,11 @@ export class SeanceCreateComponent implements OnInit, OnChanges {
   }
 
   onSubmit(): void {
+    console.log('Tentative de soumission du formulaire');
+    console.log('Formulaire valide ?', this.seanceForm.valid);
+    console.log('Valeurs du formulaire:', this.seanceForm.value);
+    console.log('Erreurs du formulaire:', this.getFormErrors());
+
     if (this.seanceForm.valid && this.validateTimeRange()) {
       if (this.isEditMode) {
         this.updateSeance();
@@ -206,38 +209,53 @@ export class SeanceCreateComponent implements OnInit, OnChanges {
       }
     } else {
       this.markFormGroupTouched();
+      console.error('Formulaire invalide, erreurs:', this.getFormErrors());
     }
+  }
+
+  private getFormErrors(): any {
+    const formErrors: any = {};
+    Object.keys(this.seanceForm.controls).forEach(key => {
+      const controlErrors = this.seanceForm.get(key)?.errors;
+      if (controlErrors) {
+        formErrors[key] = controlErrors;
+      }
+    });
+    return formErrors;
   }
 
   createSeance(): void {
     const formValue = this.seanceForm.value;
-    const date = this.formatDateForBackend(formValue.date);
 
     const newSeance: SeanceRequest = {
       enseignantId: parseInt(formValue.enseignantId),
       moduleId: parseInt(formValue.moduleId),
-      date: date,
-      heureDebut: formValue.heureDebut,
-      heureFin: formValue.heureFin,
+      date: this.formatDateForBackend(formValue.date),
+      heureDebut: this.formatTimeForBackend(formValue.heureDebut),
+      heureFin: this.formatTimeForBackend(formValue.heureFin),
       numeroSeance: formValue.numeroSeance,
       statut: formValue.statut,
       description: formValue.description || undefined
     };
 
-    console.log('Création de la séance:', newSeance);
+    console.log('Création de la séance avec les données:', newSeance);
 
     this.seanceService.createSeance(newSeance).subscribe({
       next: (response) => {
+        console.log('Réponse du serveur:', response);
         if (response.success) {
           console.log('Séance créée avec succès:', response.data);
+          alert('Séance créée avec succès !');
           this.resetForm();
           this.seanceCreated.emit();
         } else {
           console.error('Erreur lors de la création de la séance:', response.message);
+          alert('Erreur lors de la création: ' + (response.message || 'Erreur inconnue'));
         }
       },
       error: (error) => {
         console.error('Erreur lors de la création de la séance:', error);
+        alert('Erreur lors de la création: ' + (error.error?.message || error.message || 'Erreur inconnue'));
       }
     });
   }
@@ -246,57 +264,117 @@ export class SeanceCreateComponent implements OnInit, OnChanges {
     if (!this.seanceToEdit) return;
 
     const formValue = this.seanceForm.value;
-    const date = this.formatDateForBackend(formValue.date);
 
     const updatedSeance: SeanceRequest = {
       enseignantId: parseInt(formValue.enseignantId),
       moduleId: parseInt(formValue.moduleId),
-      date: date,
-      heureDebut: formValue.heureDebut,
-      heureFin: formValue.heureFin,
+      date: this.formatDateForBackend(formValue.date),
+      heureDebut: this.formatTimeForBackend(formValue.heureDebut),
+      heureFin: this.formatTimeForBackend(formValue.heureFin),
       numeroSeance: formValue.numeroSeance,
       statut: formValue.statut,
       description: formValue.description || undefined
     };
 
-    console.log('Mise à jour de la séance:', updatedSeance);
+    console.log('Mise à jour de la séance avec les données formatées:', updatedSeance);
 
     this.seanceService.updateSeance(this.seanceToEdit.id, updatedSeance).subscribe({
       next: (response) => {
         if (response.success) {
           console.log('Séance mise à jour avec succès:', response.data);
+          alert('Séance mise à jour avec succès !');
           this.resetForm();
           this.isEditMode = false;
           this.seanceUpdated.emit();
         } else {
           console.error('Erreur lors de la mise à jour de la séance:', response.message);
+          alert('Erreur lors de la mise à jour: ' + (response.message || 'Erreur inconnue'));
         }
       },
       error: (error) => {
         console.error('Erreur lors de la mise à jour de la séance:', error);
+        alert('Erreur lors de la mise à jour: ' + (error.error?.message || error.message || 'Erreur inconnue'));
       }
     });
   }
 
-  private formatDateForBackend(dateString: string): string {
-    if (!dateString) return '';
+  private formatDateForBackend(dateInput: string | Date): string {
+    if (!dateInput) return '';
 
-    const parts = dateString.split('-');
-    if (parts.length === 3) {
-      // Si c'est au format yyyy-MM-dd, convertir vers dd-MM-yyyy
-      if (parts[0].length === 4) {
+    let date: Date;
+
+    // Si c'est déjà une chaîne au format attendu, la retourner
+    if (typeof dateInput === 'string') {
+      // Vérifier si c'est déjà au format dd-MM-yyyy
+      if (/^\d{2}-\d{2}-\d{4}$/.test(dateInput)) {
+        return dateInput;
+      }
+
+      // Si c'est au format yyyy-MM-dd (input HTML date)
+      if (/^\d{4}-\d{2}-\d{2}$/.test(dateInput)) {
+        const parts = dateInput.split('-');
         return `${parts[2]}-${parts[1]}-${parts[0]}`;
-      } else {
-        return dateString;
+      }
+
+      // Sinon, essayer de parser la date
+      date = new Date(dateInput);
+    } else {
+      date = dateInput;
+    }
+
+    // Vérifier si la date est valide
+    if (isNaN(date.getTime())) {
+      console.error('Date invalide:', dateInput);
+      return '';
+    }
+
+    // Formater au format dd-MM-yyyy
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+
+    return `${day}-${month}-${year}`;
+  }
+
+  private formatTimeForBackend(timeString: string): string {
+    if (!timeString) return '';
+
+    // Si l'heure contient déjà les secondes, les enlever
+    if (timeString.includes(':')) {
+      const parts = timeString.split(':');
+      if (parts.length >= 2) {
+        return `${parts[0]}:${parts[1]}`;
       }
     }
-    return dateString;
+    return timeString;
+  }
+
+  private formatTimeForDisplay(timeString: string): string {
+    if (!timeString) return '';
+
+    // Si l'heure contient les secondes, les enlever pour l'affichage
+    if (timeString.includes(':')) {
+      const parts = timeString.split(':');
+      if (parts.length >= 2) {
+        return `${parts[0]}:${parts[1]}`;
+      }
+    }
+    return timeString;
   }
 
   resetForm(): void {
-    this.seanceForm.reset();
-    this.initForm();
-    this.modules = [];
+    this.seanceForm.reset({
+      enseignantId: '',
+      moduleId: '',
+      date: '',
+      heureDebut: '',
+      heureFin: '',
+      numeroSeance: '',
+      statut: StatusSeance.PLANIFIEE,
+      description: '',
+      effectuee: false
+    });
+    this.modules = [...this.allModules];
   }
 
   cancelEdit(): void {

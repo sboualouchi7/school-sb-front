@@ -1,0 +1,118 @@
+<div class="dashboard-container">
+  <h1 class="dashboard-title">Tableau de bord</h1>
+
+  <!-- Message d'erreur -->
+  <div *ngIf="hasError" class="error-message">
+    <i class="pi pi-exclamation-triangle"></i>
+    <span>{{ errorMessage }}</span>
+    <button class="retry-button" (click)="loadDashboardData()">
+      <i class="pi pi-refresh"></i> Réessayer
+    </button>
+  </div>
+
+  <!-- Indicateur de chargement -->
+  <div *ngIf="isLoading" class="loading-indicator">
+    <div class="spinner"></div>
+    <span>Chargement des données...</span>
+  </div>
+
+  <!-- Cartes de statistiques -->
+  <div *ngIf="!isLoading && !hasError" class="stats-grid">
+    <!-- Carte Étudiants -->
+    <div class="stat-card">
+      <div class="card-icon student-icon">
+        <i class="pi pi-users"></i>
+      </div>
+      <div class="card-content">
+        <h3 class="card-title">Étudiants</h3>
+        <div class="card-value">{{ totalEtudiants }}</div>
+        <div class="card-subtitle">inscrits</div>
+      </div>
+    </div>
+
+    <!-- Carte Enseignants -->
+    <div class="stat-card">
+      <div class="card-icon teacher-icon">
+        <i class="pi pi-briefcase"></i>
+      </div>
+      <div class="card-content">
+        <h3 class="card-title">Enseignants</h3>
+        <div class="card-value">{{ totalEnseignants }}</div>
+        <div class="card-subtitle">actifs</div>
+      </div>
+    </div>
+
+    <!-- Carte Classes -->
+    <div class="stat-card">
+      <div class="card-icon class-icon">
+        <i class="pi pi-th-large"></i>
+      </div>
+      <div class="card-content">
+        <h3 class="card-title">Classes</h3>
+        <div class="card-value">{{ totalClasses }}</div>
+        <div class="card-subtitle">actives</div>
+      </div>
+    </div>
+
+    <!-- Carte Modules -->
+    <div class="stat-card">
+      <div class="card-icon module-icon">
+        <i class="pi pi-book"></i>
+      </div>
+      <div class="card-content">
+        <h3 class="card-title">Modules</h3>
+        <div class="card-value">{{ totalModules }}</div>
+        <div class="card-subtitle">disponibles</div>
+      </div>
+    </div>
+
+    <!-- Carte Séances Effectuées -->
+    <div class="stat-card">
+      <div class="card-icon seance-icon">
+        <i class="pi pi-calendar-check"></i>
+      </div>
+      <div class="card-content">
+        <h3 class="card-title">Séances</h3>
+        <div class="card-value">{{ totalSeancesEffectuees }}</div>
+        <div class="card-subtitle">effectuées</div>
+      </div>
+    </div>
+
+    <!-- Carte Documents en attente -->
+    <div class="stat-card">
+      <div class="card-icon document-icon">
+        <i class="pi pi-file-o"></i>
+      </div>
+      <div class="card-content">
+        <h3 class="card-title">Documents</h3>
+        <div class="card-value">{{ totalDocumentsEnAttente }}</div>
+        <div class="card-subtitle">en attente</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Autres sections du dashboard -->
+  <div class="dashboard-sections" *ngIf="!isLoading && !hasError">
+    <div class="section">
+      <h2 class="section-title">Activité récente</h2>
+      <div class="section-content">
+        <!-- Placeholder pour l'activité récente -->
+        <p class="placeholder-text">Cette section affichera l'activité récente de l'application.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="section-title">Tâches à effectuer</h2>
+      <div class="section-content">
+        <!-- Placeholder pour les tâches -->
+        <div class="task-list">
+          <div class="task">
+            <i class="pi pi-exclamation-circle task-icon"></i>
+            <span>{{ totalDocumentsEnAttente }} documents en attente de traitement</span>
+          </div>
+          <!-- Autres tâches à ajouter selon les besoins -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

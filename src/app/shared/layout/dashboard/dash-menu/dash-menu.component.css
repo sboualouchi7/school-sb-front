@@ -1,3 +1,4 @@
+/* Container pour permettre aux tooltips de dépasser */
 .main {
   width: 8%;
   height: 100%;
@@ -5,12 +6,16 @@
   top: 0;
   left: 0;
   padding: 20px 5px;
+  display: flex;
+  flex-direction: column;
+  overflow: visible; /* Permet aux tooltips de dépasser à droite */
 }
 
 .menu {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .menu > i {
@@ -19,15 +24,27 @@
 
 ul {
   list-style: none;
-  padding: 40px 0;
+  padding: 10px 0; /* Réduit encore plus */
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly; /* Distribue équitablement l'espace */
+  flex-direction: column;
+  flex: 1;
+  height: 100%; /* Prend toute la hauteur disponible */
+}
+
+/* Suppression des styles de scrollbar - pas besoin */
+
+/* Script pour positionner dynamiquement les tooltips */
+
+li {
+  margin: 0; /* Suppression des marges - l'espace sera géré par justify-content */
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
-}
-
-li {
-  margin: 20px auto;
+  position: relative;
+  flex: 1; /* Chaque élément prend un espace égal */
 }
 
 li > a {
@@ -42,8 +59,6 @@ li > a {
   text-decoration: none;
   cursor: pointer;
 }
-
-/* État hover normal */
 li > a:hover {
   background: var(--hover-bg);
   color: var(--hover-color);
@@ -67,61 +82,101 @@ li:first-of-type > a.match {
   color: var(--hover-color);
 }
 
-/* Paragraphe caché par défaut avec transition */
+/* Paragraphe (tooltip) - à côté de l'icône sans scrollbar */
 li > a > p {
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.5s ease, visibility 0.5s ease;
-  padding: 5px;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  padding: 6px 10px;
   position: absolute;
-  font-size: 10px;
+  font-size: 11px;
   background: var(--hover-bg);
   color: var(--hover-color);
-  left: 80%;
-  top: 15px;
-  border-radius: 12px;
+  border-radius: 6px;
+  white-space: nowrap;
+  z-index: 9999;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+
+  /* Positionnement à droite de l'icône */
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-left: 15px;
 }
 
+/* Flèche du tooltip */
+li > a > p::before {
+  content: '';
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 5px solid transparent;
+  border-right-color: var(--hover-bg);
+}
+
+/* Flèche supprimée car le tooltip est maintenant dans le composant principal */
+
+/* Script pour positionner dynamiquement les tooltips */
+li > a:hover > p,
 li > a > p.active-p {
   opacity: 1;
   visibility: visible;
 }
 
-li > a:hover > p {
-  opacity: 1;
-  visibility: visible;
+/* Adaptations responsives pour différentes hauteurs d'écran */
+
+/* Adaptations responsives - ajustements pour petits écrans */
+
+/* Écrans standards (1080p et plus) */
+@media screen and (min-height: 900px) {
+  li > a {
+    font-size: 22px;
+    padding: 10px 15px;
+  }
 }
 
-/* Bouton de déconnexion */
-.logout-item {
-  margin-top: auto;
-  padding-top: 20px;
-  border-top: 1px solid var(--color-border);
+/* Écrans moyens (768p à 1080p) */
+@media screen and (max-height: 900px) and (min-height: 700px) {
+  li > a {
+    font-size: 20px;
+    padding: 8px 12px;
+  }
 }
 
-.logout-btn {
-  background: #f44336 !important;
-  color: white !important;
+/* Écrans plus petits (moins de 768p) */
+@media screen and (max-height: 700px) {
+  ul {
+    padding: 5px 0;
+  }
+
+  li > a {
+    font-size: 18px;
+    padding: 6px 10px;
+  }
+
+  .menu > i {
+    font-size: 20px;
+  }
 }
 
-.logout-btn:hover {
-  background: #d32f2f !important;
-  color: white !important;
-}
+/* Écrans très petits (netbooks, etc.) */
+@media screen and (max-height: 600px) {
+  .main {
+    padding: 8px 5px;
+  }
 
-.logout-btn > p {
-  background: #f44336;
-  color: white;
-}
+  ul {
+    padding: 2px 0;
+  }
 
-.logout-btn > p::before {
-  border-right-color: #f44336;
-}
+  li > a {
+    font-size: 16px;
+    padding: 4px 8px;
+  }
 
-.logout-btn:hover > p {
-  background: #d32f2f;
-}
-
-.logout-btn:hover > p::before {
-  border-right-color: #d32f2f;
+  .menu > i {
+    font-size: 18px;
+  }
 }

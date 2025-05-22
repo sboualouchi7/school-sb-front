@@ -2,6 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { EtudiantDashboardService } from '../../../../core/services/etudiant-dashboard.service';
 import { DocumentResponse } from '../../../../core/dto/document/document-response';
 import { AuthService } from '../../../../core/services/auth-service';
@@ -12,14 +13,20 @@ import { StatusDocument } from '../../../../core/enums/StatusDocument';
   standalone: true,
   imports: [
     CommonModule,
-    RouterModule
+    RouterModule,
+    FormsModule
   ],
   templateUrl: './demandes.component.html',
   styleUrls: ['./demandes.component.css']
 })
 export class DemandesComponent implements OnInit {
   demandes: DocumentResponse[] = [];
+  demandesFiltered: DocumentResponse[] = [];
   etudiantId: number | null = null;
+
+  // Filtre par type de document
+  selectedDocumentType: string = '';
+  documentTypes: string[] = [];
 
   isLoading = false;
   error: string | null = null;
@@ -58,6 +65,12 @@ export class DemandesComponent implements OnInit {
           this.demandes.sort((a, b) =>
             new Date(b.dateCreation).getTime() - new Date(a.dateCreation).getTime()
           );
+
+          // Extraire les types de documents uniques
+          this.extractDocumentTypes();
+
+          // Appliquer le filtre
+          this.applyFilter();
         } else {
           this.error = response.message || 'Erreur lors du chargement des demandes';
         }
@@ -69,6 +82,30 @@ export class DemandesComponent implements OnInit {
         console.error('Erreur lors du chargement des demandes:', err);
       }
     });
+  }
+
+  extractDocumentTypes(): void {
+    const types = [...new Set(this.demandes.map(demande => demande.type))];
+    this.documentTypes = types.sort();
+  }
+
+  applyFilter(): void {
+    if (!this.selectedDocumentType) {
+      this.demandesFiltered = [...this.demandes];
+    } else {
+      this.demandesFiltered = this.demandes.filter(
+        demande => demande.type === this.selectedDocumentType
+      );
+    }
+  }
+
+  onDocumentTypeChange(): void {
+    this.applyFilter();
+  }
+
+  resetFilters(): void {
+    this.selectedDocumentType = '';
+    this.applyFilter();
   }
 
   formatDateForDisplay(dateString: string): string {

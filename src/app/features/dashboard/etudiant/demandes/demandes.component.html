@@ -13,6 +13,29 @@
     </a>
   </div>
 
+  <!-- Section de filtres -->
+  <div class="filter-section">
+    <div class="filter-row">
+      <div class="filter-group">
+        <label for="documentTypeFilter">Filtrer par type de document:</label>
+        <select
+          id="documentTypeFilter"
+          class="filter-control"
+          [(ngModel)]="selectedDocumentType"
+          (change)="onDocumentTypeChange()">
+          <option value="">Tous les types</option>
+          <option *ngFor="let type of documentTypes" [value]="type">
+            {{ formatDocumentType(type) }}
+          </option>
+        </select>
+      </div>
+
+      <button class="btn reset-btn" (click)="resetFilters()">
+        <i class="pi pi-refresh"></i> Réinitialiser
+      </button>
+    </div>
+  </div>
+
   <!-- Chargement -->
   <div *ngIf="isLoading" class="loading-container">
     <div class="spinner">
@@ -29,7 +52,7 @@
 
   <!-- Contenu des demandes -->
   <div *ngIf="!isLoading && !error" class="demandes-content">
-    <div *ngIf="demandes.length === 0" class="no-data">
+    <div *ngIf="demandesFiltered.length === 0 && demandes.length === 0" class="no-data">
       <i class="pi pi-file"></i>
       <p>Aucune demande de document trouvée.</p>
       <a href="https://docs.google.com/forms/d/e/1FAIpQLScQ7ks5r3PFWZ_hvtJQHhpDdwvKzDJrB4H6_pZo2S8o_19iuA/viewform"
@@ -39,8 +62,16 @@
       </a>
     </div>
 
-    <div *ngIf="demandes.length > 0" class="demandes-list">
-      <div *ngFor="let demande of demandes" class="demande-card">
+    <div *ngIf="demandesFiltered.length === 0 && demandes.length > 0" class="no-data">
+      <i class="pi pi-filter"></i>
+      <p>Aucune demande trouvée avec les filtres actuels.</p>
+      <button class="btn reset-btn" (click)="resetFilters()">
+        <i class="pi pi-refresh"></i> Réinitialiser les filtres
+      </button>
+    </div>
+
+    <div *ngIf="demandesFiltered.length > 0" class="demandes-list">
+      <div *ngFor="let demande of demandesFiltered" class="demande-card">
         <div class="demande-icon">
           <i class="pi {{ getDocumentTypeIcon(demande.type) }}"></i>
         </div>

@@ -314,10 +314,16 @@
   border-bottom: 2px solid var(--color-border);
 }
 
+/* Centrer l'en-tête de la colonne Note */
+.notes-table th:nth-child(3) {
+  text-align: center;
+}
+
 .notes-table td {
   padding: 16px;
   border-bottom: 1px solid var(--color-border);
   color: var(--text-color);
+  vertical-align: middle;
 }
 
 .notes-table tr:last-child td {
@@ -348,8 +354,11 @@
   opacity: 0.8;
 }
 
+/* CORRECTION POUR L'ALIGNEMENT DES NOTES */
 .note-cell {
-  text-align: center;
+  text-align: center !important;
+  vertical-align: middle !important;
+  padding: 16px !important;
 }
 
 .note-value {
@@ -358,6 +367,9 @@
   border-radius: 50px;
   font-weight: 700;
   font-size: 14px;
+  text-align: center;
+  vertical-align: middle;
+  margin: 0 auto;
 }
 
 .eval-comment {
@@ -543,5 +555,10 @@
   .notes-table th,
   .notes-table td {
     padding: 12px 8px;
+  }
+
+  /* Maintenir l'alignement sur mobile */
+  .note-cell {
+    text-align: center !important;
   }
 }

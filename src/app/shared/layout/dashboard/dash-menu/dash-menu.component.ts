@@ -172,7 +172,7 @@ export class DashMenuComponent implements OnInit {
         path: '/dashboard/parent',
         icon: 'pi pi-home',
         roles: [Role.PARENT]
-      },
+      }/*,
       {
         label: 'Notes enfants',
         path: '/dashboard/parent/notes-enfant',
@@ -184,7 +184,7 @@ export class DashMenuComponent implements OnInit {
         path: '/dashboard/parent/absences-enfant',
         icon: 'pi pi-calendar-times',
         roles: [Role.PARENT]
-      }
+      }*/
     ];
 
     // Filtrer les items en fonction du rôle de l'utilisateur

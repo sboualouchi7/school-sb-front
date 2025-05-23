@@ -46,7 +46,7 @@ export class AbsenceService {
   }
 
   validate(id: number, validee: boolean): Observable<ApiResponse<AbsenceResponse>> {
-    return this.http.patch<ApiResponse<AbsenceResponse>>(`${this.apiUrl}/${id}/validation`, { validee });
+    return this.http.put<ApiResponse<AbsenceResponse>>(`${this.apiUrl}/${id}/valider?validee=${validee}`, null);
   }
 
   delete(id: number): Observable<ApiResponse<void>> {

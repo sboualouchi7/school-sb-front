@@ -13,7 +13,7 @@ export const PARENT_ROUTES: Routes = [
   {
     path: 'tableau-bord',
     component: TableauBordComponent
-  },
+  }/*,
   {
     path: 'notes-enfant',
     component: NotesEnfantComponent
@@ -21,5 +21,5 @@ export const PARENT_ROUTES: Routes = [
   {
     path: 'absences-enfant',
     component: AbsencesEnfantComponent
-  }
+  }*/
 ];

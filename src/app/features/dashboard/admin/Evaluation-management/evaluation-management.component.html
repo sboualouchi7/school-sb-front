@@ -4,7 +4,7 @@
     <div class="first-section">
       <div class="filters">
         <h1>Gestion des Évaluations</h1>
-        
+
         <form [formGroup]="filterForm" class="filter-form">
           <div class="form-group">
             <label for="moduleId">Module</label>
@@ -13,7 +13,7 @@
               <option *ngFor="let module of modules" [value]="module.id">{{ module.libelle }}</option>
             </select>
           </div>
-          
+
           <div class="form-group">
             <label for="classeId">Classe</label>
             <select id="classeId" formControlName="classeId" class="form-control">
@@ -21,23 +21,23 @@
               <option *ngFor="let classe of classes" [value]="classe.id">{{ classe.nom }}</option>
             </select>
           </div>
-          
+
           <div class="form-actions">
             <button type="button" class="reset-button" (click)="resetFilters()">
               <i class="pi pi-refresh"></i> Réinitialiser
             </button>
           </div>
         </form>
-        
+
         <div class="header-actions">
           <button class="add-button" (click)="openModal()">
             <i class="pi pi-plus"></i> Ajouter une évaluation
           </button>
         </div>
       </div>
-      
+
       <div class="evaluation-list">
-        <app-evaluation-list 
+        <app-evaluation-list
           (editEvaluationEvent)="onEditEvaluation($event)">
         </app-evaluation-list>
       </div>
@@ -46,10 +46,14 @@
 </div>
 
 <!-- Modal pour créer/éditer une évaluation -->
-<div class="modal" *ngIf="showModal">
-  <div class="modal-content">
+<!-- Modern Modal Template for Evaluation Management -->
+<div class="modal-overlay" *ngIf="showModal">
+  <div class="modal-container">
     <div class="modal-header">
-      <span class="close-button" (click)="closeModal()">&times;</span>
+      <h2 class="modal-title">{{ evaluationToEdit ? 'Modifier l\'évaluation' : 'Ajouter une évaluation' }}</h2>
+      <button class="modal-close" (click)="closeModal()">
+        <i class="pi pi-times"></i>
+      </button>
     </div>
     <div class="modal-body">
       <app-evaluation-create

@@ -13,10 +13,13 @@
 </div>
 
 <!-- Modal pour créer/éditer un parent -->
-<div class="modal" *ngIf="showModal">
-  <div class="modal-content">
+<div class="modal-overlay" *ngIf="showModal">
+  <div class="modal-container">
     <div class="modal-header">
-      <span class="close-button" (click)="closeModal()">&times;</span>
+      <h2 class="modal-title">{{ parentToEdit ? 'Modifier le parent' : 'Ajouter un parent' }}</h2>
+      <button class="modal-close" (click)="closeModal()">
+        <i class="pi pi-times"></i>
+      </button>
     </div>
     <div class="modal-body">
       <app-parent-create

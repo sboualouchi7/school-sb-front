@@ -1,142 +1,145 @@
 <!-- evaluation-create.component.html -->
 <div class="container">
-  <h1>{{ isEditMode ? 'Modifier l\'évaluation' : 'Ajouter une évaluation' }}</h1>
+  <!--<h1>{{ isEditMode ? 'Modifier l\'évaluation' : 'Ajouter une évaluation' }}</h1>-->
 
-  <form [formGroup]="formEvaluation" (ngSubmit)="onSubmit()">
-    <!-- Module and Type -->
-    <div class="form-row">
-      <div class="form-group">
-        <label for="moduleId">Module:</label>
-        <select id="moduleId" formControlName="moduleId" class="form-control">
-          <option value="" disabled>Sélectionnez un module</option>
-          <option *ngFor="let module of modules" [value]="module.id">{{ module.libelle }}</option>
-        </select>
-        <div *ngIf="formEvaluation.get('moduleId')?.invalid && formEvaluation.get('moduleId')?.touched" class="error-message">
-          Le module est requis
+  <!-- evaluation-create.component.html -->
+  <div class="modal-content-wrapper">
+    <form [formGroup]="formEvaluation" (ngSubmit)="onSubmit()" class="modern-form">
+      <!-- Module and Type -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="moduleId">Module:</label>
+          <select id="moduleId" formControlName="moduleId" class="form-control">
+            <option value="" disabled>Sélectionnez un module</option>
+            <option *ngFor="let module of modules" [value]="module.id">{{ module.libelle }}</option>
+          </select>
+          <div *ngIf="formEvaluation.get('moduleId')?.invalid && formEvaluation.get('moduleId')?.touched" class="error-message">
+            <i class="pi pi-exclamation-circle"></i> Le module est requis
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="type">Type d'évaluation:</label>
+          <select id="type" formControlName="type" class="form-control">
+            <option value="" disabled>Sélectionnez un type</option>
+            <option *ngFor="let type of evaluationTypes" [value]="type">{{ formatType(type) }}</option>
+          </select>
+          <div *ngIf="formEvaluation.get('type')?.invalid && formEvaluation.get('type')?.touched" class="error-message">
+            <i class="pi pi-exclamation-circle"></i> Le type d'évaluation est requis
+          </div>
         </div>
       </div>
 
-      <div class="form-group">
-        <label for="type">Type d'évaluation:</label>
-        <select id="type" formControlName="type" class="form-control">
-          <option value="" disabled>Sélectionnez un type</option>
-          <option *ngFor="let type of evaluationTypes" [value]="type">{{ formatType(type) }}</option>
-        </select>
-        <div *ngIf="formEvaluation.get('type')?.invalid && formEvaluation.get('type')?.touched" class="error-message">
-          Le type d'évaluation est requis
+      <!-- Étudiant and Enseignant -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="etudiantId">Étudiant:</label>
+          <select id="etudiantId" formControlName="etudiantId" class="form-control">
+            <option value="" disabled>Sélectionnez un étudiant</option>
+            <option *ngFor="let etudiant of etudiants" [value]="etudiant.id">
+              {{ etudiant.prenom }} {{ etudiant.nom }} ({{ etudiant.numeroEtudiant }})
+            </option>
+          </select>
+          <div *ngIf="formEvaluation.get('etudiantId')?.invalid && formEvaluation.get('etudiantId')?.touched" class="error-message">
+            <i class="pi pi-exclamation-circle"></i> L'étudiant est requis
+          </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Étudiant and Enseignant -->
-    <div class="form-row">
-      <div class="form-group">
-        <label for="etudiantId">Étudiant:</label>
-        <select id="etudiantId" formControlName="etudiantId" class="form-control">
-          <option value="" disabled>Sélectionnez un étudiant</option>
-          <option *ngFor="let etudiant of etudiants" [value]="etudiant.id">
-            {{ etudiant.prenom }} {{ etudiant.nom }} ({{ etudiant.numeroEtudiant }})
-          </option>
-        </select>
-        <div *ngIf="formEvaluation.get('etudiantId')?.invalid && formEvaluation.get('etudiantId')?.touched" class="error-message">
-          L'étudiant est requis
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="enseignantId">Enseignant:</label>
-        <select id="enseignantId" formControlName="enseignantId" class="form-control">
-          <option value="" disabled>Sélectionnez un enseignant</option>
-          <option *ngFor="let enseignant of enseignants" [value]="enseignant.id">
-            {{ enseignant.prenom }} {{ enseignant.nom }}
-          </option>
-        </select>
-        <div *ngIf="formEvaluation.get('enseignantId')?.invalid && formEvaluation.get('enseignantId')?.touched" class="error-message">
-          L'enseignant est requis
-        </div>
-      </div>
-    </div>
-
-    <!-- Session and Date -->
-    <div class="form-row">
-      <div class="form-group">
-        <label for="sessionId">Session:</label>
-        <select id="sessionId" formControlName="sessionId" class="form-control">
-          <option value="" disabled>Sélectionnez une session</option>
-          <option *ngFor="let session of sessions" [value]="session.id">
-            {{ session.nom }} ({{ session.anneeScolaire }})
-          </option>
-        </select>
-        <div *ngIf="formEvaluation.get('sessionId')?.invalid && formEvaluation.get('sessionId')?.touched" class="error-message">
-          La session est requise
+        <div class="form-group">
+          <label for="enseignantId">Enseignant:</label>
+          <select id="enseignantId" formControlName="enseignantId" class="form-control">
+            <option value="" disabled>Sélectionnez un enseignant</option>
+            <option *ngFor="let enseignant of enseignants" [value]="enseignant.id">
+              {{ enseignant.prenom }} {{ enseignant.nom }}
+            </option>
+          </select>
+          <div *ngIf="formEvaluation.get('enseignantId')?.invalid && formEvaluation.get('enseignantId')?.touched" class="error-message">
+            <i class="pi pi-exclamation-circle"></i> L'enseignant est requis
+          </div>
         </div>
       </div>
 
-      <div class="form-group">
-        <label for="dateEvaluation">Date d'évaluation:</label>
-        <input 
-          type="date" 
-          id="dateEvaluation" 
-          formControlName="dateEvaluation" 
-          class="form-control"
+      <!-- Session and Date -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="sessionId">Session:</label>
+          <select id="sessionId" formControlName="sessionId" class="form-control">
+            <option value="" disabled>Sélectionnez une session</option>
+            <option *ngFor="let session of sessions" [value]="session.id">
+              {{ session.nom }} ({{ session.anneeScolaire }})
+            </option>
+          </select>
+          <div *ngIf="formEvaluation.get('sessionId')?.invalid && formEvaluation.get('sessionId')?.touched" class="error-message">
+            <i class="pi pi-exclamation-circle"></i> La session est requise
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="dateEvaluation">Date d'évaluation:</label>
+          <input
+            type="date"
+            id="dateEvaluation"
+            formControlName="dateEvaluation"
+            class="form-control"
+          >
+          <div *ngIf="formEvaluation.get('dateEvaluation')?.invalid && formEvaluation.get('dateEvaluation')?.touched" class="error-message">
+            <i class="pi pi-exclamation-circle"></i> La date d'évaluation est requise
+          </div>
+        </div>
+      </div>
+
+      <!-- Note -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="note">Note:</label>
+          <input
+            type="number"
+            id="note"
+            formControlName="note"
+            class="form-control"
+            placeholder="Note sur 20"
+            min="0"
+            max="20"
+            step="0.5"
+          >
+          <div *ngIf="formEvaluation.get('note')?.invalid && formEvaluation.get('note')?.touched" class="error-message">
+            <i class="pi pi-exclamation-circle"></i> La note est requise et doit être entre 0 et 20
+          </div>
+        </div>
+      </div>
+
+      <!-- Commentaire -->
+      <div class="form-row">
+        <div class="form-group full-width">
+          <label for="commentaire">Commentaire (optionnel):</label>
+          <textarea
+            id="commentaire"
+            formControlName="commentaire"
+            class="form-control"
+            placeholder="Saisir un commentaire"
+            rows="4"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button
+          *ngIf="isEditMode"
+          type="button"
+          class="btn btn-secondary"
+          (click)="cancelEdit()"
         >
-        <div *ngIf="formEvaluation.get('dateEvaluation')?.invalid && formEvaluation.get('dateEvaluation')?.touched" class="error-message">
-          La date d'évaluation est requise
-        </div>
-      </div>
-    </div>
+          <i class="pi pi-times"></i> Annuler
+        </button>
 
-    <!-- Note -->
-    <div class="form-row">
-      <div class="form-group">
-        <label for="note">Note:</label>
-        <input 
-          type="number" 
-          id="note" 
-          formControlName="note" 
-          class="form-control" 
-          placeholder="Note sur 20"
-          min="0"
-          max="20"
-          step="0.5"
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="formEvaluation.invalid"
         >
-        <div *ngIf="formEvaluation.get('note')?.invalid && formEvaluation.get('note')?.touched" class="error-message">
-          La note est requise et doit être entre 0 et 20
-        </div>
+          <i class="pi pi-check"></i> {{ isEditMode ? 'Mettre à jour' : 'Ajouter' }}
+        </button>
       </div>
-    </div>
-
-    <!-- Commentaire -->
-    <div class="form-row">
-      <div class="form-group full-width">
-        <label for="commentaire">Commentaire (optionnel):</label>
-        <textarea 
-          id="commentaire" 
-          formControlName="commentaire" 
-          class="form-control" 
-          placeholder="Saisir un commentaire"
-          rows="4"
-        ></textarea>
-      </div>
-    </div>
-
-    <div class="form-actions">
-      <button 
-        type="submit" 
-        class="btn-primary" 
-        [disabled]="formEvaluation.invalid"
-      >
-        {{ isEditMode ? 'Mettre à jour' : 'Ajouter' }}
-      </button>
-
-      <button 
-        *ngIf="isEditMode" 
-        type="button" 
-        class="btn-secondary" 
-        (click)="cancelEdit()"
-      >
-        Annuler
-      </button>
-    </div>
-  </form>
+    </form>
+  </div>
 </div>

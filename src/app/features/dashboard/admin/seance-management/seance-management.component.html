@@ -34,10 +34,13 @@
 </div>
 
 <!-- Modal pour créer/éditer une séance -->
-<div class="modal" *ngIf="showModal">
-  <div class="modal-content">
+<div class="modal-overlay" *ngIf="showModal">
+  <div class="modal-container">
     <div class="modal-header">
-      <span class="close-button" (click)="closeModal()">&times;</span>
+      <h2 class="modal-title">{{ seanceToEdit ? 'Modifier la séance' : 'Ajouter une séance' }}</h2>
+      <button class="modal-close" (click)="closeModal()">
+        <i class="pi pi-times"></i>
+      </button>
     </div>
     <div class="modal-body">
       <app-seance-create
